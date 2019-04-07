@@ -37,18 +37,6 @@ class StudentForm extends React.Component {
         selectedClasses: [],
     };
 
-    componentDidMount() {
-        const { student } = this.props;
-        if (student) {
-            this.setState({
-                name: student.name,
-                mobile: student.mobile,
-                email: student.email,
-                selectedClasses: student.classes,
-            });
-        }
-    }
-
     componentDidUpdate() {
         const { student } = this.props;
         if (student && student.id !== this.state.id) {

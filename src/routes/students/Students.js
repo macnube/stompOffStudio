@@ -8,8 +8,7 @@ import MUIDataTable from 'mui-datatables';
 import StudentForm from './StudentForm';
 import AddIcon from '@material-ui/icons/Add';
 import Fab from '@material-ui/core/Fab';
-
-const columns = ['ID', 'Name', 'Email', 'Mobile', 'Classes', 'Status'];
+import { ContentToolbar } from 'components';
 
 const availableClasses = {
     TueL2: { name: 'Tues - Lindy Hop II', id: 'TueL2' },
@@ -53,14 +52,46 @@ const data = {
     },
 };
 
-const getClassesStringFromIds = ids =>
+const columns = [
+    {
+        name: 'ID',
+        options: {
+            display: 'false',
+        },
+    },
+    {
+        name: 'Name',
+    },
+    {
+        name: 'Email',
+    },
+    {
+        name: 'Mobile',
+    },
+    {
+        name: 'ClassIds',
+        options: {
+            display: 'false',
+        },
+    },
+    {
+        name: 'Status',
+    },
+    {
+        name: 'Classes',
+    },
+];
+
+const getClassNamesFromIds = ids =>
     map(ids, id => availableClasses[id].name).join(', ');
 
 const convertStudentsDataToArray = students =>
     reduce(
         students,
         (acc, student) => {
-            acc.push(Object.values(student));
+            const result = { ...student };
+            result.classNames = getClassNamesFromIds(student.classes);
+            acc.push(Object.values(result));
             return acc;
         },
         []
@@ -92,17 +123,17 @@ class Students extends Component {
             responsive: 'scroll',
             onRowClick: this.handleStudentClick,
         };
-        const { classes } = this.props;
         return (
             <Fragment>
-                <Fab
-                    color="primary"
-                    aria-label="Add"
-                    className={classes.fab}
-                    onClick={this.handleClickOpen}
-                >
-                    <AddIcon />
-                </Fab>
+                <ContentToolbar>
+                    <Fab
+                        color="primary"
+                        aria-label="Add"
+                        onClick={this.handleClickOpen}
+                    >
+                        <AddIcon />
+                    </Fab>
+                </ContentToolbar>
                 <StudentForm
                     open={this.state.open}
                     handleClose={this.handleClose}

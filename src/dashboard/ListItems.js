@@ -9,6 +9,8 @@ import PeopleIcon from '@material-ui/icons/People';
 import EuroIcon from '@material-ui/icons/EuroSymbol';
 import AttendanceIcon from '@material-ui/icons/HowToReg';
 import ClassIcon from '@material-ui/icons/CastForEducation';
+import TeacherIcon from '@material-ui/icons/RecordVoiceOver';
+import StudioIcon from '@material-ui/icons/AccountBalance';
 
 export const ListItems = () => (
     <div>
@@ -44,6 +46,14 @@ export const ListItems = () => (
                 <ListItemText primary="Students" />
             </ListItem>
         </NavLink>
+        <NavLink exact to="/teachers" style={{ textDecoration: 'none' }}>
+            <ListItem button>
+                <ListItemIcon>
+                    <TeacherIcon />
+                </ListItemIcon>
+                <ListItemText primary="Teachers" />
+            </ListItem>
+        </NavLink>
         <NavLink exact to="/payments" style={{ textDecoration: 'none' }}>
             <ListItem button>
                 <ListItemIcon>
@@ -58,6 +68,18 @@ export const ListItems = () => (
                     <AttendanceIcon />
                 </ListItemIcon>
                 <ListItemText primary="Class Attendance" />
+            </ListItem>
+        </NavLink>
+        <NavLink
+            exact
+            to="/studioManagement"
+            style={{ textDecoration: 'none' }}
+        >
+            <ListItem button>
+                <ListItemIcon>
+                    <StudioIcon />
+                </ListItemIcon>
+                <ListItemText primary="Studio Management" />
             </ListItem>
         </NavLink>
     </div>

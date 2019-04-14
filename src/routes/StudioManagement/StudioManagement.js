@@ -121,7 +121,7 @@ const convertClassesDataToArray = classes =>
         []
     );
 
-class ClassDetail extends Component {
+class StudioManagement extends Component {
     state = {
         id: '',
         name: '',
@@ -276,8 +276,8 @@ class ClassDetail extends Component {
     }
 }
 
-ClassDetail.propTypes = {
+StudioManagement.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(ClassDetail);
+export default withStyles(styles)(StudioManagement);

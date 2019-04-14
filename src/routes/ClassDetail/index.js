@@ -1,3 +1,3 @@
-import ClassManagement from './ClassManagement';
+import ClassDetail from './ClassDetail';
 
-export default ClassManagement;
+export default ClassDetail;

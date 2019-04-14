@@ -80,6 +80,8 @@ class ClassForm extends React.Component {
         });
     };
 
+    handleCreateClass = () => {};
+
     clearForm = () => {
         this.setState({
             id: '',
@@ -95,7 +97,6 @@ class ClassForm extends React.Component {
     render() {
         const { classes, open, handleClose } = this.props;
         const { studioId, roomId } = this.state;
-        console.log('studioId ', studioId);
         return (
             <div>
                 <Dialog

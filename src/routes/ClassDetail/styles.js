@@ -4,6 +4,10 @@ const styles = theme => ({
         marginLeft: theme.spacing.unit,
         marginRight: theme.spacing.unit,
     },
+    topForm: {
+        paddingLeft: 2 * theme.spacing.unit,
+        paddingRight: 2 * theme.spacing.unit,
+    },
     textField: {
         marginLeft: theme.spacing.unit,
         marginRight: theme.spacing.unit,

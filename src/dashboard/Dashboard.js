@@ -15,7 +15,7 @@ import Badge from '@material-ui/core/Badge';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import NotificationsIcon from '@material-ui/icons/Notifications';
-import { Overview, Students, ClassManagement } from 'routes';
+import { Overview, Students, ClassManagement, ClassDetail } from 'routes';
 import ListItems from './ListItems';
 import styles from './styles';
 
@@ -112,6 +112,7 @@ class Dashboard extends React.Component {
                         path="/classManagement"
                         component={ClassManagement}
                     />
+                    <Route exact path="/classDetail" component={ClassDetail} />
                 </main>
             </div>
         );

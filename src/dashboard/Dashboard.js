@@ -22,6 +22,7 @@ import {
     ClassDetail,
     Teachers,
     StudioManagement,
+    StudioDetail,
 } from 'routes';
 import ListItems from './ListItems';
 import styles from './styles';
@@ -125,6 +126,11 @@ class Dashboard extends React.Component {
                         exact
                         path="/studioManagement"
                         component={StudioManagement}
+                    />
+                    <Route
+                        exact
+                        path="/studioDetail"
+                        component={StudioDetail}
                     />
                 </main>
             </div>

@@ -1,3 +1,3 @@
-import ClassDetail from './ClassDetail';
+import StudioDetail from './StudioDetail';
 
-export default ClassDetail;
+export default StudioDetail;

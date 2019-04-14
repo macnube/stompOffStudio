@@ -1,7 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import map from 'lodash/map';
-import filter from 'lodash/filter';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
@@ -9,22 +7,9 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import FormLabel from '@material-ui/core/FormLabel';
-import FormControl from '@material-ui/core/FormControl';
-import FormGroup from '@material-ui/core/FormGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import Checkbox from '@material-ui/core/Checkbox';
 import styles from './styles';
 
 const cardTypes = ['None', 'Single', 'Double', 'Triple', 'All'];
-
-const availableClasses = {
-    TueL2: { name: 'Tues - Lindy Hop II', id: 'TueL2' },
-    ThuB2: { name: 'Thu - Balboa II', id: 'ThuB2' },
-    TueL3: { name: 'Tues - Lindy Hop III', id: 'TueL3' },
-    ThuAJ2: { name: 'Thu - Authentic Jazz II', id: 'ThuAJ2' },
-};
 
 class StudentForm extends React.Component {
     state = {
@@ -54,21 +39,6 @@ class StudentForm extends React.Component {
         this.setState({ [name]: event.target.value });
     };
 
-    handleSelectClass = selectedId => {
-        const { selectedClasses } = this.state;
-        if (selectedClasses.includes(selectedId)) {
-            return this.setState({
-                selectedClasses: filter(
-                    selectedClasses,
-                    id => id !== selectedId
-                ),
-            });
-        }
-        this.setState({
-            selectedClasses: selectedClasses.concat(selectedId),
-        });
-    };
-
     clearForm = () => {
         this.setState({
             id: '',
@@ -77,7 +47,6 @@ class StudentForm extends React.Component {
             email: '',
             cardType: 'Single',
             cardStart: '',
-            selectedClasses: [],
         });
     };
 
@@ -153,33 +122,6 @@ class StudentForm extends React.Component {
                             margin="normal"
                             disabled={this.state.cardType === 'None'}
                         />
-                        <FormControl
-                            component="fieldset"
-                            className={classes.formControl}
-                            margin="normal"
-                        >
-                            <FormLabel component="legend">
-                                Assign Class
-                            </FormLabel>
-                            <FormGroup>
-                                {map(availableClasses, c => (
-                                    <FormControlLabel
-                                        key={c.id}
-                                        control={
-                                            <Checkbox
-                                                checked={this.state.selectedClasses.includes(
-                                                    c.id
-                                                )}
-                                                onChange={() =>
-                                                    this.handleSelectClass(c.id)
-                                                }
-                                            />
-                                        }
-                                        label={c.name}
-                                    />
-                                ))}
-                            </FormGroup>
-                        </FormControl>
                     </DialogContent>
                     <DialogActions>
                         <Button

@@ -135,26 +135,18 @@ class ClassDetail extends Component {
     componentDidMount() {
         const { location } = this.props;
         console.log('location is: ', location);
-        if (location && location.state && location.state.selectedClass) {
-            const {
-                id,
-                name,
-                studioId,
-                roomId,
-                startDate,
-                teachers,
-                maxStudents,
-            } = location.state.selectedClass;
-            this.setState({
-                id,
-                name,
-                studioId,
-                roomId,
-                startDate,
-                teachers,
-                maxStudents,
-            });
-        }
+        // if (location && location.state) {
+        //     const {id, name, studioId}
+        //     this.setState({
+        //         id: '',
+        // name: '',
+        // studioId: '',
+        // roomId: '',
+        // startDate: '',
+        // teachers: [],
+        // maxStudents: null,
+        //     })
+        // }
     }
 
     handleChange = name => event => {

@@ -1,9 +1,10 @@
 import React, { Component, Fragment } from 'react';
 import compose from 'recompose/compose';
 import { withRouter } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import map from 'lodash/map';
 import reduce from 'lodash/reduce';
-import PropTypes from 'prop-types';
+import find from 'lodash/find';
 import { withStyles } from '@material-ui/core/styles';
 import styles from './styles';
 import MUIDataTable from 'mui-datatables';
@@ -58,34 +59,31 @@ const data = {
     },
 };
 
-const convertStudioDataToArray = studios =>
+const parseStudiosToTableData = studios =>
     reduce(
         studios,
         (acc, studio) => {
-            const result = { ...studio };
-            result.roomNames = map(studio.rooms, room => room.name).join(', ');
-            acc.push(Object.values(result));
+            const roomNames = map(studio.rooms, room => room.name).join(', ');
+            const result = [studio.id, studio.name, studio.address, roomNames];
+            acc.push(result);
             return acc;
         },
         []
     );
 
 class StudioManagement extends Component {
-    state = {
-        open: false,
-        selectedStudentId: null,
-    };
-
     handleNavigateToStudioDetail = rowData => {
+        const { studios } = this.props;
         this.props.history.push({
             pathname: '/studioDetail',
             state: {
-                selectedClass: data[rowData[0]],
+                selectedStudio: find(studios, { id: rowData[0] }),
             },
         });
     };
 
     render() {
+        const { studios } = this.props;
         const options = {
             responsive: 'scroll',
             onRowClick: this.handleNavigateToStudioDetail,
@@ -103,7 +101,7 @@ class StudioManagement extends Component {
                 </ContentToolbar>
                 <MUIDataTable
                     title={'Studios'}
-                    data={convertStudioDataToArray(data)}
+                    data={parseStudiosToTableData(studios)}
                     columns={columns}
                     options={options}
                 />
@@ -114,6 +112,7 @@ class StudioManagement extends Component {
 
 StudioManagement.propTypes = {
     classes: PropTypes.object.isRequired,
+    studios: PropTypes.array.isRequired,
 };
 
 export default compose(

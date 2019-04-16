@@ -50,8 +50,9 @@ class StudioDetail extends Component {
 
     componentDidMount() {
         const { location } = this.props;
-        if (location && location.state && location.state.selectedClass) {
-            const { id, name, address, rooms } = location.state.selectedClass;
+        console.log('location is: ', location);
+        if (location && location.state && location.state.selectedStudio) {
+            const { id, name, address, rooms } = location.state.selectedStudio;
             this.setState({
                 id,
                 name,
@@ -94,6 +95,9 @@ class StudioDetail extends Component {
     render() {
         const options = {
             responsive: 'scroll',
+            filter: true,
+            selectableRows: false,
+            filterType: 'checkbox',
             onRowClick: this.handleRoomClick,
             customToolbar: () => (
                 <CustomToolbar handleAddRoomPress={this.handleClickOpen} />

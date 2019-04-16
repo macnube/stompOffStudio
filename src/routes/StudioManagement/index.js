@@ -1,3 +1,3 @@
-import StudioManagement from './StudioManagement';
+import StudioManagementContainer from './StudioManagementContainer';
 
-export default StudioManagement;
+export default StudioManagementContainer;

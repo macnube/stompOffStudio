@@ -8,7 +8,7 @@ import MUIDataTable from 'mui-datatables';
 import StudentForm from './StudentForm';
 import AddIcon from '@material-ui/icons/Add';
 import Fab from '@material-ui/core/Fab';
-import { ContentToolbar } from 'components';
+import { ContentToolbar, CustomEmailToolbar } from 'components';
 
 const availableClasses = {
     TueL2: { name: 'Tues - Lindy Hop II', id: 'TueL2' },
@@ -170,6 +170,7 @@ class Students extends Component {
         const options = {
             responsive: 'scroll',
             onRowClick: this.handleStudentClick,
+            customToolbarSelect: () => <CustomEmailToolbar />,
         };
         return (
             <Fragment>

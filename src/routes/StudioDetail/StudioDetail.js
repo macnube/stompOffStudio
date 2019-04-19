@@ -15,12 +15,6 @@ import RoomForm from './RoomForm/RoomFormContainer';
 
 const columns = [
     {
-        name: 'ID',
-        options: {
-            display: 'false',
-        },
-    },
-    {
         name: 'Name',
     },
     {
@@ -32,7 +26,8 @@ const convertRoomDataToArray = rooms =>
     reduce(
         rooms,
         (acc, c) => {
-            acc.push(Object.values(c));
+            console.log('room is: ', c);
+            acc.push([c.name, c.capacity]);
             return acc;
         },
         []

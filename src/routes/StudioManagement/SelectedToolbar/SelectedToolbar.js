@@ -1,8 +1,9 @@
 import React from 'react';
+import forEach from 'lodash/forEach';
 import PropTypes from 'prop-types';
 import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
-import EmailIcon from '@material-ui/icons/Email';
+import TrashIcon from '@material-ui/icons/Delete';
 import { withStyles } from '@material-ui/core/styles';
 
 const defaultToolbarStyles = {
@@ -10,18 +11,27 @@ const defaultToolbarStyles = {
 };
 
 class SelectedToolbar extends React.Component {
+    //Having to delete each studio individually because prisma has a bug
+    //where cascading deletes don't work for deleteMany
+    //https://github.com/prisma/prisma/issues/3587
+    deleteStudios = () => {
+        const { idsToDelete, deleteStudio } = this.props;
+        forEach(idsToDelete, id => {
+            deleteStudio({ variables: { id } });
+        });
+    };
+
     render() {
         const { classes, children } = this.props;
-        console.log('props are: ', this.props);
 
         return (
             <React.Fragment>
-                <Tooltip title={'Email'}>
+                <Tooltip title={'Delete'}>
                     <IconButton
                         className={classes.iconButton}
-                        onClick={() => null}
+                        onClick={this.deleteStudios}
                     >
-                        <EmailIcon className={classes.deleteIcon} />
+                        <TrashIcon className={classes.deleteIcon} />
                     </IconButton>
                 </Tooltip>
                 {children}
@@ -34,7 +44,7 @@ SelectedToolbar.propTypes = {
     classes: PropTypes.object.isRequired,
     children: PropTypes.node,
     deleteStudio: PropTypes.func.isRequired,
-    selectedRows: PropTypes.array.isRequired,
+    idsToDelete: PropTypes.array.isRequired,
 };
 
 export default withStyles(defaultToolbarStyles, { name: 'SelectedToolbar' })(

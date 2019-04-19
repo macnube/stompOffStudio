@@ -1,3 +1,3 @@
-import StudioDetail from './StudioDetail';
+import StudioDetailContainer from './StudioDetailContainer';
 
-export default StudioDetail;
+export default StudioDetailContainer;

@@ -1,12 +1,10 @@
 import React from 'react';
 import { Query } from 'react-apollo';
 import gql from 'graphql-tag';
-import map from 'lodash/map';
-import reduce from 'lodash/reduce';
 
 import StudioManagement from './StudioManagement';
 
-const GET_STUDIOS = gql`
+export const GET_STUDIOS = gql`
     query {
         studios {
             id

@@ -11,7 +11,7 @@ import Paper from '@material-ui/core/Paper';
 import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
 import { ContentToolbar } from 'components';
 import CustomToolbar from './CustomToolbar';
-import RoomForm from './RoomForm';
+import RoomForm from './RoomForm/RoomFormContainer';
 
 const columns = [
     {
@@ -49,10 +49,10 @@ class StudioDetail extends Component {
     };
 
     componentDidMount() {
-        const { location } = this.props;
-        console.log('location is: ', location);
-        if (location && location.state && location.state.selectedStudio) {
-            const { id, name, address, rooms } = location.state.selectedStudio;
+        const { studio } = this.props;
+        console.log('studio is: ', studio);
+        if (studio) {
+            const { id, name, address, rooms } = studio;
             this.setState({
                 id,
                 name,
@@ -104,7 +104,7 @@ class StudioDetail extends Component {
             ),
         };
         const { classes } = this.props;
-        const { name, address, rooms, open, selectedRoomId } = this.state;
+        const { name, address, rooms, open, selectedRoomId, id } = this.state;
         console.log('rooms is: ', rooms);
         console.log('roomId is: ', selectedRoomId);
         return (
@@ -124,6 +124,7 @@ class StudioDetail extends Component {
                 <RoomForm
                     open={open}
                     handleClose={this.handleClose}
+                    studioId={id}
                     room={find(rooms, { id: selectedRoomId })}
                 />
                 <Paper>
@@ -148,7 +149,9 @@ class StudioDetail extends Component {
                     <MuiThemeProvider theme={this.getMuiTheme()}>
                         <MUIDataTable
                             title={'Rooms'}
-                            data={convertRoomDataToArray(rooms)}
+                            data={convertRoomDataToArray(
+                                this.props.studio.rooms
+                            )}
                             columns={columns}
                             options={options}
                         />

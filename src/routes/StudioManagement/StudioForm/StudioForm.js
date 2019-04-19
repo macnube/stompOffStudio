@@ -9,41 +9,39 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import styles from './styles';
 
-class RoomForm extends React.Component {
+class StudioForm extends React.Component {
     state = {
-        id: '',
         name: '',
-        capacity: 0,
+        address: '',
     };
-
-    componentDidUpdate() {
-        const { room } = this.props;
-        console.log('room is: ', room);
-        if (room && room.id !== this.state.id) {
-            const { id, name, capacity } = room;
-            this.setState({
-                id,
-                name,
-                capacity,
-            });
-        }
-    }
 
     handleChange = name => event => {
         this.setState({ [name]: event.target.value });
     };
 
+    handleCreate = () => {
+        const { createStudio, handleClose } = this.props;
+        const { name, address } = this.state;
+        createStudio({
+            variables: {
+                name,
+                address,
+            },
+        });
+        handleClose(this.clearForm);
+        // this.props.navigateToStudio(newStudio);
+    };
+
     clearForm = () => {
         this.setState({
-            id: '',
             name: '',
-            capacity: 0,
+            address: '',
         });
     };
 
     render() {
-        const { classes, open, handleClose, room } = this.props;
-        const { name, capacity } = this.state;
+        const { classes, open, handleClose } = this.props;
+        const { name, address } = this.state;
         return (
             <div>
                 <Dialog
@@ -52,7 +50,7 @@ class RoomForm extends React.Component {
                     aria-labelledby="form-dialog-title"
                 >
                     <DialogTitle id="form-dialog-title">
-                        {room ? 'Edit Room' : 'Create New Room'}
+                        Create New Studio
                     </DialogTitle>
                     <DialogContent>
                         <TextField
@@ -62,14 +60,14 @@ class RoomForm extends React.Component {
                             value={name}
                             onChange={this.handleChange('name')}
                             margin="normal"
+                            autoFocus={true}
                         />
                         <TextField
-                            id="standard-number"
-                            label="Room Capacity"
-                            value={capacity}
-                            onChange={this.handleChange('capacity')}
-                            type="number"
+                            id="standard-name"
+                            label="Address"
                             className={classes.textField}
+                            value={address}
+                            onChange={this.handleChange('address')}
                             margin="normal"
                         />
                     </DialogContent>
@@ -80,11 +78,8 @@ class RoomForm extends React.Component {
                         >
                             Cancel
                         </Button>
-                        <Button
-                            onClick={handleClose.bind(null, this.clearForm)}
-                            color="primary"
-                        >
-                            {room ? 'Save' : 'Create'}
+                        <Button onClick={this.handleCreate} color="primary">
+                            Create
                         </Button>
                     </DialogActions>
                 </Dialog>
@@ -93,11 +88,12 @@ class RoomForm extends React.Component {
     }
 }
 
-RoomForm.propTypes = {
+StudioForm.propTypes = {
     classes: PropTypes.object.isRequired,
     open: PropTypes.bool.isRequired,
-    room: PropTypes.object,
     handleClose: PropTypes.func.isRequired,
+    createStudio: PropTypes.func.isRequired,
+    navigateToStudio: PropTypes.func.isRequired,
 };
 
-export default withStyles(styles)(RoomForm);
+export default withStyles(styles)(StudioForm);

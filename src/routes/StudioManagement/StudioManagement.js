@@ -5,6 +5,8 @@ import PropTypes from 'prop-types';
 import map from 'lodash/map';
 import reduce from 'lodash/reduce';
 import find from 'lodash/find';
+import keys from 'lodash/keys';
+import forEach from 'lodash/forEach';
 import { withStyles } from '@material-ui/core/styles';
 import styles from './styles';
 import MUIDataTable from 'mui-datatables';
@@ -37,7 +39,6 @@ const parseStudiosToTableData = studios =>
         studios,
         (acc, studio) => {
             const roomNames = map(studio.rooms, room => room.name).join(', ');
-            console.log('roomNames is :', roomNames);
             const result = [studio.id, studio.name, studio.address, roomNames];
             acc.push(result);
             return acc;
@@ -75,17 +76,43 @@ class StudioManagement extends Component {
         this.navigateToStudioDetail(find(studios, { id: rowData[0] }));
     };
 
+    //Having to delete each studio individually because prisma has a bug
+    //where cascading deletes don't work for deleteMany
+    //https://github.com/prisma/prisma/issues/3587
+    handleOnDeletePress = ids => () => {
+        const { deleteStudio } = this.props;
+
+        forEach(ids, id => {
+            deleteStudio({ variables: { id } });
+        });
+    };
+
+    renderSelectedToolbar = (selectedRows, displayData) => {
+        const selectedIndexes = keys(selectedRows.lookup);
+        const idsToDelete = reduce(
+            displayData,
+            (result, row, index) => {
+                if (selectedIndexes.includes(index.toString())) {
+                    result.push(row.data[0]);
+                    return result;
+                }
+                return result;
+            },
+            []
+        );
+        return (
+            <SelectedToolbar
+                handleOnDeletePress={this.handleOnDeletePress(idsToDelete)}
+            />
+        );
+    };
+
     render() {
-        const { studios } = this.props;
+        const { studios, createStudio } = this.props;
         const options = {
             responsive: 'scroll',
             onRowClick: this.handleNavigateToStudioDetail,
-            customToolbarSelect: (selectedRows, displayData) => (
-                <SelectedToolbar
-                    selectedRows={selectedRows}
-                    displayData={displayData}
-                />
-            ),
+            customToolbarSelect: this.renderSelectedToolbar,
         };
         return (
             <Fragment>
@@ -102,6 +129,7 @@ class StudioManagement extends Component {
                     open={this.state.open}
                     handleClose={this.handleClose}
                     navigateToStudioDetail={this.navigateToStudioDetail}
+                    createStudio={createStudio}
                 />
                 <MUIDataTable
                     title={'Studios'}
@@ -117,6 +145,8 @@ class StudioManagement extends Component {
 StudioManagement.propTypes = {
     classes: PropTypes.object.isRequired,
     studios: PropTypes.array.isRequired,
+    deleteStudio: PropTypes.func.isRequired,
+    createStudio: PropTypes.func.isRequired,
 };
 
 export default compose(

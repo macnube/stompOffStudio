@@ -1,4 +1,5 @@
 import React from 'react';
+import { parse } from 'query-string';
 import { Redirect } from 'react-router-dom';
 import { Query } from 'react-apollo';
 import gql from 'graphql-tag';
@@ -20,12 +21,10 @@ export const GET_STUDIO = gql`
 `;
 
 const StudioDetailContainer = ({ location }) => {
-    if (location && location.state) {
+    const params = parse(location.search);
+    if (params.id) {
         return (
-            <Query
-                query={GET_STUDIO}
-                variables={{ id: location.state.studioId }}
-            >
+            <Query query={GET_STUDIO} variables={{ id: params.id }}>
                 {({ loading, error, data }) => {
                     if (loading) return null;
                     if (error) return `Error: ${error}`;

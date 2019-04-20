@@ -19,10 +19,9 @@ class RoomForm extends React.Component {
 
     componentDidUpdate() {
         const { room } = this.props;
-        console.log('room is: ', room);
         if (room && room.id !== this.state.id) {
             const { id, name, capacity } = room;
-            this.setState({
+            return this.setState({
                 id,
                 name,
                 capacity,
@@ -40,19 +39,6 @@ class RoomForm extends React.Component {
         });
     };
 
-    handleCreate = () => {
-        const { studioId, createRoom } = this.props;
-        const { name, capacity } = this.state;
-        createRoom({
-            variables: {
-                name,
-                capacity,
-                studioId,
-            },
-        });
-        this.clearForm();
-    };
-
     clearForm = () => {
         this.setState({
             id: '',
@@ -62,7 +48,7 @@ class RoomForm extends React.Component {
     };
 
     render() {
-        const { classes, open, handleClose, room } = this.props;
+        const { classes, open, handleClose, handleCreate, room } = this.props;
         const { name, capacity } = this.state;
         return (
             <div>
@@ -101,7 +87,11 @@ class RoomForm extends React.Component {
                             Cancel
                         </Button>
                         <Button
-                            onClick={room ? () => null : this.handleCreate}
+                            onClick={
+                                room
+                                    ? () => null
+                                    : () => handleCreate(name, capacity)
+                            }
                             color="primary"
                         >
                             {room ? 'Save' : 'Create'}
@@ -118,8 +108,7 @@ RoomForm.propTypes = {
     open: PropTypes.bool.isRequired,
     room: PropTypes.object,
     handleClose: PropTypes.func.isRequired,
-    studioId: PropTypes.string.isRequired,
-    createRoom: PropTypes.func.isRequired,
+    handleCreate: PropTypes.func.isRequired,
 };
 
 export default withStyles(styles)(RoomForm);

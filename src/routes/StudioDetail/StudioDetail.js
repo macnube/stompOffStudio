@@ -1,6 +1,8 @@
 import React, { Component, Fragment } from 'react';
 import find from 'lodash/find';
 import reduce from 'lodash/reduce';
+import keys from 'lodash/keys';
+import forEach from 'lodash/forEach';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import styles from './styles';
@@ -9,11 +11,17 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
-import { ContentToolbar } from 'components';
+import { ContentToolbar, SelectedDeleteToolbar } from 'components';
 import CustomToolbar from './CustomToolbar';
-import RoomForm from './RoomForm/RoomFormContainer';
+import RoomForm from './RoomForm';
 
 const columns = [
+    {
+        name: 'ID',
+        options: {
+            display: 'false',
+        },
+    },
     {
         name: 'Name',
     },
@@ -26,8 +34,7 @@ const convertRoomDataToArray = rooms =>
     reduce(
         rooms,
         (acc, c) => {
-            console.log('room is: ', c);
-            acc.push([c.name, c.capacity]);
+            acc.push([c.id, c.name, c.capacity]);
             return acc;
         },
         []
@@ -38,21 +45,18 @@ class StudioDetail extends Component {
         id: '',
         name: '',
         address: '',
-        rooms: [],
         open: false,
         selectedRoomId: null,
     };
 
     componentDidMount() {
         const { studio } = this.props;
-        console.log('studio is: ', studio);
         if (studio) {
-            const { id, name, address, rooms } = studio;
+            const { id, name, address } = studio;
             this.setState({
                 id,
                 name,
                 address,
-                rooms,
             });
         }
     }
@@ -70,10 +74,10 @@ class StudioDetail extends Component {
     };
 
     handleClose = onClose => {
+        this.setState({ open: false, selectedRoomId: null });
         if (onClose) {
             onClose();
         }
-        this.setState({ open: false, selectedRoomId: null });
     };
 
     getMuiTheme = () =>
@@ -87,21 +91,58 @@ class StudioDetail extends Component {
             },
         });
 
+    handleOnDeleteRoomsPress = ids => () => {
+        const { deleteRoom } = this.props;
+
+        forEach(ids, id => {
+            deleteRoom({ variables: { id } });
+        });
+    };
+
+    handleCreateRoom = (name, capacity) => {
+        this.props.createRoom({
+            variables: {
+                name,
+                capacity,
+                studioId: this.state.id,
+            },
+        });
+        this.handleClose();
+    };
+
+    renderSelectedToolbar = (selectedRows, displayData) => {
+        const selectedIndexes = keys(selectedRows.lookup);
+        const idsToDelete = reduce(
+            displayData,
+            (result, row, index) => {
+                if (selectedIndexes.includes(index.toString())) {
+                    result.push(row.data[0]);
+                    return result;
+                }
+                return result;
+            },
+            []
+        );
+        return (
+            <SelectedDeleteToolbar
+                handleOnDeletePress={this.handleOnDeleteRoomsPress(idsToDelete)}
+            />
+        );
+    };
+
     render() {
         const options = {
             responsive: 'scroll',
             filter: true,
-            selectableRows: false,
             filterType: 'checkbox',
             onRowClick: this.handleRoomClick,
             customToolbar: () => (
                 <CustomToolbar handleAddRoomPress={this.handleClickOpen} />
             ),
+            customToolbarSelect: this.renderSelectedToolbar,
         };
-        const { classes } = this.props;
-        const { name, address, rooms, open, selectedRoomId, id } = this.state;
-        console.log('rooms is: ', rooms);
-        console.log('roomId is: ', selectedRoomId);
+        const { classes, studio } = this.props;
+        const { name, address, open, selectedRoomId, id } = this.state;
         return (
             <Fragment>
                 <ContentToolbar>
@@ -119,8 +160,8 @@ class StudioDetail extends Component {
                 <RoomForm
                     open={open}
                     handleClose={this.handleClose}
-                    studioId={id}
-                    room={find(rooms, { id: selectedRoomId })}
+                    handleCreate={this.handleCreateRoom}
+                    room={find(studio.rooms, { id: selectedRoomId })}
                 />
                 <Paper>
                     <form className={classes.topForm}>
@@ -159,6 +200,9 @@ class StudioDetail extends Component {
 
 StudioDetail.propTypes = {
     classes: PropTypes.object.isRequired,
+    studio: PropTypes.object.isRequired,
+    deleteRoom: PropTypes.func.isRequired,
+    createRoom: PropTypes.func.isRequired,
 };
 
 export default withStyles(styles)(StudioDetail);

@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import compose from 'recompose/compose';
-import { withRouter, Redirect } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import map from 'lodash/map';
 import reduce from 'lodash/reduce';
@@ -10,8 +10,7 @@ import forEach from 'lodash/forEach';
 import { withStyles } from '@material-ui/core/styles';
 import styles from './styles';
 import MUIDataTable from 'mui-datatables';
-import { ContentToolbar } from 'components';
-import SelectedToolbar from './SelectedToolbar';
+import { ContentToolbar, SelectedDeleteToolbar } from 'components';
 import StudioForm from './StudioForm';
 import AddIcon from '@material-ui/icons/Add';
 import Fab from '@material-ui/core/Fab';
@@ -65,9 +64,7 @@ class StudioManagement extends Component {
     navigateToStudioDetail = studio => {
         this.props.history.push({
             pathname: './studioDetail',
-            state: {
-                studioId: studio.id,
-            },
+            search: `id=${studio.id}`,
         });
     };
 
@@ -101,7 +98,7 @@ class StudioManagement extends Component {
             []
         );
         return (
-            <SelectedToolbar
+            <SelectedDeleteToolbar
                 handleOnDeletePress={this.handleOnDeletePress(idsToDelete)}
             />
         );

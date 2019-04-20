@@ -51,3 +51,13 @@ export const DELETE_ROOM = gql`
         }
     }
 `;
+
+export const UPDATE_ROOM = gql`
+    mutation StudioDetailUpdateRoom($id: ID!, $name: String!, $capacity: Int!) {
+        updateRoom(id: $id, name: $name, capacity: $capacity) {
+            id
+            name
+            capacity
+        }
+    }
+`;

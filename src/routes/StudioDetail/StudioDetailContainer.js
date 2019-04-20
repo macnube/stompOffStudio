@@ -5,7 +5,7 @@ import { Redirect } from 'react-router-dom';
 import { Query, Mutation } from 'react-apollo';
 import { Adopt } from 'react-adopt';
 
-import { GET_STUDIO, DELETE_ROOM, CREATE_ROOM } from './graphql';
+import { GET_STUDIO, DELETE_ROOM, CREATE_ROOM, UPDATE_ROOM } from './graphql';
 import StudioDetail from './StudioDetail';
 
 const getStudio = ({ render, id }) => (
@@ -40,8 +40,14 @@ const deleteRoom = ({ render, id }) => (
     </Mutation>
 );
 
-const createRoom = ({ render, id }) => (
+const createRoom = ({ render }) => (
     <Mutation mutation={CREATE_ROOM}>
+        {(mutation, result) => render({ mutation, result })}
+    </Mutation>
+);
+
+const updateRoom = ({ render }) => (
+    <Mutation mutation={UPDATE_ROOM}>
         {(mutation, result) => render({ mutation, result })}
     </Mutation>
 );
@@ -50,6 +56,7 @@ const mapper = {
     getStudio,
     deleteRoom,
     createRoom,
+    updateRoom,
 };
 
 const StudioDetailContainer = ({ location }) => {
@@ -59,14 +66,9 @@ const StudioDetailContainer = ({ location }) => {
             <Adopt mapper={mapper} id={params.id}>
                 {({
                     getStudio: { data, loading, error },
-                    deleteRoom: {
-                        mutation: deleteRoomMutation,
-                        result: deleteRoomResult,
-                    },
-                    createRoom: {
-                        mutation: createRoomMutation,
-                        result: createRoomResult,
-                    },
+                    deleteRoom: { mutation: deleteRoomMutation },
+                    createRoom: { mutation: createRoomMutation },
+                    updateRoom: { mutation: updateRoomMutation },
                 }) => {
                     if (loading) return null;
                     if (error) return `Error: ${error}`;
@@ -76,6 +78,7 @@ const StudioDetailContainer = ({ location }) => {
                             studio={data.studio}
                             deleteRoom={deleteRoomMutation}
                             createRoom={createRoomMutation}
+                            updateRoom={updateRoomMutation}
                         />
                     );
                 }}

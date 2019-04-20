@@ -110,6 +110,17 @@ class StudioDetail extends Component {
         this.handleClose();
     };
 
+    handleUpdateRoom = (id, name, capacity) => {
+        this.props.updateRoom({
+            variables: {
+                id,
+                name,
+                capacity,
+            },
+        });
+        this.handleClose();
+    };
+
     renderSelectedToolbar = (selectedRows, displayData) => {
         const selectedIndexes = keys(selectedRows.lookup);
         const idsToDelete = reduce(
@@ -161,6 +172,7 @@ class StudioDetail extends Component {
                     open={open}
                     handleClose={this.handleClose}
                     handleCreate={this.handleCreateRoom}
+                    handleUpdate={this.handleUpdateRoom}
                     room={find(studio.rooms, { id: selectedRoomId })}
                 />
                 <Paper>
@@ -203,6 +215,7 @@ StudioDetail.propTypes = {
     studio: PropTypes.object.isRequired,
     deleteRoom: PropTypes.func.isRequired,
     createRoom: PropTypes.func.isRequired,
+    updateRoom: PropTypes.func.isRequired,
 };
 
 export default withStyles(styles)(StudioDetail);

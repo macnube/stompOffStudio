@@ -48,8 +48,15 @@ class RoomForm extends React.Component {
     };
 
     render() {
-        const { classes, open, handleClose, handleCreate, room } = this.props;
-        const { name, capacity } = this.state;
+        const {
+            classes,
+            open,
+            handleClose,
+            handleCreate,
+            handleUpdate,
+            room,
+        } = this.props;
+        const { id, name, capacity } = this.state;
         return (
             <div>
                 <Dialog
@@ -89,7 +96,7 @@ class RoomForm extends React.Component {
                         <Button
                             onClick={
                                 room
-                                    ? () => null
+                                    ? () => handleUpdate(id, name, capacity)
                                     : () => handleCreate(name, capacity)
                             }
                             color="primary"
@@ -109,6 +116,7 @@ RoomForm.propTypes = {
     room: PropTypes.object,
     handleClose: PropTypes.func.isRequired,
     handleCreate: PropTypes.func.isRequired,
+    handleUpdate: PropTypes.func.isRequired,
 };
 
 export default withStyles(styles)(RoomForm);

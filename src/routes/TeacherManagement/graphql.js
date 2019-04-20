@@ -7,7 +7,7 @@ export const GET_TEACHERS = gql`
             name
             email
             mobile
-            classes {
+            courses {
                 id
                 name
             }
@@ -26,7 +26,7 @@ export const CREATE_TEACHER = gql`
             name
             email
             mobile
-            classes {
+            courses {
                 id
                 name
             }
@@ -46,7 +46,7 @@ export const UPDATE_TEACHER = gql`
             name
             email
             mobile
-            classes {
+            courses {
                 id
                 name
             }

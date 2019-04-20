@@ -7,6 +7,7 @@ export const GET_STUDIOS = gql`
             name
             address
             rooms {
+                id
                 name
                 capacity
             }

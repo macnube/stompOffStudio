@@ -22,12 +22,16 @@ export const ListItems = () => (
                 <ListItemText primary="Overview" />
             </ListItem>
         </NavLink>
-        <NavLink exact to="/classManagement" style={{ textDecoration: 'none' }}>
+        <NavLink
+            exact
+            to="/courseManagement"
+            style={{ textDecoration: 'none' }}
+        >
             <ListItem button>
                 <ListItemIcon>
                     <ClassIcon />
                 </ListItemIcon>
-                <ListItemText primary="Class Management" />
+                <ListItemText primary="Course Management" />
             </ListItem>
         </NavLink>
         <NavLink exact to="/cardManagement" style={{ textDecoration: 'none' }}>
@@ -71,7 +75,7 @@ export const ListItems = () => (
                 <ListItemIcon>
                     <AttendanceIcon />
                 </ListItemIcon>
-                <ListItemText primary="Class Attendance" />
+                <ListItemText primary="Course Attendance" />
             </ListItem>
         </NavLink>
         <NavLink

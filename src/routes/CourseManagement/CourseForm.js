@@ -1,10 +1,18 @@
+import 'date-fns';
 import React from 'react';
 import PropTypes from 'prop-types';
 import map from 'lodash/map';
-import filter from 'lodash/filter';
+import find from 'lodash/find';
+import toNumber from 'lodash/toNumber';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
+import {
+    MuiPickersUtilsProvider,
+    TimePicker,
+    DatePicker,
+} from 'material-ui-pickers';
+import DateFnsUtils from '@date-io/date-fns';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -12,72 +20,43 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import MenuItem from '@material-ui/core/MenuItem';
 import styles from './styles';
 
-const availableStudios = {
-    AKA: {
-        name: 'Akazienstrasse',
-        id: 'AKA',
-        rooms: [
-            { id: 'AKA_SR1', name: 'Big Room' },
-            { id: 'AKA_SR2', name: 'Small Room' },
-        ],
-    },
-    SOS: {
-        name: 'Stomp Off Studio',
-        id: 'SOS',
-        rooms: [
-            { id: 'SOS_SR1', name: 'Main Room' },
-            { id: 'SOS_SR2', name: 'Side Room' },
-            { id: 'SOS_SR3', name: 'Upstairs Room' },
-            { id: 'SOS_SR4', name: 'Downstairs Room' },
-        ],
-    },
-};
-const availableTeachers = {
-    LanaS: {
-        name: 'Lana Sedlmayr',
-        email: 'miss.lana.sedlmayr@gmail.com',
-    },
-    PaulM: {
-        name: 'Paul McCloud',
-        email: 'paul.mccloud@gmail.com',
-    },
-};
-
-class ClassForm extends React.Component {
-    availableStudios = null;
-    availableTeachers = null;
+class CourseForm extends React.Component {
     state = {
-        id: '',
         name: '',
+        description: '',
+        duration: 0,
+        startTime: new Date(),
         studioId: '',
         roomId: '',
-        startDate: '',
-        teachers: [],
-        maxStudents: null,
+        startDate: new Date(),
+        studentLimit: 0,
     };
 
-    componentDidMount = () => {
-        this.availableStudios = availableStudios;
-        this.availableTeachers = availableTeachers;
-    };
-
-    handleChange = name => event => {
-        this.setState({ [name]: event.target.value });
-    };
-
-    handleSelectClass = selectedId => {
-        const { selectedClasses } = this.state;
-        if (selectedClasses.includes(selectedId)) {
-            return this.setState({
-                selectedClasses: filter(
-                    selectedClasses,
-                    id => id !== selectedId
-                ),
-            });
+    handleChange = (name, isNumber = false) => event => {
+        let value = event.target.value;
+        if (isNumber) {
+            value = toNumber(value);
         }
+        this.setState({ [name]: value });
+    };
+
+    handleSetStartTime = startTime => {
         this.setState({
-            selectedClasses: selectedClasses.concat(selectedId),
+            startTime,
         });
+    };
+
+    handleSetStartDate = startDate => {
+        this.setState({
+            startDate,
+        });
+    };
+
+    handleCreateCourse = () => {
+        const { handleCreate } = this.props;
+        const { studioId, ...course } = this.state;
+        handleCreate(course);
+        // this.props.navigateToStudio(newStudio);
     };
 
     handleCreateClass = () => {};
@@ -86,36 +65,55 @@ class ClassForm extends React.Component {
         this.setState({
             id: '',
             name: '',
+            description: '',
+            duration: 0,
+            startTime: new Date(),
             studioId: '',
             roomId: '',
-            startDate: '',
-            teachers: [],
-            maxStudents: null,
+            startDate: new Date(),
+            studentLimit: 0,
         });
     };
 
     render() {
-        const { classes, open, handleClose } = this.props;
-        const { studioId, roomId } = this.state;
+        const { classes, studios, open, handleClose } = this.props;
+        const {
+            name,
+            description,
+            duration,
+            studioId,
+            roomId,
+            startDate,
+            startTime,
+            studentLimit,
+        } = this.state;
         return (
-            <div>
+            <MuiPickersUtilsProvider utils={DateFnsUtils}>
                 <Dialog
                     open={open}
                     onClose={handleClose.bind(null, this.clearForm)}
                     aria-labelledby="form-dialog-title"
                 >
                     <DialogTitle id="form-dialog-title">
-                        Create New Class
+                        Create New Course
                     </DialogTitle>
                     <DialogContent>
                         <TextField
                             id="standard-name"
                             label="Name"
-                            value={this.state.name}
+                            value={name}
                             className={classes.textField}
                             onChange={this.handleChange('name')}
                             margin="normal"
-                            fullWidth
+                            autoFocus
+                        />
+                        <TextField
+                            id="standard-name"
+                            label="description"
+                            value={description}
+                            className={classes.textField}
+                            onChange={this.handleChange('description')}
+                            margin="normal"
                         />
                         <TextField
                             id="standard-select-studio-native"
@@ -126,7 +124,7 @@ class ClassForm extends React.Component {
                             onChange={this.handleChange('studioId')}
                             margin="normal"
                         >
-                            {map(this.availableStudios, s => (
+                            {map(studios, s => (
                                 <MenuItem key={s.id} value={s.id}>
                                     {s.name}
                                 </MenuItem>
@@ -144,7 +142,7 @@ class ClassForm extends React.Component {
                         >
                             {studioId &&
                                 map(
-                                    this.availableStudios[studioId].rooms,
+                                    find(studios, { id: studioId }).rooms,
                                     r => (
                                         <MenuItem key={r.id} value={r.id}>
                                             {r.name}
@@ -152,11 +150,26 @@ class ClassForm extends React.Component {
                                     )
                                 )}
                         </TextField>
-                        <TextField
-                            id="date"
+                        <DatePicker
+                            margin="normal"
                             label="Start Date"
-                            type="date"
-                            onChange={this.handleChange('startDate')}
+                            value={startDate}
+                            className={classes.textField}
+                            onChange={this.handleSetStartDate}
+                        />
+                        <TimePicker
+                            margin="normal"
+                            label="Start Time"
+                            value={startTime}
+                            className={classes.textField}
+                            onChange={this.handleSetStartTime}
+                        />
+                        <TextField
+                            id="filled-number"
+                            label="Time Duration (min)"
+                            value={duration}
+                            onChange={this.handleChange('duration', true)}
+                            type="number"
                             className={classes.textField}
                             InputLabelProps={{
                                 shrink: true,
@@ -165,9 +178,9 @@ class ClassForm extends React.Component {
                         />
                         <TextField
                             id="filled-number"
-                            label="Max Students"
-                            value={this.state.maxStudents}
-                            onChange={this.handleChange('maxStudents')}
+                            label="Student Limit"
+                            value={studentLimit}
+                            onChange={this.handleChange('studentLimit', true)}
                             type="number"
                             className={classes.textField}
                             InputLabelProps={{
@@ -184,23 +197,24 @@ class ClassForm extends React.Component {
                             Cancel
                         </Button>
                         <Button
-                            onClick={handleClose.bind(null, this.clearForm)}
+                            onClick={this.handleCreateCourse}
                             color="primary"
                         >
                             Create
                         </Button>
                     </DialogActions>
                 </Dialog>
-            </div>
+            </MuiPickersUtilsProvider>
         );
     }
 }
 
-ClassForm.propTypes = {
+CourseForm.propTypes = {
     classes: PropTypes.object.isRequired,
     open: PropTypes.bool.isRequired,
-    student: PropTypes.object,
+    studios: PropTypes.array.isRequired,
+    handleCreate: PropTypes.func.isRequired,
     handleClose: PropTypes.func.isRequired,
 };
 
-export default withStyles(styles)(ClassForm);
+export default withStyles(styles)(CourseForm);

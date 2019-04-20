@@ -18,8 +18,8 @@ import NotificationsIcon from '@material-ui/icons/Notifications';
 import {
     Overview,
     Students,
-    ClassManagement,
-    ClassDetail,
+    CourseManagement,
+    CourseDetail,
     TeacherManagement,
     StudioManagement,
     StudioDetail,
@@ -117,10 +117,14 @@ class Dashboard extends React.Component {
                     <Route exact path="/students" component={Students} />
                     <Route
                         exact
-                        path="/classManagement"
-                        component={ClassManagement}
+                        path="/courseManagement"
+                        component={CourseManagement}
                     />
-                    <Route exact path="/classDetail" component={ClassDetail} />
+                    <Route
+                        exact
+                        path="/courseDetail"
+                        component={CourseDetail}
+                    />
                     <Route
                         exact
                         path="/teacherManagement"

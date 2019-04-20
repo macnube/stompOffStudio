@@ -29,19 +29,20 @@ class TeacherForm extends React.Component {
         name: '',
         mobile: '',
         email: '',
-        selectedClasses: [],
     };
 
     componentDidUpdate() {
         const { teacher } = this.props;
         if (teacher && teacher.id !== this.state.id) {
-            this.setState({
-                id: teacher.id,
-                name: teacher.name,
-                mobile: teacher.mobile,
-                email: teacher.email,
-                selectedClasses: teacher.classes,
+            const { id, name, mobile, email } = teacher;
+            return this.setState({
+                id: id,
+                name: name,
+                mobile: mobile,
+                email: email,
             });
+        } else if (this.state.id && !teacher) {
+            this.clearForm();
         }
     }
 
@@ -49,20 +50,20 @@ class TeacherForm extends React.Component {
         this.setState({ [name]: event.target.value });
     };
 
-    handleSelectClass = selectedId => {
-        const { selectedClasses } = this.state;
-        if (selectedClasses.includes(selectedId)) {
-            return this.setState({
-                selectedClasses: filter(
-                    selectedClasses,
-                    id => id !== selectedId
-                ),
-            });
-        }
-        this.setState({
-            selectedClasses: selectedClasses.concat(selectedId),
-        });
-    };
+    // handleSelectClass = selectedId => {
+    //     const { selectedClasses } = this.state;
+    //     if (selectedClasses.includes(selectedId)) {
+    //         return this.setState({
+    //             selectedClasses: filter(
+    //                 selectedClasses,
+    //                 id => id !== selectedId
+    //             ),
+    //         });
+    //     }
+    //     this.setState({
+    //         selectedClasses: selectedClasses.concat(selectedId),
+    //     });
+    // };
 
     clearForm = () => {
         this.setState({
@@ -70,12 +71,19 @@ class TeacherForm extends React.Component {
             name: '',
             mobile: '',
             email: '',
-            selectedClasses: [],
         });
     };
 
     render() {
-        const { classes, open, handleClose, teacher } = this.props;
+        const {
+            classes,
+            open,
+            handleClose,
+            handleCreate,
+            handleUpdate,
+            teacher,
+        } = this.props;
+        const { id, name, email, mobile } = this.state;
         return (
             <div>
                 <Dialog
@@ -94,13 +102,13 @@ class TeacherForm extends React.Component {
                             value={this.state.name}
                             onChange={this.handleChange('name')}
                             margin="normal"
+                            autoFocus={true}
                         />
                         <TextField
                             id="standard-number"
                             label="Mobile Number"
                             value={this.state.mobile}
                             onChange={this.handleChange('mobile')}
-                            type="number"
                             className={classes.textField}
                             margin="normal"
                         />
@@ -113,33 +121,6 @@ class TeacherForm extends React.Component {
                             className={classes.emailField}
                             type="email"
                         />
-                        <FormControl
-                            component="fieldset"
-                            className={classes.formControl}
-                            margin="normal"
-                        >
-                            <FormLabel component="legend">
-                                Assign To Class
-                            </FormLabel>
-                            <FormGroup>
-                                {map(availableClasses, c => (
-                                    <FormControlLabel
-                                        key={c.id}
-                                        control={
-                                            <Checkbox
-                                                checked={this.state.selectedClasses.includes(
-                                                    c.id
-                                                )}
-                                                onChange={() =>
-                                                    this.handleSelectClass(c.id)
-                                                }
-                                            />
-                                        }
-                                        label={c.name}
-                                    />
-                                ))}
-                            </FormGroup>
-                        </FormControl>
                     </DialogContent>
                     <DialogActions>
                         <Button
@@ -149,7 +130,18 @@ class TeacherForm extends React.Component {
                             Cancel
                         </Button>
                         <Button
-                            onClick={handleClose.bind(null, this.clearForm)}
+                            onClick={
+                                teacher
+                                    ? () =>
+                                          handleUpdate(
+                                              id,
+                                              name,
+                                              email,
+                                              mobile,
+                                              []
+                                          )
+                                    : () => handleCreate(name, email, mobile)
+                            }
                             color="primary"
                         >
                             {teacher ? 'Save' : 'Create'}
@@ -166,6 +158,8 @@ TeacherForm.propTypes = {
     open: PropTypes.bool.isRequired,
     teacher: PropTypes.object,
     handleClose: PropTypes.func.isRequired,
+    handleCreate: PropTypes.func.isRequired,
+    handleUpdate: PropTypes.func.isRequired,
 };
 
 export default withStyles(styles)(TeacherForm);

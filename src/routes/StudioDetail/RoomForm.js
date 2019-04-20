@@ -75,6 +75,7 @@ class RoomForm extends React.Component {
                             value={name}
                             onChange={this.handleChange('name')}
                             margin="normal"
+                            autoFocus={true}
                         />
                         <TextField
                             id="standard-number"

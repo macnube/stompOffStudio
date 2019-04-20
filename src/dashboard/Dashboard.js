@@ -20,7 +20,7 @@ import {
     Students,
     ClassManagement,
     ClassDetail,
-    Teachers,
+    TeacherManagement,
     StudioManagement,
     StudioDetail,
 } from 'routes';
@@ -121,7 +121,11 @@ class Dashboard extends React.Component {
                         component={ClassManagement}
                     />
                     <Route exact path="/classDetail" component={ClassDetail} />
-                    <Route exact path="/teachers" component={Teachers} />
+                    <Route
+                        exact
+                        path="/teacherManagement"
+                        component={TeacherManagement}
+                    />
                     <Route
                         exact
                         path="/studioManagement"

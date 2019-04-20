@@ -46,7 +46,11 @@ export const ListItems = () => (
                 <ListItemText primary="Students" />
             </ListItem>
         </NavLink>
-        <NavLink exact to="/teachers" style={{ textDecoration: 'none' }}>
+        <NavLink
+            exact
+            to="/teacherManagement"
+            style={{ textDecoration: 'none' }}
+        >
             <ListItem button>
                 <ListItemIcon>
                     <TeacherIcon />

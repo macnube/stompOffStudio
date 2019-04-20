@@ -5,13 +5,25 @@ import { Redirect } from 'react-router-dom';
 import { Query, Mutation } from 'react-apollo';
 import { Adopt } from 'react-adopt';
 
-import { GET_STUDIO, DELETE_ROOM, CREATE_ROOM, UPDATE_ROOM } from './graphql';
+import {
+    GET_STUDIO,
+    DELETE_ROOM,
+    CREATE_ROOM,
+    UPDATE_ROOM,
+    UPDATE_STUDIO,
+} from './graphql';
 import StudioDetail from './StudioDetail';
 
 const getStudio = ({ render, id }) => (
     <Query query={GET_STUDIO} variables={{ id }}>
         {render}
     </Query>
+);
+
+const updateStudio = ({ render }) => (
+    <Mutation mutation={UPDATE_STUDIO}>
+        {(mutation, result) => render({ mutation, result })}
+    </Mutation>
 );
 
 const deleteRoom = ({ render, id }) => (
@@ -57,6 +69,7 @@ const mapper = {
     deleteRoom,
     createRoom,
     updateRoom,
+    updateStudio,
 };
 
 const StudioDetailContainer = ({ location }) => {
@@ -69,6 +82,7 @@ const StudioDetailContainer = ({ location }) => {
                     deleteRoom: { mutation: deleteRoomMutation },
                     createRoom: { mutation: createRoomMutation },
                     updateRoom: { mutation: updateRoomMutation },
+                    updateStudio: { mutation: updateStudioMutation },
                 }) => {
                     if (loading) return null;
                     if (error) return `Error: ${error}`;
@@ -79,6 +93,7 @@ const StudioDetailContainer = ({ location }) => {
                             deleteRoom={deleteRoomMutation}
                             createRoom={createRoomMutation}
                             updateRoom={updateRoomMutation}
+                            updateStudio={updateStudioMutation}
                         />
                     );
                 }}

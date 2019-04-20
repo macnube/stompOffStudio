@@ -1,4 +1,6 @@
 import React, { Component, Fragment } from 'react';
+import compose from 'recompose/compose';
+import { withRouter } from 'react-router-dom';
 import find from 'lodash/find';
 import reduce from 'lodash/reduce';
 import keys from 'lodash/keys';
@@ -47,6 +49,7 @@ class StudioDetail extends Component {
         address: '',
         open: false,
         selectedRoomId: null,
+        canSave: false,
     };
 
     componentDidMount() {
@@ -62,7 +65,7 @@ class StudioDetail extends Component {
     }
 
     handleChange = name => event => {
-        this.setState({ [name]: event.target.value });
+        this.setState({ [name]: event.target.value, canSave: true });
     };
 
     handleClickOpen = () => {
@@ -110,6 +113,21 @@ class StudioDetail extends Component {
         this.handleClose();
     };
 
+    handleUpdateStudio = () => {
+        const { id, name, address } = this.state;
+        console.log('address is: ', address);
+        this.props.updateStudio({
+            variables: {
+                id,
+                name,
+                address,
+            },
+        });
+        this.setState({
+            canSave: false,
+        });
+    };
+
     handleUpdateRoom = (id, name, capacity) => {
         this.props.updateRoom({
             variables: {
@@ -141,6 +159,12 @@ class StudioDetail extends Component {
         );
     };
 
+    navigateToStudioManagement = () => {
+        this.props.history.push({
+            pathname: './studioManagement',
+        });
+    };
+
     render() {
         const options = {
             responsive: 'scroll',
@@ -153,17 +177,23 @@ class StudioDetail extends Component {
             customToolbarSelect: this.renderSelectedToolbar,
         };
         const { classes, studio } = this.props;
-        const { name, address, open, selectedRoomId, id } = this.state;
+        const { name, address, open, selectedRoomId, canSave } = this.state;
         return (
             <Fragment>
                 <ContentToolbar>
-                    <Button variant="contained" className={classes.button}>
+                    <Button
+                        variant="contained"
+                        className={classes.button}
+                        onClick={this.navigateToStudioManagement}
+                    >
                         Cancel
                     </Button>
                     <Button
                         variant="contained"
                         color="primary"
                         className={classes.button}
+                        disabled={!canSave}
+                        onClick={this.handleUpdateStudio}
                     >
                         Save
                     </Button>
@@ -216,6 +246,10 @@ StudioDetail.propTypes = {
     deleteRoom: PropTypes.func.isRequired,
     createRoom: PropTypes.func.isRequired,
     updateRoom: PropTypes.func.isRequired,
+    updateStudio: PropTypes.func.isRequired,
 };
 
-export default withStyles(styles)(StudioDetail);
+export default compose(
+    withRouter,
+    withStyles(styles)
+)(StudioDetail);

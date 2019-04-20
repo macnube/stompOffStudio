@@ -18,6 +18,20 @@ export const GET_STUDIO = gql`
     }
 `;
 
+export const UPDATE_STUDIO = gql`
+    mutation StudioDetailUpdateStudio(
+        $id: ID!
+        $name: String!
+        $address: String!
+    ) {
+        updateStudio(id: $id, name: $name, address: $address) {
+            id
+            name
+            address
+        }
+    }
+`;
+
 export const CREATE_ROOM = gql`
     mutation StudioDetailCreateRoom(
         $name: String!

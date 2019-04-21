@@ -4,17 +4,10 @@ import filter from 'lodash/filter';
 import { Query, Mutation } from 'react-apollo';
 import { Adopt } from 'react-adopt';
 
-import {
-    GET_COURSES,
-    DELETE_COURSE,
-    CREATE_COURSE,
-    GET_STUDIOS,
-} from './graphql';
+import { GET_COURSES, DELETE_COURSE, CREATE_COURSE } from './graphql';
 import CourseManagement from './CourseManagement';
 
 const getCourses = ({ render }) => <Query query={GET_COURSES}>{render}</Query>;
-
-const getStudios = ({ render }) => <Query query={GET_STUDIOS}>{render}</Query>;
 
 const deleteCourse = ({ render }) => (
     <Mutation
@@ -49,7 +42,6 @@ const createCourse = ({ render }) => (
 );
 
 const mapper = {
-    getStudios,
     getCourses,
     deleteCourse,
     createCourse,
@@ -58,7 +50,6 @@ const mapper = {
 const CourseManagementContainer = () => (
     <Adopt mapper={mapper}>
         {({
-            getStudios: { data: studiosData },
             getCourses: { data, loading, error },
             deleteCourse: { mutation: deleteCourseMutation },
             createCourse: {
@@ -70,7 +61,6 @@ const CourseManagementContainer = () => (
             if (error) return `Error: ${error}`;
             if (!data.courses) return `404: Session not found`;
             if (createCourseResult.data) {
-                console.log('createCourseResult is: ', createCourseResult);
                 return (
                     <Redirect
                         to={{
@@ -82,11 +72,8 @@ const CourseManagementContainer = () => (
                     />
                 );
             }
-            console.log('studiosData is: ', studiosData);
-            console.log('coursesData is: ', data);
             return (
                 <CourseManagement
-                    studios={studiosData.studios}
                     courses={data.courses}
                     deleteCourse={deleteCourseMutation}
                     createCourse={createCourseMutation}

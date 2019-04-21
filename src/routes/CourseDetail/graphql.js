@@ -1,22 +1,25 @@
 import gql from 'graphql-tag';
 
-export const GET_COURSES = gql`
-    query CourseManagementGetCourses {
-        courses {
+export const GET_COURSE = gql`
+    query CourseDetailGetCourse($id: ID!) {
+        course(id: $id) {
             id
             name
             description
             startDate
             startTime
             duration
+            studentLimit
             teachers {
                 id
                 name
+                email
             }
             courseStudents {
                 id
                 student {
                     id
+                    email
                     name
                 }
                 role
@@ -24,7 +27,6 @@ export const GET_COURSES = gql`
             courseHistory {
                 id
             }
-            studentLimit
             room {
                 id
                 name
@@ -38,8 +40,9 @@ export const GET_COURSES = gql`
     }
 `;
 
-export const CREATE_COURSE = gql`
-    mutation CourseManagementCreateCourse(
+export const UPDATE_COURSE = gql`
+    mutation CourseDetailUpdateCourse(
+        $id: ID!
         $name: String!
         $description: String
         $startDate: DateTime
@@ -48,7 +51,8 @@ export const CREATE_COURSE = gql`
         $studentLimit: Int
         $roomId: ID!
     ) {
-        createCourse(
+        updateCourse(
+            id: $id
             name: $name
             description: $description
             startDate: $startDate
@@ -63,35 +67,22 @@ export const CREATE_COURSE = gql`
             startDate
             startTime
             duration
-            teachers {
-                id
-                name
-            }
-            courseStudents {
-                id
-                student {
-                    id
-                    name
-                }
-                role
-            }
-            courseHistory {
-                id
-            }
             studentLimit
-            room {
-                id
-                name
-            }
+            roomId
         }
     }
 `;
 
-export const DELETE_COURSE = gql`
-    mutation CourseManagementDeleteCourse($id: ID!) {
-        deleteCourse(id: $id) {
+export const REMOVE_TEACHER_FROM_COURSE = gql`
+    mutation CourseDetailAddTeacherToCourse($id: ID!, $teacherId: ID!) {
+        removeTeacherFromCourse(id: $id, teacherId: $teacherId) {
             id
             name
+            teachers {
+                id
+                name
+                email
+            }
         }
     }
 `;

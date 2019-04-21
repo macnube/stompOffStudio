@@ -1,24 +1,24 @@
 import React from 'react';
-import keys from 'lodash/keys';
-import reduce from 'lodash/reduce';
 import PropTypes from 'prop-types';
+import reduce from 'lodash/reduce';
+import keys from 'lodash/keys';
 import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
-import TrashIcon from '@material-ui/icons/Delete';
+import AddIcon from '@material-ui/icons/Add';
 import { withStyles } from '@material-ui/core/styles';
 
 const defaultToolbarStyles = {
     iconButton: {},
 };
 
-const SelectedToolbar = ({
+const SelectedAddToolbar = ({
     classes,
-    children,
+    handleAddPress,
+    title,
     selectedRows,
     displayData,
-    handleOnDeletePress,
 }) => {
-    const idsToDelete = reduce(
+    const idsToAdd = reduce(
         displayData,
         (result, row, index) => {
             if (keys(selectedRows.lookup).includes(index.toString())) {
@@ -31,27 +31,26 @@ const SelectedToolbar = ({
     );
     return (
         <React.Fragment>
-            <Tooltip title={'Delete'}>
+            <Tooltip title={title}>
                 <IconButton
                     className={classes.iconButton}
-                    onClick={() => handleOnDeletePress(idsToDelete)}
+                    onClick={() => handleAddPress(idsToAdd)}
                 >
-                    <TrashIcon className={classes.deleteIcon} />
+                    <AddIcon className={classes.deleteIcon} />
                 </IconButton>
             </Tooltip>
-            {children}
         </React.Fragment>
     );
 };
 
-SelectedToolbar.propTypes = {
+SelectedAddToolbar.propTypes = {
     classes: PropTypes.object.isRequired,
-    children: PropTypes.node,
-    handleOnDeletePress: PropTypes.func.isRequired,
+    handleAddPress: PropTypes.func.isRequired,
+    title: PropTypes.string.isRequired,
     selectedRows: PropTypes.object.isRequired,
     displayData: PropTypes.array.isRequired,
 };
 
-export default withStyles(defaultToolbarStyles, { name: 'SelectedToolbar' })(
-    SelectedToolbar
+export default withStyles(defaultToolbarStyles, { name: 'SelectedAddToolbar' })(
+    SelectedAddToolbar
 );

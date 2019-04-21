@@ -1,17 +1,29 @@
-import React, { Component, Fragment } from 'react';
-import map from 'lodash/map';
-import filter from 'lodash/filter';
+import 'date-fns';
+import React, { Component } from 'react';
+import toNumber from 'lodash/toNumber';
 import reduce from 'lodash/reduce';
+import forEach from 'lodash/forEach';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import styles from './styles';
 import MUIDataTable from 'mui-datatables';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
-import MenuItem from '@material-ui/core/MenuItem';
 import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
-import { ContentToolbar } from 'components';
+import {
+    MuiPickersUtilsProvider,
+    TimePicker,
+    DatePicker,
+} from 'material-ui-pickers';
+import DateFnsUtils from '@date-io/date-fns';
+
+import styles from './styles';
+import {
+    ContentToolbar,
+    CustomAddToolbar,
+    SelectedDeleteToolbar,
+} from 'components';
+import AddTeacherForm from './AddTeacherForm';
 
 const columns = [
     {
@@ -28,137 +40,88 @@ const columns = [
     },
 ];
 
-const data = {
-    1: {
-        id: 1,
-        name: 'Paul McCloud',
-        email: 'paul.mccloud@gmail.com',
-        mobile: '17643311645',
-        classes: ['TueL3', 'ThuB2', 'ThuAJ2'],
-        status: 'Active',
-    },
-    2: {
-        id: 2,
-        name: 'Helge Berger',
-        email: 'lanabalboa.maki@mailhero.io',
-        mobile: '4915205780149',
-        classes: ['ThuB2'],
-        status: 'Inactive',
-    },
-    3: {
-        id: 3,
-        name: 'Benjamin Weitner',
-        email: 'benjamin-weitner@web.de',
-        mobile: '491799091735',
-        classes: ['TueL3', 'TueL2', 'ThuAJ2'],
-        status: 'Active',
-    },
-    4: {
-        id: 4,
-        name: 'Timm Gerber',
-        email: 'timm2202@gmx.net',
-        mobile: '1636523812',
-        classes: ['TueL2', 'ThuB2'],
-        status: 'Active',
-    },
-    5: {
-        id: 5,
-        name: 'Julia Küchle',
-        email: 'Juliakuechle@yahoo.de',
-        mobile: '17622600181',
-        classes: ['TueL2', 'ThuB2'],
-        status: 'Active',
-    },
-    6: {
-        id: 6,
-        name: 'Julia Fuhs',
-        email: 'Julia_Fuhs@hotmail.com',
-        mobile: '17620174245',
-        classes: ['ThuB2'],
-        status: 'Active',
-    },
-    7: {
-        id: 7,
-        name: 'Juliane Krüger',
-        email: 'juliane_krueger@freenet.de',
-        mobile: '1733517552',
-        classes: ['ThuB2', 'ThuAJ2'],
-        status: 'Active',
-    },
-    8: {
-        id: 8,
-        name: 'Agata Bilska',
-        email: 'bilska.ag@gmail.com',
-        mobile: '17699816083',
-        classes: ['ThuB2', 'TueL2'],
-        status: 'Active',
-    },
-    9: {
-        id: 9,
-        name: 'Tea Ghigo',
-        email: 'teaghigo@libero.it',
-        mobile: '17637597750',
-        classes: ['ThuB2', 'TueL3'],
-        status: 'Active',
-    },
-    10: {
-        id: 10,
-        name: 'Jim Liu',
-        email: 'jimmy.h.liu@gmail.com',
-        mobile: '49015901960810',
-        classes: ['ThuB2', 'ThuAJ2'],
-        status: 'Active',
-    },
-};
-
-const convertClassesDataToArray = classes =>
+const parseCourseStudentsToTableData = courseStudents =>
     reduce(
-        classes,
-        (acc, c) => {
-            acc.push(Object.values(c));
+        courseStudents,
+        (acc, student) => {
+            const result = [student.id, student.name, student.email];
+            acc.push(result);
             return acc;
         },
         []
     );
 
-class ClassDetail extends Component {
+const parseTeachersToTableData = teachers =>
+    reduce(
+        teachers,
+        (acc, teacher) => {
+            const result = [teacher.id, teacher.name, teacher.email];
+            acc.push(result);
+            return acc;
+        },
+        []
+    );
+
+class CourseDetail extends Component {
     state = {
         id: '',
         name: '',
-        studioId: '',
-        roomId: '',
-        startDate: '',
-        teachers: [],
-        maxStudents: null,
+        description: '',
+        duration: 0,
+        startTime: new Date(),
+        studioName: '',
+        roomName: '',
+        startDate: new Date(),
+        studentLimit: 0,
+        canSave: false,
+        openTeacherForm: false,
     };
 
     componentDidMount() {
-        const { location } = this.props;
-        console.log('location is: ', location);
-        if (location && location.state && location.state.selectedClass) {
+        const { course } = this.props;
+        if (course) {
             const {
                 id,
                 name,
-                studioId,
-                roomId,
+                description,
+                duration,
+                startTime,
+                room,
                 startDate,
-                teachers,
-                maxStudents,
-            } = location.state.selectedClass;
+                studentLimit,
+            } = course;
             this.setState({
                 id,
                 name,
-                studioId,
-                roomId,
+                description,
+                duration,
+                startTime,
+                roomName: room.name,
+                studioName: room.studio.name,
                 startDate,
-                teachers,
-                maxStudents,
+                studentLimit,
             });
         }
     }
 
-    handleChange = name => event => {
-        this.setState({ [name]: event.target.value });
+    handleChange = (name, isNumber = false) => event => {
+        let value = event.target.value;
+        if (isNumber) {
+            value = toNumber(value);
+        }
+        this.setState({ [name]: value, canSave: true });
+    };
+
+    handleSetStartTime = startTime => {
+        this.setState({
+            startTime,
+        });
+    };
+
+    handleSetStartDate = startDate => {
+        this.setState({
+            startDate,
+        });
     };
 
     getMuiTheme = () =>
@@ -172,23 +135,89 @@ class ClassDetail extends Component {
             },
         });
 
+    navigateToCourseManagement = () => {
+        this.props.history.push({
+            pathname: './courseManagement',
+        });
+    };
+
+    navigateToTeacherDetail = () => {
+        this.props.history.push({
+            pathname: './teacherManagement',
+        });
+    };
+
+    renderTeacherSelectedToolbar = (selectedRows, displayData) => (
+        <SelectedDeleteToolbar
+            selectedRows={selectedRows}
+            displayData={displayData}
+            handleOnDeletePress={this.handleOnDeleteTeachersPress}
+        />
+    );
+
+    handleClickAddTeacherOpen = () => {
+        this.setState({ openTeacherForm: true });
+    };
+
+    handleClose = () => {
+        this.setState({ openTeacherForm: false });
+    };
+
+    handleOnDeleteTeachersPress = ids => {
+        const { removeTeacherFromCourse } = this.props;
+
+        forEach(ids, teacherId => {
+            removeTeacherFromCourse({
+                variables: { id: this.state.id, teacherId },
+            });
+        });
+    };
+
     render() {
-        const options = {
+        const baseOptions = {
             responsive: 'scroll',
-            onRowClick: this.handleClassClick,
         };
-        const { classes } = this.props;
-        const { studioId, roomId } = this.state;
+        const teacherOptions = {
+            ...baseOptions,
+            onRowClick: this.navigateToTeacherDetail,
+            customToolbar: () => (
+                <CustomAddToolbar
+                    title={'Add Room'}
+                    handleAddPress={this.handleClickAddTeacherOpen}
+                />
+            ),
+            customToolbarSelect: this.renderTeacherSelectedToolbar,
+        };
+        const { classes, course } = this.props;
+        const {
+            id,
+            name,
+            description,
+            duration,
+            startTime,
+            roomName,
+            studioName,
+            startDate,
+            studentLimit,
+            canSave,
+            openTeacherForm,
+        } = this.state;
         return (
-            <Fragment>
+            <MuiPickersUtilsProvider utils={DateFnsUtils}>
                 <ContentToolbar>
-                    <Button variant="contained" className={classes.button}>
+                    <Button
+                        variant="contained"
+                        className={classes.button}
+                        onClick={this.navigateToCourseManagement}
+                    >
                         Cancel
                     </Button>
                     <Button
                         variant="contained"
                         color="primary"
                         className={classes.button}
+                        disabled={!canSave}
+                        onClick={this.handleUpdateStudio}
                     >
                         Save
                     </Button>
@@ -198,51 +227,55 @@ class ClassDetail extends Component {
                         <TextField
                             id="standard-name"
                             label="Name"
-                            value={this.state.name}
+                            value={name}
                             className={classes.textField}
                             onChange={this.handleChange('name')}
                             margin="normal"
                         />
                         <TextField
+                            id="standard-name"
+                            label="Description"
+                            value={description}
+                            className={classes.textField}
+                            onChange={this.handleChange('description')}
+                            margin="normal"
+                        />
+                        <TextField
                             id="standard-select-studio-native"
-                            select
-                            label="Select Studio"
-                            value={studioId}
+                            disabled
+                            label="Studio"
+                            value={studioName}
                             className={classes.textField}
-                            onChange={this.handleChange('studioId')}
                             margin="normal"
-                        >
-                            {map(this.availableStudios, s => (
-                                <MenuItem key={s.id} value={s.id}>
-                                    {s.name}
-                                </MenuItem>
-                            ))}
-                        </TextField>
+                        />
                         <TextField
-                            id="standard-select-room-native"
-                            select
-                            label="Select Room"
-                            value={roomId}
+                            id="standard-select-studio-native"
+                            disabled
+                            label="Room"
+                            value={roomName}
                             className={classes.textField}
-                            onChange={this.handleChange('roomId')}
                             margin="normal"
-                            disabled={!studioId}
-                        >
-                            {studioId &&
-                                map(
-                                    this.availableStudios[studioId].rooms,
-                                    r => (
-                                        <MenuItem key={r.id} value={r.id}>
-                                            {r.name}
-                                        </MenuItem>
-                                    )
-                                )}
-                        </TextField>
-                        <TextField
-                            id="date"
+                        />
+                        <DatePicker
+                            margin="normal"
                             label="Start Date"
-                            type="date"
-                            onChange={this.handleChange('startDate')}
+                            value={startDate}
+                            className={classes.textField}
+                            onChange={this.handleSetStartDate}
+                        />
+                        <TimePicker
+                            margin="normal"
+                            label="Start Time"
+                            value={startTime}
+                            className={classes.textField}
+                            onChange={this.handleSetStartTime}
+                        />
+                        <TextField
+                            id="filled-number"
+                            label="Time Duration (min)"
+                            value={duration}
+                            onChange={this.handleChange('duration', true)}
+                            type="number"
                             className={classes.textField}
                             InputLabelProps={{
                                 shrink: true,
@@ -251,9 +284,9 @@ class ClassDetail extends Component {
                         />
                         <TextField
                             id="filled-number"
-                            label="Max Students"
-                            value={this.state.maxStudents}
-                            onChange={this.handleChange('maxStudents')}
+                            label="Student Limit"
+                            value={studentLimit}
+                            onChange={this.handleChange('studentLimit', true)}
                             type="number"
                             className={classes.textField}
                             InputLabelProps={{
@@ -264,28 +297,48 @@ class ClassDetail extends Component {
                     </form>
                     <MuiThemeProvider theme={this.getMuiTheme()}>
                         <MUIDataTable
-                            title={'Leaders'}
-                            data={convertClassesDataToArray(data)}
+                            title={'Teachers'}
+                            data={parseTeachersToTableData(course.teachers)}
                             columns={columns}
-                            options={options}
+                            options={teacherOptions}
                         />
                     </MuiThemeProvider>
                     <MuiThemeProvider theme={this.getMuiTheme()}>
                         <MUIDataTable
                             title={'Leaders'}
-                            data={convertClassesDataToArray(data)}
+                            data={parseCourseStudentsToTableData(
+                                course.courseStudents
+                            )}
                             columns={columns}
-                            options={options}
+                            options={baseOptions}
                         />
                     </MuiThemeProvider>
+                    <MuiThemeProvider theme={this.getMuiTheme()}>
+                        <MUIDataTable
+                            title={'Followers'}
+                            data={parseCourseStudentsToTableData(
+                                course.courseStudents
+                            )}
+                            columns={columns}
+                            options={baseOptions}
+                        />
+                    </MuiThemeProvider>
+                    <AddTeacherForm
+                        open={openTeacherForm}
+                        handleClose={this.handleClose}
+                        courseId={id}
+                    />
                 </Paper>
-            </Fragment>
+            </MuiPickersUtilsProvider>
         );
     }
 }
 
-ClassDetail.propTypes = {
+CourseDetail.propTypes = {
     classes: PropTypes.object.isRequired,
+    course: PropTypes.object.isRequired,
+    updateCourse: PropTypes.func.isRequired,
+    removeTeacherFromCourse: PropTypes.func.isRequired,
 };
 
-export default withStyles(styles)(ClassDetail);
+export default withStyles(styles)(CourseDetail);

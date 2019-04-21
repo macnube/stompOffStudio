@@ -5,7 +5,6 @@ import reduce from 'lodash/reduce';
 import find from 'lodash/find';
 import map from 'lodash/map';
 import forEach from 'lodash/forEach';
-import keys from 'lodash/keys';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import styles from './styles';
@@ -52,7 +51,7 @@ const parseCoursesToTableData = courses =>
                 course.name,
                 course.room.studio.name,
                 course.room.name,
-                [],
+                teacherNames,
                 course.startDate,
             ];
             acc.push(result);
@@ -89,7 +88,7 @@ class CourseManagement extends Component {
         this.navigateToCourseDetail(find(courses, { id: rowData[0] }));
     };
 
-    handleOnDeletePress = ids => () => {
+    handleOnDeletePress = ids => {
         const { deleteCourse } = this.props;
 
         forEach(ids, id => {
@@ -106,25 +105,13 @@ class CourseManagement extends Component {
         this.handleClose();
     };
 
-    renderSelectedToolbar = (selectedRows, displayData) => {
-        const selectedIndexes = keys(selectedRows.lookup);
-        const idsToDelete = reduce(
-            displayData,
-            (result, row, index) => {
-                if (selectedIndexes.includes(index.toString())) {
-                    result.push(row.data[0]);
-                    return result;
-                }
-                return result;
-            },
-            []
-        );
-        return (
-            <SelectedDeleteToolbar
-                handleOnDeletePress={this.handleOnDeletePress(idsToDelete)}
-            />
-        );
-    };
+    renderSelectedToolbar = (selectedRows, displayData) => (
+        <SelectedDeleteToolbar
+            selectedRows={selectedRows}
+            displayData={displayData}
+            handleOnDeletePress={this.handleOnDeletePress}
+        />
+    );
 
     render() {
         const options = {
@@ -132,7 +119,7 @@ class CourseManagement extends Component {
             onRowClick: this.handleNavigateToClassDetail,
             customToolbarSelect: this.renderSelectedToolbar,
         };
-        const { courses, studios } = this.props;
+        const { courses } = this.props;
         return (
             <Fragment>
                 <ContentToolbar>
@@ -144,15 +131,12 @@ class CourseManagement extends Component {
                         <AddIcon />
                     </Fab>
                 </ContentToolbar>
-                {studios ? (
-                    <CourseForm
-                        open={this.state.open}
-                        handleClose={this.handleClose}
-                        navigateToCourseDetail={this.navigateToCourseDetail}
-                        handleCreate={this.handleCreateCourse}
-                        studios={studios}
-                    />
-                ) : null}
+                <CourseForm
+                    open={this.state.open}
+                    handleClose={this.handleClose}
+                    navigateToCourseDetail={this.navigateToCourseDetail}
+                    handleCreate={this.handleCreateCourse}
+                />
                 <MUIDataTable
                     title={'Course Overview'}
                     data={parseCoursesToTableData(courses)}
@@ -167,7 +151,6 @@ class CourseManagement extends Component {
 CourseManagement.propTypes = {
     classes: PropTypes.object.isRequired,
     courses: PropTypes.array.isRequired,
-    studios: PropTypes.array.isRequired,
     createCourse: PropTypes.func.isRequired,
     deleteCourse: PropTypes.func.isRequired,
 };

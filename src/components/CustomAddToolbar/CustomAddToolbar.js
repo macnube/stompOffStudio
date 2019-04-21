@@ -9,16 +9,16 @@ const defaultToolbarStyles = {
     iconButton: {},
 };
 
-class CustomToolbar extends React.Component {
+class CustomAddToolbar extends React.Component {
     render() {
-        const { classes, handleAddRoomPress } = this.props;
+        const { classes, handleAddPress, title } = this.props;
 
         return (
             <React.Fragment>
-                <Tooltip title={'Add Room'}>
+                <Tooltip title={title}>
                     <IconButton
                         className={classes.iconButton}
-                        onClick={handleAddRoomPress}
+                        onClick={handleAddPress}
                     >
                         <AddIcon className={classes.deleteIcon} />
                     </IconButton>
@@ -28,11 +28,12 @@ class CustomToolbar extends React.Component {
     }
 }
 
-CustomToolbar.propTypes = {
+CustomAddToolbar.propTypes = {
     classes: PropTypes.object.isRequired,
-    handleAddRoomPress: PropTypes.func.isRequired,
+    handleAddPress: PropTypes.func.isRequired,
+    title: PropTypes.string.isRequired,
 };
 
-export default withStyles(defaultToolbarStyles, { name: 'CustomToolbar' })(
-    CustomToolbar
+export default withStyles(defaultToolbarStyles, { name: 'CustomAddToolbar' })(
+    CustomAddToolbar
 );

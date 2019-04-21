@@ -5,7 +5,6 @@ import PropTypes from 'prop-types';
 import map from 'lodash/map';
 import reduce from 'lodash/reduce';
 import find from 'lodash/find';
-import keys from 'lodash/keys';
 import forEach from 'lodash/forEach';
 import { withStyles } from '@material-ui/core/styles';
 import styles from './styles';
@@ -76,7 +75,7 @@ class StudioManagement extends Component {
     //Having to delete each studio individually because prisma has a bug
     //where cascading deletes don't work for deleteMany
     //https://github.com/prisma/prisma/issues/3587
-    handleOnDeletePress = ids => () => {
+    handleOnDeletePress = ids => {
         const { deleteStudio } = this.props;
 
         forEach(ids, id => {
@@ -84,25 +83,13 @@ class StudioManagement extends Component {
         });
     };
 
-    renderSelectedToolbar = (selectedRows, displayData) => {
-        const selectedIndexes = keys(selectedRows.lookup);
-        const idsToDelete = reduce(
-            displayData,
-            (result, row, index) => {
-                if (selectedIndexes.includes(index.toString())) {
-                    result.push(row.data[0]);
-                    return result;
-                }
-                return result;
-            },
-            []
-        );
-        return (
-            <SelectedDeleteToolbar
-                handleOnDeletePress={this.handleOnDeletePress(idsToDelete)}
-            />
-        );
-    };
+    renderSelectedToolbar = (selectedRows, displayData) => (
+        <SelectedDeleteToolbar
+            selectedRows={selectedRows}
+            displayData={displayData}
+            handleOnDeletePress={this.handleOnDeletePress}
+        />
+    );
 
     render() {
         const { studios, createStudio } = this.props;

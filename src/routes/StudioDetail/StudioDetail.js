@@ -3,7 +3,6 @@ import compose from 'recompose/compose';
 import { withRouter } from 'react-router-dom';
 import find from 'lodash/find';
 import reduce from 'lodash/reduce';
-import keys from 'lodash/keys';
 import forEach from 'lodash/forEach';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
@@ -13,8 +12,11 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
-import { ContentToolbar, SelectedDeleteToolbar } from 'components';
-import CustomToolbar from './CustomToolbar';
+import {
+    ContentToolbar,
+    SelectedDeleteToolbar,
+    CustomAddToolbar,
+} from 'components';
 import RoomForm from './RoomForm';
 
 const columns = [
@@ -94,7 +96,7 @@ class StudioDetail extends Component {
             },
         });
 
-    handleOnDeleteRoomsPress = ids => () => {
+    handleOnDeleteRoomsPress = ids => {
         const { deleteRoom } = this.props;
 
         forEach(ids, id => {
@@ -115,7 +117,6 @@ class StudioDetail extends Component {
 
     handleUpdateStudio = () => {
         const { id, name, address } = this.state;
-        console.log('address is: ', address);
         this.props.updateStudio({
             variables: {
                 id,
@@ -139,25 +140,13 @@ class StudioDetail extends Component {
         this.handleClose();
     };
 
-    renderSelectedToolbar = (selectedRows, displayData) => {
-        const selectedIndexes = keys(selectedRows.lookup);
-        const idsToDelete = reduce(
-            displayData,
-            (result, row, index) => {
-                if (selectedIndexes.includes(index.toString())) {
-                    result.push(row.data[0]);
-                    return result;
-                }
-                return result;
-            },
-            []
-        );
-        return (
-            <SelectedDeleteToolbar
-                handleOnDeletePress={this.handleOnDeleteRoomsPress(idsToDelete)}
-            />
-        );
-    };
+    renderSelectedToolbar = (selectedRows, displayData) => (
+        <SelectedDeleteToolbar
+            selectedRows={selectedRows}
+            displayData={displayData}
+            handleOnDeletePress={this.handleOnDeleteRoomsPress}
+        />
+    );
 
     navigateToStudioManagement = () => {
         this.props.history.push({
@@ -172,7 +161,10 @@ class StudioDetail extends Component {
             filterType: 'checkbox',
             onRowClick: this.handleRoomClick,
             customToolbar: () => (
-                <CustomToolbar handleAddRoomPress={this.handleClickOpen} />
+                <CustomAddToolbar
+                    title={'Add Room'}
+                    handleAddPress={this.handleClickOpen}
+                />
             ),
             customToolbarSelect: this.renderSelectedToolbar,
         };

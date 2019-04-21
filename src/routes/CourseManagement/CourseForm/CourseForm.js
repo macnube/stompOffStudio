@@ -18,7 +18,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import MenuItem from '@material-ui/core/MenuItem';
-import styles from './styles';
+import styles from 'routes/CourseManagement/styles';
 
 class CourseForm extends React.Component {
     state = {

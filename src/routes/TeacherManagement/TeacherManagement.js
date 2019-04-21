@@ -3,7 +3,6 @@ import map from 'lodash/map';
 import reduce from 'lodash/reduce';
 import find from 'lodash/find';
 import forEach from 'lodash/forEach';
-import keys from 'lodash/keys';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import styles from './styles';
@@ -79,7 +78,7 @@ class TeacherManagement extends Component {
         this.setState({ selectedTeacherId: rowData[0], open: true });
     };
 
-    handleOnDeletePress = ids => () => {
+    handleOnDeletePress = ids => {
         const { deleteTeacher } = this.props;
 
         forEach(ids, id => {
@@ -111,25 +110,13 @@ class TeacherManagement extends Component {
         this.handleClose();
     };
 
-    renderSelectedToolbar = (selectedRows, displayData) => {
-        const selectedIndexes = keys(selectedRows.lookup);
-        const idsToDelete = reduce(
-            displayData,
-            (result, row, index) => {
-                if (selectedIndexes.includes(index.toString())) {
-                    result.push(row.data[0]);
-                    return result;
-                }
-                return result;
-            },
-            []
-        );
-        return (
-            <SelectedDeleteToolbar
-                handleOnDeletePress={this.handleOnDeletePress(idsToDelete)}
-            />
-        );
-    };
+    renderSelectedToolbar = (selectedRows, displayData) => (
+        <SelectedDeleteToolbar
+            selectedRows={selectedRows}
+            displayData={displayData}
+            handleOnDeletePress={this.handleOnDeletePress}
+        />
+    );
 
     render() {
         const options = {

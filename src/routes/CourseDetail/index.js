@@ -1,3 +1,3 @@
-import CourseDetail from './CourseDetail';
+import CourseDetailContainer from './CourseDetailContainer';
 
-export default CourseDetail;
+export default CourseDetailContainer;

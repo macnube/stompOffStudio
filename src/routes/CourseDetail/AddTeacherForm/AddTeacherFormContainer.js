@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Query, Mutation } from 'react-apollo';
 import { Adopt } from 'react-adopt';
 
@@ -20,7 +21,7 @@ const mapper = {
     addTeacherToCourse,
 };
 
-const AddTeacherFormContainer = props => (
+const AddTeacherFormContainer = ({ open, handleClose, courseId }) => (
     <Adopt mapper={mapper}>
         {({
             getTeachers: { data, loading, error },
@@ -35,8 +36,9 @@ const AddTeacherFormContainer = props => (
             if (addTeacherToCourseResult.data) {
                 return (
                     <AddTeacherForm
-                        {...props}
                         open={false}
+                        courseId={courseId}
+                        handleClose={handleClose}
                         addTeacherToCourse={addTeacherToCourseMutation}
                         teachers={data.teachers}
                     />
@@ -44,7 +46,9 @@ const AddTeacherFormContainer = props => (
             }
             return (
                 <AddTeacherForm
-                    {...props}
+                    open={open}
+                    handleClose={handleClose}
+                    courseId={courseId}
                     addTeacherToCourse={addTeacherToCourseMutation}
                     teachers={data.teachers}
                 />
@@ -52,5 +56,11 @@ const AddTeacherFormContainer = props => (
         }}
     </Adopt>
 );
+
+AddTeacherFormContainer.propTypes = {
+    open: PropTypes.bool.isRequired,
+    handleClose: PropTypes.func.isRequired,
+    courseId: PropTypes.string.isRequired,
+};
 
 export default AddTeacherFormContainer;

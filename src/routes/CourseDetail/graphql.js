@@ -49,7 +49,6 @@ export const UPDATE_COURSE = gql`
         $startTime: String
         $duration: Int
         $studentLimit: Int
-        $roomId: ID!
     ) {
         updateCourse(
             id: $id
@@ -59,7 +58,6 @@ export const UPDATE_COURSE = gql`
             startTime: $startTime
             duration: $duration
             studentLimit: $studentLimit
-            roomId: $roomId
         ) {
             id
             name
@@ -68,7 +66,6 @@ export const UPDATE_COURSE = gql`
             startTime
             duration
             studentLimit
-            roomId
         }
     }
 `;

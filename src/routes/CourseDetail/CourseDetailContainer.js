@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { parse } from 'query-string';
 import { Redirect } from 'react-router-dom';
 import { Query, Mutation } from 'react-apollo';
@@ -70,6 +71,10 @@ const CourseDetailContainer = ({ location }) => {
             }}
         />
     );
+};
+
+CourseDetailContainer.propTypes = {
+    location: PropTypes.object.isRequired,
 };
 
 export default CourseDetailContainer;

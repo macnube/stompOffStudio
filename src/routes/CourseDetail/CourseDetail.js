@@ -1,5 +1,7 @@
 import 'date-fns';
 import React, { Component } from 'react';
+import compose from 'recompose/compose';
+import { withRouter } from 'react-router-dom';
 import toNumber from 'lodash/toNumber';
 import reduce from 'lodash/reduce';
 import forEach from 'lodash/forEach';
@@ -141,7 +143,7 @@ class CourseDetail extends Component {
         });
     };
 
-    navigateToTeacherDetail = () => {
+    navigateToTeacherManagement = () => {
         this.props.history.push({
             pathname: './teacherManagement',
         });
@@ -173,13 +175,40 @@ class CourseDetail extends Component {
         });
     };
 
+    handleUpdateCourse = () => {
+        const { updateCourse } = this.props;
+        const {
+            id,
+            name,
+            description,
+            duration,
+            startTime,
+            studioName,
+            startDate,
+            studentLimit,
+        } = this.state;
+
+        updateCourse({
+            variables: {
+                id,
+                name,
+                description,
+                duration,
+                startTime,
+                studioName,
+                startDate,
+                studentLimit,
+            },
+        });
+    };
+
     render() {
         const baseOptions = {
             responsive: 'scroll',
         };
         const teacherOptions = {
             ...baseOptions,
-            onRowClick: this.navigateToTeacherDetail,
+            onRowClick: this.navigateToTeacherManagement,
             customToolbar: () => (
                 <CustomAddToolbar
                     title={'Add Room'}
@@ -217,7 +246,7 @@ class CourseDetail extends Component {
                         color="primary"
                         className={classes.button}
                         disabled={!canSave}
-                        onClick={this.handleUpdateStudio}
+                        onClick={this.handleUpdateCourse}
                     >
                         Save
                     </Button>
@@ -341,4 +370,7 @@ CourseDetail.propTypes = {
     removeTeacherFromCourse: PropTypes.func.isRequired,
 };
 
-export default withStyles(styles)(CourseDetail);
+export default compose(
+    withRouter,
+    withStyles(styles)
+)(CourseDetail);

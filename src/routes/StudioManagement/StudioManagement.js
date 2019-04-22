@@ -1,18 +1,16 @@
 import React, { Component, Fragment } from 'react';
-import compose from 'recompose/compose';
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import map from 'lodash/map';
 import reduce from 'lodash/reduce';
 import find from 'lodash/find';
 import forEach from 'lodash/forEach';
-import { withStyles } from '@material-ui/core/styles';
-import styles from './styles';
 import MUIDataTable from 'mui-datatables';
-import { ContentToolbar, SelectedDeleteToolbar } from 'components';
-import StudioForm from './StudioForm';
 import AddIcon from '@material-ui/icons/Add';
 import Fab from '@material-ui/core/Fab';
+
+import { ContentToolbar, SelectedDeleteToolbar } from 'components';
+import StudioForm from './StudioForm';
 
 const columns = [
     {
@@ -112,7 +110,6 @@ class StudioManagement extends Component {
                 <StudioForm
                     open={this.state.open}
                     handleClose={this.handleClose}
-                    navigateToStudioDetail={this.navigateToStudioDetail}
                     createStudio={createStudio}
                 />
                 <MUIDataTable
@@ -127,13 +124,10 @@ class StudioManagement extends Component {
 }
 
 StudioManagement.propTypes = {
-    classes: PropTypes.object.isRequired,
     studios: PropTypes.array.isRequired,
     deleteStudio: PropTypes.func.isRequired,
     createStudio: PropTypes.func.isRequired,
+    history: PropTypes.object.isRequired,
 };
 
-export default compose(
-    withRouter,
-    withStyles(styles)
-)(StudioManagement);
+export default withRouter(StudioManagement);

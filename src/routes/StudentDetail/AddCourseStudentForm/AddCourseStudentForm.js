@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import reduce from 'lodash/reduce';
 import filter from 'lodash/filter';
+import some from 'lodash/some';
 import forEach from 'lodash/forEach';
 import MUIDataTable from 'mui-datatables';
 
@@ -35,10 +36,13 @@ const columns = [
     },
 ];
 
-const parseCoursesToTableData = courses =>
+const parseCoursesToTableData = (courses, studentId) =>
     reduce(
         courses,
         (acc, course) => {
+            if (some(course.courseStudents, { student: { id: studentId } })) {
+                return acc;
+            }
             const {
                 id,
                 name,
@@ -75,15 +79,17 @@ class AddCourseStudentForm extends Component {
     //where cascading adds don't work for deleteMany
     //https://github.com/prisma/prisma/issues/3587
     handleAddAsRolePress = (ids, role) => {
-        const { createCourseStudent, studentId } = this.props;
+        const { createCourseStudent, studentId, handleClose } = this.props;
 
         forEach(ids, courseId => {
             createCourseStudent({ variables: { courseId, studentId, role } });
         });
+
+        handleClose();
     };
 
     render() {
-        const { courses, open, handleClose } = this.props;
+        const { courses, open, handleClose, studentId } = this.props;
         const options = {
             responsive: 'scroll',
             customToolbarSelect: (selectedRows, displayData) => (
@@ -102,7 +108,7 @@ class AddCourseStudentForm extends Component {
             >
                 <MUIDataTable
                     title={'Courses'}
-                    data={parseCoursesToTableData(courses)}
+                    data={parseCoursesToTableData(courses, studentId)}
                     columns={columns}
                     options={options}
                 />

@@ -30,25 +30,10 @@ const AddStudentsToCourseFormContainer = ({
     <Adopt mapper={mapper}>
         {({
             getStudents: { data, loading, error },
-            createCourseStudent: {
-                mutation: createCourseStudentMutation,
-                result: createCourseStudentResult,
-            },
+            createCourseStudent: { mutation: createCourseStudentMutation },
         }) => {
             if (loading) return null;
             if (error) return `Error: ${error}`;
-            if (createCourseStudentResult.data) {
-                return (
-                    <AddStudentsToCourseForm
-                        open={false}
-                        courseId={courseId}
-                        handleClose={handleClose}
-                        createCourseStudent={createCourseStudentMutation}
-                        students={data.students}
-                        title={title}
-                    />
-                );
-            }
             return (
                 <AddStudentsToCourseForm
                     open={open}
@@ -67,6 +52,7 @@ AddStudentsToCourseFormContainer.propTypes = {
     open: PropTypes.bool.isRequired,
     handleClose: PropTypes.func.isRequired,
     courseId: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
 };
 
 export default AddStudentsToCourseFormContainer;

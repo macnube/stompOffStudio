@@ -93,7 +93,6 @@ StudioForm.propTypes = {
     open: PropTypes.bool.isRequired,
     handleClose: PropTypes.func.isRequired,
     createStudio: PropTypes.func.isRequired,
-    navigateToStudio: PropTypes.func.isRequired,
 };
 
 export default withStyles(styles)(StudioForm);

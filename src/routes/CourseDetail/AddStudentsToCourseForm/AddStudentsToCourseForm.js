@@ -6,8 +6,7 @@ import some from 'lodash/some';
 import forEach from 'lodash/forEach';
 import MUIDataTable from 'mui-datatables';
 
-import SelectedAddCourseStudentToolbar from './SelectedAddCourseStudentToolbar';
-import { FullScreenDialog } from 'components';
+import { FullScreenDialog, SelectedAddToolbar } from 'components';
 
 const columns = [
     {
@@ -29,10 +28,7 @@ const parseStudentsToTableData = (students, courseId) =>
         students,
         (acc, student) => {
             console.log('student is: ', student);
-            console.log(
-                'some check: ',
-                some(student.courses, { course: { id: courseId } })
-            );
+            console.log('courseId is: ', courseId);
             if (some(student.courses, { course: { id: courseId } })) {
                 return acc;
             }
@@ -48,8 +44,8 @@ class AddStudentsToCourseForm extends Component {
     //Having to add each individually because prisma has a bug
     //where cascading adds don't work for deleteMany
     //https://github.com/prisma/prisma/issues/3587
-    handleAddAsRolePress = (ids, role) => {
-        const { createCourseStudent, courseId } = this.props;
+    handleAddAsRolePress = role => ids => {
+        const { createCourseStudent, courseId, handleClose } = this.props;
 
         forEach(ids, studentId => {
             createCourseStudent({
@@ -60,6 +56,7 @@ class AddStudentsToCourseForm extends Component {
                 },
             });
         });
+        handleClose();
     };
 
     render() {
@@ -67,10 +64,11 @@ class AddStudentsToCourseForm extends Component {
         const options = {
             responsive: 'scroll',
             customToolbarSelect: (selectedRows, displayData) => (
-                <SelectedAddCourseStudentToolbar
+                <SelectedAddToolbar
+                    title={'Add as Leader'}
                     selectedRows={selectedRows}
                     displayData={displayData}
-                    handleAddAsRolePress={this.handleAddAsRolePress}
+                    handleAddPress={this.handleAddAsRolePress('Leader')}
                 />
             ),
         };

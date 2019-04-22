@@ -13,6 +13,10 @@ export const GET_STUDENTS = gql`
                     id
                     name
                 }
+                student {
+                    id
+                    name
+                }
                 role
             }
             cards {

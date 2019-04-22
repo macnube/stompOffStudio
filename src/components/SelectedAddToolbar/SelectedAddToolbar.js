@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import reduce from 'lodash/reduce';
+import noop from 'lodash/noop';
 import keys from 'lodash/keys';
 import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
@@ -17,8 +18,10 @@ const SelectedAddToolbar = ({
     title,
     selectedRows,
     displayData,
+    buttonLabel = '',
+    renderChildren = noop,
 }) => {
-    const idsToAdd = reduce(
+    const selectedIds = reduce(
         displayData,
         (result, row, index) => {
             if (keys(selectedRows.lookup).includes(index.toString())) {
@@ -31,12 +34,14 @@ const SelectedAddToolbar = ({
     );
     return (
         <React.Fragment>
+            {renderChildren(selectedIds)}
             <Tooltip title={title}>
                 <IconButton
                     className={classes.iconButton}
-                    onClick={() => handleAddPress(idsToAdd)}
+                    onClick={() => handleAddPress(selectedIds)}
                 >
                     <AddIcon className={classes.deleteIcon} />
+                    {buttonLabel}
                 </IconButton>
             </Tooltip>
         </React.Fragment>
@@ -49,6 +54,8 @@ SelectedAddToolbar.propTypes = {
     title: PropTypes.string.isRequired,
     selectedRows: PropTypes.object.isRequired,
     displayData: PropTypes.array.isRequired,
+    buttonLabel: PropTypes.string,
+    renderChildren: PropTypes.func,
 };
 
 export default withStyles(defaultToolbarStyles, { name: 'SelectedAddToolbar' })(

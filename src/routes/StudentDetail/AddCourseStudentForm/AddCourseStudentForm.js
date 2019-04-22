@@ -1,0 +1,122 @@
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import reduce from 'lodash/reduce';
+import filter from 'lodash/filter';
+import forEach from 'lodash/forEach';
+import MUIDataTable from 'mui-datatables';
+
+import SelectedAddCourseStudentToolbar from './SelectedAddCourseStudentToolbar';
+import { FullScreenDialog } from 'components';
+
+const columns = [
+    {
+        name: 'ID',
+        options: {
+            display: 'false',
+        },
+    },
+    {
+        name: 'Name',
+    },
+    {
+        name: 'Start Time',
+    },
+    {
+        name: 'Duration',
+    },
+    {
+        name: '# of Leaders',
+    },
+    {
+        name: '# of Followers',
+    },
+    {
+        name: 'Student Limit',
+    },
+];
+
+const parseCoursesToTableData = courses =>
+    reduce(
+        courses,
+        (acc, course) => {
+            const {
+                id,
+                name,
+                startTime,
+                duration,
+                courseStudents,
+                studentLimit,
+            } = course;
+            const leaders = filter(
+                courseStudents,
+                courseStudent => courseStudent.role === 'Leader'
+            );
+            const followers = filter(
+                courseStudents,
+                courseStudent => courseStudent.role === 'Follower'
+            );
+            const result = [
+                id,
+                name,
+                startTime,
+                duration,
+                leaders.length,
+                followers.length,
+                studentLimit,
+            ];
+            acc.push(result);
+            return acc;
+        },
+        []
+    );
+
+class AddCourseStudentForm extends Component {
+    //Having to add each individually because prisma has a bug
+    //where cascading adds don't work for deleteMany
+    //https://github.com/prisma/prisma/issues/3587
+    handleAddAsRolePress = (ids, role) => {
+        const { createCourseStudent, studentId } = this.props;
+
+        forEach(ids, courseId => {
+            createCourseStudent({ variables: { courseId, studentId, role } });
+        });
+    };
+
+    render() {
+        const { courses, open, handleClose } = this.props;
+        const options = {
+            responsive: 'scroll',
+            customToolbarSelect: (selectedRows, displayData) => (
+                <SelectedAddCourseStudentToolbar
+                    selectedRows={selectedRows}
+                    displayData={displayData}
+                    handleAddAsRolePress={this.handleAddAsRolePress}
+                />
+            ),
+        };
+        return (
+            <FullScreenDialog
+                open={open}
+                title={'Add Student to Courses'}
+                handleClose={handleClose}
+            >
+                <MUIDataTable
+                    title={'Courses'}
+                    data={parseCoursesToTableData(courses)}
+                    columns={columns}
+                    options={options}
+                />
+            </FullScreenDialog>
+        );
+    }
+}
+
+AddCourseStudentForm.propTypes = {
+    open: PropTypes.bool.isRequired,
+    handleClose: PropTypes.func.isRequired,
+    courses: PropTypes.array.isRequired,
+    createCourseStudent: PropTypes.func.isRequired,
+    studentId: PropTypes.string.isRequired,
+};
+
+export default AddCourseStudentForm;

@@ -22,6 +22,9 @@ export const GET_COURSE = gql`
                     email
                     name
                 }
+                course {
+                    id
+                }
                 role
             }
             courseHistory {

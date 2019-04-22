@@ -51,6 +51,7 @@ const CourseDetailContainer = ({ location }) => {
                     if (loading) return null;
                     if (error) return `Error: ${error}`;
                     if (!data.course) return `Error: 404`;
+                    console.log('courseDetail data: ', data.course);
                     return (
                         <CourseDetail
                             course={data.course}

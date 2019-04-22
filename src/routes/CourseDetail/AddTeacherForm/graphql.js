@@ -23,17 +23,3 @@ export const ADD_TEACHER_TO_COURSE = gql`
         }
     }
 `;
-
-export const REMOVE_TEACHER_FROM_COURSE = gql`
-    mutation CourseDetailAddTeacherToCourse($id: ID!, $teacherId: ID!) {
-        removeTeacherFromCourse(id: $id, teacherId: $teacherId) {
-            id
-            name
-            teachers {
-                id
-                name
-                email
-            }
-        }
-    }
-`;

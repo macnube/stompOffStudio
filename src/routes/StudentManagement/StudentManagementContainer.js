@@ -65,6 +65,7 @@ const StudentManagementContainer = () => (
             if (loading) return null;
             if (error) return `Error: ${error}`;
             if (!data.students) return `404: Session not found`;
+            console.log('students are: ', data.students);
             // if (createStudentResult.data) {
             //     console.log('createStudentResult is: ', createStudentResult);
             //     return (

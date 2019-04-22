@@ -19,6 +19,9 @@ export const GET_COURSES = gql`
                     id
                     name
                 }
+                course {
+                    id
+                }
                 role
             }
             courseHistory {

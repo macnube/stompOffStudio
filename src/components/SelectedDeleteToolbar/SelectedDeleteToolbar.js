@@ -37,7 +37,6 @@ const SelectedDeleteToolbar = ({
 };
 
 SelectedDeleteToolbar.propTypes = {
-    classes: PropTypes.object.isRequired,
     renderChildren: PropTypes.func,
     handleOnDeletePress: PropTypes.func.isRequired,
     selectedRows: PropTypes.object.isRequired,

@@ -17,6 +17,7 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import {
     Overview,
+    StudentDetail,
     StudentManagement,
     CourseManagement,
     CourseDetail,
@@ -118,6 +119,11 @@ class Dashboard extends React.Component {
                         exact
                         path="/studentManagement"
                         component={StudentManagement}
+                    />
+                    <Route
+                        exact
+                        path="/studentDetail"
+                        component={StudentDetail}
                     />
                     <Route
                         exact

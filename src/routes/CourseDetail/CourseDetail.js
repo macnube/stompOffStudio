@@ -4,6 +4,7 @@ import compose from 'recompose/compose';
 import { withRouter } from 'react-router-dom';
 import toNumber from 'lodash/toNumber';
 import reduce from 'lodash/reduce';
+import filter from 'lodash/filter';
 import forEach from 'lodash/forEach';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
@@ -42,11 +43,12 @@ const columns = [
     },
 ];
 
-const parseCourseStudentsToTableData = courseStudents =>
+const parseCourseStudentsToTableData = (courseStudents, role) =>
     reduce(
-        courseStudents,
-        (acc, student) => {
-            const result = [student.id, student.name, student.email];
+        filter(courseStudents, courseStudent => courseStudent.role === role),
+        (acc, courseStudent) => {
+            const { id, name, email } = courseStudent.student;
+            const result = [id, name, email];
             acc.push(result);
             return acc;
         },
@@ -336,7 +338,8 @@ class CourseDetail extends Component {
                         <MUIDataTable
                             title={'Leaders'}
                             data={parseCourseStudentsToTableData(
-                                course.courseStudents
+                                course.courseStudents,
+                                'Leader'
                             )}
                             columns={columns}
                             options={baseOptions}
@@ -346,7 +349,8 @@ class CourseDetail extends Component {
                         <MUIDataTable
                             title={'Followers'}
                             data={parseCourseStudentsToTableData(
-                                course.courseStudents
+                                course.courseStudents,
+                                'Follower'
                             )}
                             columns={columns}
                             options={baseOptions}

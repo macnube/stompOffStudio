@@ -17,7 +17,7 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import {
     Overview,
-    Students,
+    StudentManagement,
     CourseManagement,
     CourseDetail,
     TeacherManagement,
@@ -114,7 +114,11 @@ class Dashboard extends React.Component {
                 <main className={classes.content}>
                     <div className={classes.appBarSpacer} />
                     <Route exact path="/overview" component={Overview} />
-                    <Route exact path="/students" component={Students} />
+                    <Route
+                        exact
+                        path="/studentManagement"
+                        component={StudentManagement}
+                    />
                     <Route
                         exact
                         path="/courseManagement"

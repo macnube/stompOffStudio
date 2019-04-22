@@ -1,21 +1,21 @@
 import React, { Component, Fragment } from 'react';
+import compose from 'recompose/compose';
+import { withRouter } from 'react-router-dom';
 import map from 'lodash/map';
 import reduce from 'lodash/reduce';
+import find from 'lodash/find';
+import forEach from 'lodash/forEach';
+import values from 'lodash/values';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import styles from './styles';
 import MUIDataTable from 'mui-datatables';
-import StudentForm from './StudentForm';
 import AddIcon from '@material-ui/icons/Add';
 import Fab from '@material-ui/core/Fab';
-import { ContentToolbar, CustomEmailToolbar } from 'components';
 
-const availableClasses = {
-    TueL2: { name: 'Tues - Lindy Hop II', id: 'TueL2' },
-    ThuB2: { name: 'Thu - Balboa II', id: 'ThuB2' },
-    TueL3: { name: 'Tues - Lindy Hop III', id: 'TueL3' },
-    ThuAJ2: { name: 'Thu - Authentic Jazz II', id: 'ThuAJ2' },
-};
+import { ContentToolbar, SelectedDeleteToolbar } from 'components';
+import EmailButton from './EmailButton';
+import StudentForm from './StudentForm';
+import styles from './styles';
 
 const data = {
     1: {
@@ -117,61 +117,106 @@ const columns = [
         name: 'Mobile',
     },
     {
-        name: 'ClassIds',
-        options: {
-            display: 'false',
-        },
-    },
-    {
         name: 'Status',
     },
     {
-        name: 'Classes',
+        name: 'Courses',
     },
 ];
 
-const getClassNamesFromIds = ids =>
-    map(ids, id => availableClasses[id].name).join(', ');
-
-const convertStudentsDataToArray = students =>
+const parseStudentsToTableData = studentManagement =>
     reduce(
-        students,
+        studentManagement,
         (acc, student) => {
-            const result = { ...student };
-            result.classNames = getClassNamesFromIds(student.classes);
-            acc.push(Object.values(result));
+            const courseNames = map(
+                student.courses,
+                course => course.name
+            ).join(', ');
+            const result = [
+                student.id,
+                student.name,
+                student.email,
+                student.mobile,
+                courseNames,
+            ];
+            acc.push(result);
             return acc;
         },
         []
     );
 
-class Students extends Component {
+class StudentManagement extends Component {
     state = {
         open: false,
-        selectedStudentId: null,
     };
 
     handleClickOpen = () => {
-        this.setState({ open: true });
+        const students = values(data);
+        forEach(students, ({ name, email, mobile }) => {
+            this.props.createStudent({
+                variables: {
+                    name,
+                    email,
+                    mobile,
+                },
+            });
+        });
+        //this.setState({ open: true });
     };
 
     handleClose = onClose => {
         if (onClose) {
             onClose();
         }
-        this.setState({ open: false, selectedStudentId: null });
+        this.setState({ open: false });
     };
 
-    handleStudentClick = rowData => {
-        this.setState({ selectedStudentId: rowData[0], open: true });
+    navigateToStudentDetail = student => {
+        this.props.history.push({
+            pathname: './studentDetail',
+            search: `id=${student.id}`,
+        });
     };
+
+    handleNavigateToStudentDetail = rowData => {
+        const { students } = this.props;
+        this.navigateToStudentDetail(find(students, { id: rowData[0] }));
+    };
+
+    handleOnDeletePress = ids => {
+        const { deleteStudent } = this.props;
+
+        forEach(ids, id => {
+            deleteStudent({ variables: { id } });
+        });
+    };
+
+    renderEmailButton = ids => {
+        return (
+            <EmailButton
+                handleOnEmailPress={ids => console.log('ids are: ', ids)}
+                selectedIds={ids}
+            />
+        );
+    };
+
+    renderSelectedToolbar = (selectedRows, displayData) => (
+        <SelectedDeleteToolbar
+            selectedRows={selectedRows}
+            displayData={displayData}
+            handleOnDeletePress={this.handleOnDeletePress}
+            renderChildren={this.renderEmailButton}
+        />
+    );
 
     render() {
         const options = {
             responsive: 'scroll',
-            onRowClick: this.handleStudentClick,
-            customToolbarSelect: () => <CustomEmailToolbar />,
+            onRowClick: this.handleNavigateToStudentDetail,
+            customToolbarSelect: this.renderSelectedToolbar,
         };
+        const { students, createStudent } = this.props;
+        const { open } = this.state;
         return (
             <Fragment>
                 <ContentToolbar>
@@ -184,13 +229,14 @@ class Students extends Component {
                     </Fab>
                 </ContentToolbar>
                 <StudentForm
-                    open={this.state.open}
+                    open={open}
                     handleClose={this.handleClose}
-                    student={data[this.state.selectedStudentId]}
+                    navigateToStudentDetail={this.navigateToStudentDetail}
+                    createStudent={createStudent}
                 />
                 <MUIDataTable
                     title={'Students'}
-                    data={convertStudentsDataToArray(data)}
+                    data={parseStudentsToTableData(students)}
                     columns={columns}
                     options={options}
                 />
@@ -199,8 +245,14 @@ class Students extends Component {
     }
 }
 
-Students.propTypes = {
+StudentManagement.propTypes = {
     classes: PropTypes.object.isRequired,
+    students: PropTypes.array.isRequired,
+    deleteStudent: PropTypes.func.isRequired,
+    createStudent: PropTypes.func.isRequired,
 };
 
-export default withStyles(styles)(Students);
+export default compose(
+    withRouter,
+    withStyles(styles)
+)(StudentManagement);

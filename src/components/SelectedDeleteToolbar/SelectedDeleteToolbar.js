@@ -1,24 +1,19 @@
 import React from 'react';
 import keys from 'lodash/keys';
+import noop from 'lodash/noop';
 import reduce from 'lodash/reduce';
 import PropTypes from 'prop-types';
 import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
 import TrashIcon from '@material-ui/icons/Delete';
-import { withStyles } from '@material-ui/core/styles';
 
-const defaultToolbarStyles = {
-    iconButton: {},
-};
-
-const SelectedToolbar = ({
-    classes,
-    children,
+const SelectedDeleteToolbar = ({
     selectedRows,
     displayData,
     handleOnDeletePress,
+    renderChildren = noop,
 }) => {
-    const idsToDelete = reduce(
+    const selectedIds = reduce(
         displayData,
         (result, row, index) => {
             if (keys(selectedRows.lookup).includes(index.toString())) {
@@ -30,28 +25,23 @@ const SelectedToolbar = ({
         []
     );
     return (
-        <React.Fragment>
+        <div>
+            {renderChildren(selectedIds)}
             <Tooltip title={'Delete'}>
-                <IconButton
-                    className={classes.iconButton}
-                    onClick={() => handleOnDeletePress(idsToDelete)}
-                >
-                    <TrashIcon className={classes.deleteIcon} />
+                <IconButton onClick={() => handleOnDeletePress(selectedIds)}>
+                    <TrashIcon />
                 </IconButton>
             </Tooltip>
-            {children}
-        </React.Fragment>
+        </div>
     );
 };
 
-SelectedToolbar.propTypes = {
+SelectedDeleteToolbar.propTypes = {
     classes: PropTypes.object.isRequired,
-    children: PropTypes.node,
+    renderChildren: PropTypes.func,
     handleOnDeletePress: PropTypes.func.isRequired,
     selectedRows: PropTypes.object.isRequired,
     displayData: PropTypes.array.isRequired,
 };
 
-export default withStyles(defaultToolbarStyles, { name: 'SelectedToolbar' })(
-    SelectedToolbar
-);
+export default SelectedDeleteToolbar;

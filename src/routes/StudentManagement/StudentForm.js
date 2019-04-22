@@ -9,49 +9,42 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import styles from './styles';
 
-const cardTypes = ['None', 'Single', 'Double', 'Triple', 'All'];
-
 class StudentForm extends React.Component {
     state = {
-        id: '',
         name: '',
         mobile: '',
         email: '',
-        cardType: 'Single',
-        cardStart: '',
-        selectedClasses: [],
     };
-
-    componentDidUpdate() {
-        const { student } = this.props;
-        if (student && student.id !== this.state.id) {
-            this.setState({
-                id: student.id,
-                name: student.name,
-                mobile: student.mobile,
-                email: student.email,
-                selectedClasses: student.classes,
-            });
-        }
-    }
 
     handleChange = name => event => {
         this.setState({ [name]: event.target.value });
     };
 
+    handleCreate = () => {
+        const { createStudent, handleClose } = this.props;
+        const { name, email, mobile } = this.state;
+        createStudent({
+            variables: {
+                name,
+                email,
+                mobile,
+            },
+        });
+        handleClose(this.clearForm);
+        // this.props.navigateToStudio(newStudio);
+    };
+
     clearForm = () => {
         this.setState({
-            id: '',
             name: '',
             mobile: '',
             email: '',
-            cardType: 'Single',
-            cardStart: '',
         });
     };
 
     render() {
-        const { classes, open, handleClose, student } = this.props;
+        const { classes, open, handleClose } = this.props;
+        const { name, mobile, email } = this.state;
         return (
             <div>
                 <Dialog
@@ -60,21 +53,21 @@ class StudentForm extends React.Component {
                     aria-labelledby="form-dialog-title"
                 >
                     <DialogTitle id="form-dialog-title">
-                        {student ? 'Edit Student' : 'Create New Student'}
+                        Create New Student
                     </DialogTitle>
                     <DialogContent>
                         <TextField
                             id="standard-name"
                             label="Name"
                             className={classes.textField}
-                            value={this.state.name}
+                            value={name}
                             onChange={this.handleChange('name')}
                             margin="normal"
                         />
                         <TextField
                             id="standard-number"
                             label="Mobile Number"
-                            value={this.state.mobile}
+                            value={mobile}
                             onChange={this.handleChange('mobile')}
                             type="number"
                             className={classes.textField}
@@ -84,43 +77,10 @@ class StudentForm extends React.Component {
                             margin="dense"
                             id="name"
                             label="Email Address"
-                            value={this.state.email}
+                            value={email}
                             onChange={this.handleChange('email')}
                             className={classes.emailField}
                             type="email"
-                        />
-                        <TextField
-                            id="standard-select-currency-native"
-                            select
-                            label="Select Card Type"
-                            className={classes.textField}
-                            value={this.state.cardType}
-                            onChange={this.handleChange('cardType')}
-                            SelectProps={{
-                                native: true,
-                                MenuProps: {
-                                    className: classes.menu,
-                                },
-                            }}
-                            margin="normal"
-                        >
-                            {cardTypes.map(option => (
-                                <option key={option} value={option}>
-                                    {option}
-                                </option>
-                            ))}
-                        </TextField>
-                        <TextField
-                            id="date"
-                            label="Card Start Date"
-                            type="date"
-                            onChange={this.handleChange('cardStart')}
-                            className={classes.textField}
-                            InputLabelProps={{
-                                shrink: true,
-                            }}
-                            margin="normal"
-                            disabled={this.state.cardType === 'None'}
                         />
                     </DialogContent>
                     <DialogActions>
@@ -130,11 +90,8 @@ class StudentForm extends React.Component {
                         >
                             Cancel
                         </Button>
-                        <Button
-                            onClick={handleClose.bind(null, this.clearForm)}
-                            color="primary"
-                        >
-                            {student ? 'Save' : 'Create'}
+                        <Button onClick={this.handleCreate} color="primary">
+                            Create
                         </Button>
                     </DialogActions>
                 </Dialog>
@@ -146,8 +103,9 @@ class StudentForm extends React.Component {
 StudentForm.propTypes = {
     classes: PropTypes.object.isRequired,
     open: PropTypes.bool.isRequired,
-    student: PropTypes.object,
     handleClose: PropTypes.func.isRequired,
+    createStudent: PropTypes.func.isRequired,
+    navigateToStudentDetail: PropTypes.func.isRequired,
 };
 
 export default withStyles(styles)(StudentForm);

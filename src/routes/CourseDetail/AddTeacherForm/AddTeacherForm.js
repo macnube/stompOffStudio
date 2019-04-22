@@ -37,11 +37,13 @@ class AddTeacherForm extends Component {
     //where cascading deletes don't work for deleteMany
     //https://github.com/prisma/prisma/issues/3587
     handleAddPress = ids => {
-        const { addTeacherToCourse, courseId } = this.props;
+        const { addTeacherToCourse, courseId, handleClose } = this.props;
 
         forEach(ids, teacherId => {
             addTeacherToCourse({ variables: { id: courseId, teacherId } });
         });
+
+        handleClose();
     };
 
     render() {

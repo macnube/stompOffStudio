@@ -25,25 +25,10 @@ const AddTeacherFormContainer = ({ open, handleClose, courseId }) => (
     <Adopt mapper={mapper}>
         {({
             getTeachers: { data, loading, error },
-            addTeacherToCourse: {
-                mutation: addTeacherToCourseMutation,
-                result: addTeacherToCourseResult,
-            },
+            addTeacherToCourse: { mutation: addTeacherToCourseMutation },
         }) => {
             if (loading) return null;
             if (error) return `Error: ${error}`;
-            console.log('data is: ', data.teachers);
-            if (addTeacherToCourseResult.data) {
-                return (
-                    <AddTeacherForm
-                        open={false}
-                        courseId={courseId}
-                        handleClose={handleClose}
-                        addTeacherToCourse={addTeacherToCourseMutation}
-                        teachers={data.teachers}
-                    />
-                );
-            }
             return (
                 <AddTeacherForm
                     open={open}

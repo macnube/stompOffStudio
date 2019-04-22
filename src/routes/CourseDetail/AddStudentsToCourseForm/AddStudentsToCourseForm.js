@@ -27,8 +27,6 @@ const parseStudentsToTableData = (students, courseId) =>
     reduce(
         students,
         (acc, student) => {
-            console.log('student is: ', student);
-            console.log('courseId is: ', courseId);
             if (some(student.courses, { course: { id: courseId } })) {
                 return acc;
             }

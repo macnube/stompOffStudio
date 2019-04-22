@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import filter from 'lodash/filter';
 import { parse } from 'query-string';
 import { Redirect } from 'react-router-dom';
 import { Query, Mutation } from 'react-apollo';
@@ -9,6 +10,7 @@ import {
     GET_COURSE,
     UPDATE_COURSE,
     REMOVE_TEACHER_FROM_COURSE,
+    DELETE_COURSE_STUDENT,
 } from './graphql';
 import CourseDetail from './CourseDetail';
 
@@ -30,10 +32,43 @@ const removeTeacherFromCourse = ({ render }) => (
     </Mutation>
 );
 
+const deleteCourseStudent = ({ render, id }) => (
+    <Mutation
+        mutation={DELETE_COURSE_STUDENT}
+        update={(cache, { data: { deleteCourseStudent } }) => {
+            const { course } = cache.readQuery({
+                query: GET_COURSE,
+                variables: {
+                    id,
+                },
+            });
+            cache.writeQuery({
+                query: GET_COURSE,
+                variables: {
+                    id,
+                },
+                data: {
+                    course: {
+                        ...course,
+                        courseStudents: filter(
+                            course.courseStudents,
+                            courseStudent =>
+                                courseStudent.id !== deleteCourseStudent.id
+                        ),
+                    },
+                },
+            });
+        }}
+    >
+        {(mutation, result) => render({ mutation, result })}
+    </Mutation>
+);
+
 const mapper = {
     getCourse,
     updateCourse,
     removeTeacherFromCourse,
+    deleteCourseStudent,
 };
 
 const CourseDetailContainer = ({ location }) => {
@@ -48,15 +83,18 @@ const CourseDetailContainer = ({ location }) => {
                     removeTeacherFromCourse: {
                         mutation: removeTeacherFromCourseMutation,
                     },
+                    deleteCourseStudent: {
+                        mutation: deleteCourseStudentMutation,
+                    },
                 }) => {
                     if (loading) return null;
                     if (error) return `Error: ${error}`;
                     if (!data.course) return `Error: 404`;
-                    console.log('courseDetail data: ', data.course);
                     return (
                         <CourseDetail
                             course={data.course}
                             updateCourse={updateCourseMutation}
+                            deleteCourseStudent={deleteCourseStudentMutation}
                             removeTeacherFromCourse={
                                 removeTeacherFromCourseMutation
                             }

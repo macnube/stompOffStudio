@@ -45,7 +45,7 @@ const deleteCourseStudent = ({ render, id }) => (
                         ...student,
                         courses: filter(
                             student.courses,
-                            studio => studio.id !== deleteCourseStudent.id
+                            course => course.id !== deleteCourseStudent.id
                         ),
                     },
                 },
@@ -72,15 +72,12 @@ const StudioDetailContainer = ({ location }) => {
                     getStudent: { data, loading, error },
                     deleteCourseStudent: {
                         mutation: deleteCourseStudentMutation,
-                        result: deleteCourseStudentResult,
                     },
                     updateStudent: { mutation: updateStudentMutation },
                 }) => {
                     if (loading) return null;
                     if (error) return `Error: ${error}`;
                     if (!data.student) return `Error: 404`;
-                    console.log('student is: ', data.student);
-                    console.log('result is :', deleteCourseStudentResult.data);
                     return (
                         <StudentDetail
                             student={data.student}

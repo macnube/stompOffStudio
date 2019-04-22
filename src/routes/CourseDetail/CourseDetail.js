@@ -48,8 +48,8 @@ const parseCourseStudentsToTableData = (courseStudents, role) =>
     reduce(
         filter(courseStudents, courseStudent => courseStudent.role === role),
         (acc, courseStudent) => {
-            const { id, name, email } = courseStudent.student;
-            const result = [id, name, email];
+            const { name, email } = courseStudent.student;
+            const result = [courseStudent.id, name, email];
             acc.push(result);
             return acc;
         },
@@ -162,7 +162,7 @@ class CourseDetail extends Component {
     handleNavigateToStudentDetail = rowData => {
         const { course } = this.props;
         const courseStudent = find(course.courseStudents, {
-            student: { id: rowData[0] },
+            id: rowData[0],
         });
         this.navigateToStudentDetail(courseStudent.student);
     };
@@ -172,6 +172,14 @@ class CourseDetail extends Component {
             selectedRows={selectedRows}
             displayData={displayData}
             handleOnDeletePress={this.handleOnDeleteTeachersPress}
+        />
+    );
+
+    renderCourseStudentSelectedToolbar = (selectedRows, displayData) => (
+        <SelectedDeleteToolbar
+            selectedRows={selectedRows}
+            displayData={displayData}
+            handleOnDeletePress={this.handleOnDeleteCourseStudentsPress}
         />
     );
 
@@ -189,6 +197,16 @@ class CourseDetail extends Component {
         forEach(ids, teacherId => {
             removeTeacherFromCourse({
                 variables: { id: this.state.id, teacherId },
+            });
+        });
+    };
+
+    handleOnDeleteCourseStudentsPress = ids => {
+        const { deleteCourseStudent } = this.props;
+
+        forEach(ids, id => {
+            deleteCourseStudent({
+                variables: { id },
             });
         });
     };
@@ -238,6 +256,7 @@ class CourseDetail extends Component {
         const studentOptions = {
             ...baseOptions,
             onRowClick: this.handleNavigateToStudentDetail,
+            customToolbarSelect: this.renderCourseStudentSelectedToolbar,
         };
         const { classes, course } = this.props;
         const {
@@ -392,6 +411,7 @@ CourseDetail.propTypes = {
     course: PropTypes.object.isRequired,
     updateCourse: PropTypes.func.isRequired,
     removeTeacherFromCourse: PropTypes.func.isRequired,
+    deleteCourseStudent: PropTypes.func.isRequired,
 };
 
 export default compose(

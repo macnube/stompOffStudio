@@ -86,3 +86,11 @@ export const REMOVE_TEACHER_FROM_COURSE = gql`
         }
     }
 `;
+
+export const DELETE_COURSE_STUDENT = gql`
+    mutation StudentDetailDeleteCourseStudent($id: ID!) {
+        deleteCourseStudent(id: $id) {
+            id
+        }
+    }
+`;

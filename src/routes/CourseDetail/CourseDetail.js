@@ -4,6 +4,7 @@ import compose from 'recompose/compose';
 import { withRouter } from 'react-router-dom';
 import toNumber from 'lodash/toNumber';
 import reduce from 'lodash/reduce';
+import find from 'lodash/find';
 import filter from 'lodash/filter';
 import forEach from 'lodash/forEach';
 import PropTypes from 'prop-types';
@@ -151,6 +152,21 @@ class CourseDetail extends Component {
         });
     };
 
+    navigateToStudentDetail = student => {
+        this.props.history.push({
+            pathname: './studentDetail',
+            search: `id=${student.id}`,
+        });
+    };
+
+    handleNavigateToStudentDetail = rowData => {
+        const { course } = this.props;
+        const courseStudent = find(course.courseStudents, {
+            student: { id: rowData[0] },
+        });
+        this.navigateToStudentDetail(courseStudent.student);
+    };
+
     renderTeacherSelectedToolbar = (selectedRows, displayData) => (
         <SelectedDeleteToolbar
             selectedRows={selectedRows}
@@ -218,6 +234,10 @@ class CourseDetail extends Component {
                 />
             ),
             customToolbarSelect: this.renderTeacherSelectedToolbar,
+        };
+        const studentOptions = {
+            ...baseOptions,
+            onRowClick: this.handleNavigateToStudentDetail,
         };
         const { classes, course } = this.props;
         const {
@@ -342,7 +362,7 @@ class CourseDetail extends Component {
                                 'Leader'
                             )}
                             columns={columns}
-                            options={baseOptions}
+                            options={studentOptions}
                         />
                     </MuiThemeProvider>
                     <MuiThemeProvider theme={this.getMuiTheme()}>
@@ -353,7 +373,7 @@ class CourseDetail extends Component {
                                 'Follower'
                             )}
                             columns={columns}
-                            options={baseOptions}
+                            options={studentOptions}
                         />
                     </MuiThemeProvider>
                     <AddTeacherForm

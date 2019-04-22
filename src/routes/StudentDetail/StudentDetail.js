@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import compose from 'recompose/compose';
 import { withRouter } from 'react-router-dom';
 import toNumber from 'lodash/toNumber';
+import find from 'lodash/find';
 import reduce from 'lodash/reduce';
 import forEach from 'lodash/forEach';
 import PropTypes from 'prop-types';
@@ -99,10 +100,19 @@ class StudentDetail extends Component {
         });
     };
 
-    navigateToCourseManagement = () => {
+    navigateToCourseDetail = course => {
         this.props.history.push({
-            pathname: './courseManagement',
+            pathname: './courseDetail',
+            search: `id=${course.id}`,
         });
+    };
+
+    handleNavigateToCourseDetail = rowData => {
+        const { student } = this.props;
+        const courseStudent = find(student.courses, {
+            id: rowData[0],
+        });
+        this.navigateToCourseDetail(courseStudent.course);
     };
 
     renderCourseSelectedToolbar = (selectedRows, displayData) => (
@@ -151,7 +161,7 @@ class StudentDetail extends Component {
         };
         const courseStudentOptions = {
             ...baseOptions,
-            onRowClick: this.navigateToCourseManagement,
+            onRowClick: this.handleNavigateToCourseDetail,
             customToolbar: () => (
                 <CustomAddToolbar
                     title={'Add to Course'}

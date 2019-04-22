@@ -6,7 +6,7 @@ import { Adopt } from 'react-adopt';
 import { GET_TEACHERS, ADD_TEACHER_TO_COURSE } from './graphql';
 import AddTeacherForm from './AddTeacherForm';
 
-const getTeachers = ({ render, id }) => (
+const getTeachers = ({ render }) => (
     <Query query={GET_TEACHERS}>{render}</Query>
 );
 

@@ -28,6 +28,7 @@ import {
     SelectedDeleteToolbar,
 } from 'components';
 import AddTeacherForm from './AddTeacherForm';
+import AddStudentsToCourseForm from './AddStudentsToCourseForm';
 
 const columns = [
     {
@@ -80,6 +81,7 @@ class CourseDetail extends Component {
         studentLimit: 0,
         canSave: false,
         openTeacherForm: false,
+        openCourseStudentForm: false,
     };
 
     componentDidMount() {
@@ -187,8 +189,12 @@ class CourseDetail extends Component {
         this.setState({ openTeacherForm: true });
     };
 
+    handleClickAddCourseStudentOpen = () => {
+        this.setState({ openCourseStudentForm: true });
+    };
+
     handleClose = () => {
-        this.setState({ openTeacherForm: false });
+        this.setState({ openTeacherForm: false, openCourseStudentForm: false });
     };
 
     handleOnDeleteTeachersPress = ids => {
@@ -247,7 +253,7 @@ class CourseDetail extends Component {
             onRowClick: this.navigateToTeacherManagement,
             customToolbar: () => (
                 <CustomAddToolbar
-                    title={'Add Room'}
+                    title={'Add Teacher'}
                     handleAddPress={this.handleClickAddTeacherOpen}
                 />
             ),
@@ -255,6 +261,12 @@ class CourseDetail extends Component {
         };
         const studentOptions = {
             ...baseOptions,
+            customToolbar: () => (
+                <CustomAddToolbar
+                    title={'Add Students'}
+                    handleAddPress={this.handleClickAddCourseStudentOpen}
+                />
+            ),
             onRowClick: this.handleNavigateToStudentDetail,
             customToolbarSelect: this.renderCourseStudentSelectedToolbar,
         };
@@ -271,6 +283,7 @@ class CourseDetail extends Component {
             studentLimit,
             canSave,
             openTeacherForm,
+            openCourseStudentForm,
         } = this.state;
         return (
             <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -397,6 +410,12 @@ class CourseDetail extends Component {
                     </MuiThemeProvider>
                     <AddTeacherForm
                         open={openTeacherForm}
+                        handleClose={this.handleClose}
+                        courseId={id}
+                    />
+                    <AddStudentsToCourseForm
+                        open={openCourseStudentForm}
+                        title={'Add Leaders to Course'}
                         handleClose={this.handleClose}
                         courseId={id}
                     />

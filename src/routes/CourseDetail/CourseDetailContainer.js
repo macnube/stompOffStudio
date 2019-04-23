@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import filter from 'lodash/filter';
+import find from 'lodash/find';
 import { parse } from 'query-string';
 import { Redirect } from 'react-router-dom';
 import { Query, Mutation } from 'react-apollo';
@@ -12,6 +13,7 @@ import {
     REMOVE_TEACHER_FROM_COURSE,
     DELETE_COURSE_STUDENT,
 } from './graphql';
+import { GET_STUDENT } from 'routes/StudentDetail';
 import CourseDetail from './CourseDetail';
 
 const getCourse = ({ render, id }) => (
@@ -42,6 +44,15 @@ const deleteCourseStudent = ({ render, id }) => (
                     id,
                 },
             });
+            const courseStudent = find(course.courseStudents, {
+                id: deleteCourseStudent.id,
+            });
+            const { student } = cache.readQuery({
+                query: GET_STUDENT,
+                variables: {
+                    id: courseStudent.student.id,
+                },
+            });
             cache.writeQuery({
                 query: GET_COURSE,
                 variables: {
@@ -54,6 +65,21 @@ const deleteCourseStudent = ({ render, id }) => (
                             course.courseStudents,
                             courseStudent =>
                                 courseStudent.id !== deleteCourseStudent.id
+                        ),
+                    },
+                },
+            });
+            cache.writeQuery({
+                query: GET_STUDENT,
+                variables: {
+                    id: student.id,
+                },
+                data: {
+                    student: {
+                        ...student,
+                        courses: filter(
+                            student.courses,
+                            courses => courses.id !== deleteCourseStudent.id
                         ),
                     },
                 },

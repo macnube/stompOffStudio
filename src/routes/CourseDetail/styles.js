@@ -4,10 +4,6 @@ const styles = theme => ({
         marginLeft: theme.spacing.unit,
         marginRight: theme.spacing.unit,
     },
-    topForm: {
-        paddingLeft: 2 * theme.spacing.unit,
-        paddingRight: 2 * theme.spacing.unit,
-    },
     textField: {
         marginLeft: theme.spacing.unit,
         marginRight: theme.spacing.unit,
@@ -27,6 +23,14 @@ const styles = theme => ({
     fab: {
         float: 'right',
         margin: theme.spacing.unit,
+    },
+    formContainer: {
+        flexGrow: 1,
+        paddingLeft: 2 * theme.spacing.unit,
+        paddingRight: 2 * theme.spacing.unit,
+    },
+    buttonContainer: {
+        marginTop: 2 * theme.spacing.unit,
     },
 });
 

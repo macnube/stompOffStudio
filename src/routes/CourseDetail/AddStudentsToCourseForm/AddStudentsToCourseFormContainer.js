@@ -25,7 +25,7 @@ const AddStudentsToCourseFormContainer = ({
     open,
     handleClose,
     courseId,
-    title,
+    role,
 }) => (
     <Adopt mapper={mapper}>
         {({
@@ -41,7 +41,7 @@ const AddStudentsToCourseFormContainer = ({
                     courseId={courseId}
                     createCourseStudent={createCourseStudentMutation}
                     students={data.students}
-                    title={title}
+                    role={role}
                 />
             );
         }}
@@ -52,7 +52,7 @@ AddStudentsToCourseFormContainer.propTypes = {
     open: PropTypes.bool.isRequired,
     handleClose: PropTypes.func.isRequired,
     courseId: PropTypes.string.isRequired,
-    title: PropTypes.string.isRequired,
+    role: PropTypes.oneOf(['Leader', 'Follower', 'Solo']).isRequired,
 };
 
 export default AddStudentsToCourseFormContainer;

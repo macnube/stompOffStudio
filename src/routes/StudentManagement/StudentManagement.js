@@ -5,7 +5,6 @@ import map from 'lodash/map';
 import reduce from 'lodash/reduce';
 import find from 'lodash/find';
 import forEach from 'lodash/forEach';
-import values from 'lodash/values';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import MUIDataTable from 'mui-datatables';

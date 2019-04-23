@@ -5,12 +5,7 @@ import { Redirect } from 'react-router-dom';
 import { Query, Mutation } from 'react-apollo';
 import { Adopt } from 'react-adopt';
 
-import {
-    GET_STUDENT,
-    DELETE_COURSE_STUDENT,
-    UPDATE_STUDENT,
-    GET_COURSE_STUDENTS,
-} from './graphql';
+import { GET_STUDENT, DELETE_COURSE_STUDENT, UPDATE_STUDENT } from './graphql';
 import StudentDetail from './StudentDetail';
 
 const getStudent = ({ render, id }) => (

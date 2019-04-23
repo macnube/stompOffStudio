@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import reduce from 'lodash/reduce';
-import filter from 'lodash/filter';
 import some from 'lodash/some';
 import forEach from 'lodash/forEach';
 import MUIDataTable from 'mui-datatables';
@@ -58,22 +57,22 @@ class AddStudentsToCourseForm extends Component {
     };
 
     render() {
-        const { students, open, handleClose, courseId, title } = this.props;
+        const { students, open, handleClose, courseId, role } = this.props;
         const options = {
             responsive: 'scroll',
             customToolbarSelect: (selectedRows, displayData) => (
                 <SelectedAddToolbar
-                    title={'Add as Leader'}
+                    title={`Add as ${role}`}
                     selectedRows={selectedRows}
                     displayData={displayData}
-                    handleAddPress={this.handleAddAsRolePress('Leader')}
+                    handleAddPress={this.handleAddAsRolePress(role)}
                 />
             ),
         };
         return (
             <FullScreenDialog
                 open={open}
-                title={title}
+                title={`Add Students as ${role}`}
                 handleClose={handleClose}
             >
                 <MUIDataTable
@@ -93,7 +92,7 @@ AddStudentsToCourseForm.propTypes = {
     students: PropTypes.array.isRequired,
     createCourseStudent: PropTypes.func.isRequired,
     courseId: PropTypes.string.isRequired,
-    title: PropTypes.string.isRequired,
+    role: PropTypes.oneOf(['Leader', 'Follower', 'Solo']).isRequired,
 };
 
 export default AddStudentsToCourseForm;

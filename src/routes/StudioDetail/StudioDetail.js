@@ -1,23 +1,16 @@
 import React, { Component, Fragment } from 'react';
-import compose from 'recompose/compose';
 import { withRouter } from 'react-router-dom';
 import find from 'lodash/find';
 import reduce from 'lodash/reduce';
 import forEach from 'lodash/forEach';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import styles from './styles';
 import MUIDataTable from 'mui-datatables';
-import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
-import {
-    ContentToolbar,
-    SelectedDeleteToolbar,
-    CustomAddToolbar,
-} from 'components';
+
+import { SelectedDeleteToolbar, CustomAddToolbar } from 'components';
 import RoomForm from './RoomForm';
+import StudioDetailHeader from './StudioDetailHeader';
 
 const columns = [
     {
@@ -46,25 +39,9 @@ const convertRoomDataToArray = rooms =>
 
 class StudioDetail extends Component {
     state = {
-        id: '',
-        name: '',
-        address: '',
-        open: false,
         selectedRoomId: null,
-        canSave: false,
+        open: false,
     };
-
-    componentDidMount() {
-        const { studio } = this.props;
-        if (studio) {
-            const { id, name, address } = studio;
-            this.setState({
-                id,
-                name,
-                address,
-            });
-        }
-    }
 
     handleChange = name => event => {
         this.setState({ [name]: event.target.value, canSave: true });
@@ -115,17 +92,14 @@ class StudioDetail extends Component {
         this.handleClose();
     };
 
-    handleUpdateStudio = () => {
-        const { id, name, address } = this.state;
+    handleUpdateStudio = studio => {
+        const { id, name, address } = studio;
         this.props.updateStudio({
             variables: {
                 id,
                 name,
                 address,
             },
-        });
-        this.setState({
-            canSave: false,
         });
     };
 
@@ -168,28 +142,10 @@ class StudioDetail extends Component {
             ),
             customToolbarSelect: this.renderSelectedToolbar,
         };
-        const { classes, studio } = this.props;
-        const { name, address, open, selectedRoomId, canSave } = this.state;
+        const { studio } = this.props;
+        const { open, selectedRoomId } = this.state;
         return (
             <Fragment>
-                <ContentToolbar>
-                    <Button
-                        variant="contained"
-                        className={classes.button}
-                        onClick={this.navigateToStudioManagement}
-                    >
-                        Cancel
-                    </Button>
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        className={classes.button}
-                        disabled={!canSave}
-                        onClick={this.handleUpdateStudio}
-                    >
-                        Save
-                    </Button>
-                </ContentToolbar>
                 <RoomForm
                     open={open}
                     handleClose={this.handleClose}
@@ -198,24 +154,11 @@ class StudioDetail extends Component {
                     room={find(studio.rooms, { id: selectedRoomId })}
                 />
                 <Paper>
-                    <form className={classes.topForm}>
-                        <TextField
-                            id="standard-name"
-                            label="Name"
-                            value={name}
-                            className={classes.textField}
-                            onChange={this.handleChange('name')}
-                            margin="normal"
-                        />
-                        <TextField
-                            id="standard-name"
-                            label="Address"
-                            value={address}
-                            className={classes.textField}
-                            onChange={this.handleChange('address')}
-                            margin="normal"
-                        />
-                    </form>
+                    <StudioDetailHeader
+                        studio={studio}
+                        handleOnSave={this.handleUpdateStudio}
+                        handleOnCancel={this.navigateToStudioManagement}
+                    />
                     <MuiThemeProvider theme={this.getMuiTheme()}>
                         <MUIDataTable
                             title={'Rooms'}
@@ -233,7 +176,6 @@ class StudioDetail extends Component {
 }
 
 StudioDetail.propTypes = {
-    classes: PropTypes.object.isRequired,
     studio: PropTypes.object.isRequired,
     deleteRoom: PropTypes.func.isRequired,
     createRoom: PropTypes.func.isRequired,
@@ -241,7 +183,4 @@ StudioDetail.propTypes = {
     updateStudio: PropTypes.func.isRequired,
 };
 
-export default compose(
-    withRouter,
-    withStyles(styles)
-)(StudioDetail);
+export default withRouter(StudioDetail);

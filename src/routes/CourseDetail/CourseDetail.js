@@ -14,7 +14,7 @@ import { MuiPickersUtilsProvider } from 'material-ui-pickers';
 import DateFnsUtils from '@date-io/date-fns';
 
 import { CustomAddToolbar, SelectedDeleteToolbar } from 'components';
-import CourseDetailMainForm from './CourseDetailMainForm';
+import CourseDetailHeader from './CourseDetailHeader';
 import AddTeacherForm from './AddTeacherForm';
 import AddStudentsToCourseForm from './AddStudentsToCourseForm';
 
@@ -232,7 +232,7 @@ class CourseDetail extends Component {
         return (
             <MuiPickersUtilsProvider utils={DateFnsUtils}>
                 <Paper>
-                    <CourseDetailMainForm
+                    <CourseDetailHeader
                         course={course}
                         handleOnCancel={this.navigateToCourseManagement}
                         handleOnSave={this.handleUpdateCourse}

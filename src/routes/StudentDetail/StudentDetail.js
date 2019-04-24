@@ -1,26 +1,18 @@
 import 'date-fns';
 import React, { Component } from 'react';
-import compose from 'recompose/compose';
 import { withRouter } from 'react-router-dom';
 import toNumber from 'lodash/toNumber';
 import find from 'lodash/find';
 import reduce from 'lodash/reduce';
 import forEach from 'lodash/forEach';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
 import MUIDataTable from 'mui-datatables';
-import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
 
-import styles from './styles';
-import {
-    ContentToolbar,
-    CustomAddToolbar,
-    SelectedDeleteToolbar,
-} from 'components';
+import { CustomAddToolbar, SelectedDeleteToolbar } from 'components';
 import AddCourseStudentForm from './AddCourseStudentForm';
+import StudentDetailHeader from './StudentDetailHeader';
 
 const columns = [
     {
@@ -54,26 +46,8 @@ const parseCourseStudentsToTableData = courseStudents =>
 
 class StudentDetail extends Component {
     state = {
-        id: '',
-        name: '',
-        email: '',
-        mobile: '',
-        canSave: false,
         openCourseStudentForm: false,
     };
-
-    componentDidMount() {
-        const { student } = this.props;
-        if (student) {
-            const { id, name, email, mobile } = student;
-            this.setState({
-                id,
-                name,
-                email,
-                mobile,
-            });
-        }
-    }
 
     handleChange = (name, isNumber = false) => event => {
         let value = event.target.value;
@@ -141,9 +115,9 @@ class StudentDetail extends Component {
         });
     };
 
-    handleUpdateStudent = () => {
+    handleUpdateStudent = student => {
         const { updateStudent } = this.props;
-        const { id, name, email, mobile } = this.state;
+        const { id, name, email, mobile } = student;
 
         updateStudent({
             variables: {
@@ -170,62 +144,16 @@ class StudentDetail extends Component {
             ),
             customToolbarSelect: this.renderCourseSelectedToolbar,
         };
-        const { classes, student } = this.props;
-        const {
-            id,
-            name,
-            email,
-            mobile,
-            canSave,
-            openCourseStudentForm,
-        } = this.state;
+        const { student } = this.props;
+        const { openCourseStudentForm } = this.state;
         return (
             <div>
-                <ContentToolbar>
-                    <Button
-                        variant="contained"
-                        className={classes.button}
-                        onClick={this.navigateToStudentManagement}
-                    >
-                        Cancel
-                    </Button>
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        className={classes.button}
-                        disabled={!canSave}
-                        onClick={this.handleUpdateStudent}
-                    >
-                        Save
-                    </Button>
-                </ContentToolbar>
                 <Paper>
-                    <form className={classes.topForm}>
-                        <TextField
-                            id="standard-name"
-                            label="Name"
-                            value={name}
-                            className={classes.textField}
-                            onChange={this.handleChange('name')}
-                            margin="normal"
-                        />
-                        <TextField
-                            id="standard-name"
-                            label="Email"
-                            value={email}
-                            className={classes.textField}
-                            onChange={this.handleChange('email')}
-                            margin="normal"
-                        />
-                        <TextField
-                            id="standard-select-studio-native"
-                            label="Mobile"
-                            value={mobile}
-                            className={classes.textField}
-                            onChange={this.handleChange('mobile')}
-                            margin="normal"
-                        />
-                    </form>
+                    <StudentDetailHeader
+                        student={student}
+                        handleOnCancel={this.navigateToStudentManagement}
+                        handleOnSave={this.handleUpdateStudent}
+                    />
                     <MuiThemeProvider theme={this.getMuiTheme()}>
                         <MUIDataTable
                             title={'Active Registered Courses'}
@@ -240,7 +168,7 @@ class StudentDetail extends Component {
                 <AddCourseStudentForm
                     open={openCourseStudentForm}
                     handleClose={this.handleClose}
-                    studentId={id}
+                    studentId={student.id}
                 />
             </div>
         );
@@ -254,7 +182,4 @@ StudentDetail.propTypes = {
     deleteCourseStudent: PropTypes.func.isRequired,
 };
 
-export default compose(
-    withRouter,
-    withStyles(styles)
-)(StudentDetail);
+export default withRouter(StudentDetail);

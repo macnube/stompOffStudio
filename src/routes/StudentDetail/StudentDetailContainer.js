@@ -54,8 +54,33 @@ const createCard = ({ render, id }) => (
     </Mutation>
 );
 
-const deleteCard = ({ render }) => (
-    <Mutation mutation={DELETE_CARD}>
+const deleteCard = ({ render, id }) => (
+    <Mutation
+        mutation={DELETE_CARD}
+        update={(cache, { data: { deleteCard } }) => {
+            const { student } = cache.readQuery({
+                query: GET_STUDENT,
+                variables: {
+                    id,
+                },
+            });
+            cache.writeQuery({
+                query: GET_STUDENT,
+                variables: {
+                    id,
+                },
+                data: {
+                    student: {
+                        ...student,
+                        cards: filter(
+                            student.cards,
+                            card => card.id !== deleteCard.id
+                        ),
+                    },
+                },
+            });
+        }}
+    >
         {(mutation, result) => render({ mutation, result })}
     </Mutation>
 );

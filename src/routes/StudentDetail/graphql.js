@@ -72,6 +72,10 @@ export const CREATE_CARD = gql`
             validCount
             expirationDate
             active
+            paid
+            useHistory {
+                id
+            }
         }
     }
 `;

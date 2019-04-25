@@ -1,5 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import compose from 'recompose/compose';
+import format from 'date-fns/format';
+import parseISO from 'date-fns/parseISO';
 import { withRouter } from 'react-router-dom';
 import reduce from 'lodash/reduce';
 import find from 'lodash/find';
@@ -52,7 +54,7 @@ const parseCoursesToTableData = courses =>
                 course.room.studio.name,
                 course.room.name,
                 teacherNames,
-                course.startDate,
+                format(parseISO(course.startDate), 'MMM do, yyyy'),
             ];
             acc.push(result);
             return acc;

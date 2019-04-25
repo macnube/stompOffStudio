@@ -1,7 +1,10 @@
 import 'date-fns';
+import parseISO from 'date-fns/parseISO';
+import format from 'date-fns/format';
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import toNumber from 'lodash/toNumber';
+import toString from 'lodash/toString';
 import find from 'lodash/find';
 import reduce from 'lodash/reduce';
 import forEach from 'lodash/forEach';
@@ -11,10 +14,11 @@ import Paper from '@material-ui/core/Paper';
 import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
 
 import { CustomAddToolbar, SelectedDeleteToolbar } from 'components';
-import AddCourseStudentForm from './AddCourseStudentForm';
+import AddCourseStudentDialog from './AddCourseStudentDialog';
+import CardDialog from './CardDialog';
 import StudentDetailHeader from './StudentDetailHeader';
 
-const columns = [
+const courseStudentsColumns = [
     {
         name: 'ID',
         options: {
@@ -26,6 +30,30 @@ const columns = [
     },
     {
         name: 'Role',
+    },
+];
+
+const cardsColumns = [
+    {
+        name: 'ID',
+        options: {
+            display: 'false',
+        },
+    },
+    {
+        name: 'Valid Count',
+    },
+    {
+        name: 'Expiration Date',
+    },
+    {
+        name: 'Classes Left',
+    },
+    {
+        name: 'Active',
+    },
+    {
+        name: 'Paid',
     },
 ];
 
@@ -44,9 +72,32 @@ const parseCourseStudentsToTableData = courseStudents =>
         []
     );
 
+const parseCardsToTableData = cards =>
+    reduce(
+        cards,
+        (acc, card) => {
+            const uses =
+                card.useHistory && card.useHistory.length
+                    ? card.useHistory.length
+                    : 0;
+            const result = [
+                card.id,
+                card.validCount,
+                format(parseISO(card.expirationDate), 'MMM do, yyyy'),
+                card.validCount - uses,
+                toString(card.active),
+                toString(card.paid),
+            ];
+            acc.push(result);
+            return acc;
+        },
+        []
+    );
+
 class StudentDetail extends Component {
     state = {
-        openCourseStudentForm: false,
+        openCourseStudentDialog: false,
+        openCardDialog: false,
     };
 
     handleChange = (name, isNumber = false) => event => {
@@ -97,12 +148,27 @@ class StudentDetail extends Component {
         />
     );
 
+    renderCardSelectedToolbar = (selectedRows, displayData) => (
+        <SelectedDeleteToolbar
+            selectedRows={selectedRows}
+            displayData={displayData}
+            handleOnDeletePress={this.handleOnDeleteCardsPress}
+        />
+    );
+
     handleClickAddCourseOpen = () => {
-        this.setState({ openCourseStudentForm: true });
+        this.setState({ openCourseStudentDialog: true });
+    };
+
+    handleClickAddCardOpen = () => {
+        this.setState({ openCardDialog: true });
     };
 
     handleClose = () => {
-        this.setState({ openCourseStudentForm: false });
+        this.setState({
+            openCourseStudentDialog: false,
+            openCardDialog: false,
+        });
     };
 
     handleOnDeleteCourseStudentsPress = ids => {
@@ -110,6 +176,16 @@ class StudentDetail extends Component {
 
         forEach(ids, id => {
             deleteCourseStudent({
+                variables: { id },
+            });
+        });
+    };
+
+    handleOnDeleteCardsPress = ids => {
+        const { deleteCard } = this.props;
+
+        forEach(ids, id => {
+            deleteCard({
                 variables: { id },
             });
         });
@@ -144,8 +220,21 @@ class StudentDetail extends Component {
             ),
             customToolbarSelect: this.renderCourseSelectedToolbar,
         };
-        const { student } = this.props;
-        const { openCourseStudentForm } = this.state;
+        const cardOptions = {
+            ...baseOptions,
+            customToolbar: () => (
+                <CustomAddToolbar
+                    title={'Add Card'}
+                    handleAddPress={this.handleClickAddCardOpen}
+                />
+            ),
+            customToolbarSelect: this.renderCardSelectedToolbar,
+        };
+        const { student, createCard } = this.props;
+        const { openCourseStudentDialog, openCardDialog } = this.state;
+        console.log('student is: ', student);
+        const cardData = parseCardsToTableData(student.cards);
+        console.log('cardData', cardData);
         return (
             <div>
                 <Paper>
@@ -160,13 +249,27 @@ class StudentDetail extends Component {
                             data={parseCourseStudentsToTableData(
                                 student.courses
                             )}
-                            columns={columns}
+                            columns={courseStudentsColumns}
                             options={courseStudentOptions}
                         />
                     </MuiThemeProvider>
+                    <MuiThemeProvider theme={this.getMuiTheme()}>
+                        <MUIDataTable
+                            title={'Cards'}
+                            data={cardData}
+                            columns={cardsColumns}
+                            options={cardOptions}
+                        />
+                    </MuiThemeProvider>
                 </Paper>
-                <AddCourseStudentForm
-                    open={openCourseStudentForm}
+                <AddCourseStudentDialog
+                    open={openCourseStudentDialog}
+                    handleClose={this.handleClose}
+                    studentId={student.id}
+                />
+                <CardDialog
+                    open={openCardDialog}
+                    createCard={createCard}
                     handleClose={this.handleClose}
                     studentId={student.id}
                 />
@@ -176,10 +279,11 @@ class StudentDetail extends Component {
 }
 
 StudentDetail.propTypes = {
-    classes: PropTypes.object.isRequired,
     student: PropTypes.object.isRequired,
     updateStudent: PropTypes.func.isRequired,
     deleteCourseStudent: PropTypes.func.isRequired,
+    createCard: PropTypes.func.isRequired,
+    deleteCard: PropTypes.func.isRequired,
 };
 
 export default withRouter(StudentDetail);

@@ -4,7 +4,7 @@ import { Query, Mutation } from 'react-apollo';
 import { Adopt } from 'react-adopt';
 
 import { GET_COURSES, CREATE_COURSE_STUDENT } from './graphql';
-import AddCourseStudentForm from './AddCourseStudentForm';
+import AddCourseStudentDialog from './AddCourseStudentDialog';
 
 const getCourses = ({ render, id }) => (
     <Query query={GET_COURSES}>{render}</Query>
@@ -21,7 +21,7 @@ const mapper = {
     createCourseStudent,
 };
 
-const AddTeacherFormContainer = ({ open, handleClose, studentId }) => (
+const AddCourseStudentDialogContainer = ({ open, handleClose, studentId }) => (
     <Adopt mapper={mapper}>
         {({
             getCourses: { data, loading, error },
@@ -30,7 +30,7 @@ const AddTeacherFormContainer = ({ open, handleClose, studentId }) => (
             if (loading) return null;
             if (error) return `Error: ${error}`;
             return (
-                <AddCourseStudentForm
+                <AddCourseStudentDialog
                     open={open}
                     handleClose={handleClose}
                     studentId={studentId}
@@ -42,10 +42,10 @@ const AddTeacherFormContainer = ({ open, handleClose, studentId }) => (
     </Adopt>
 );
 
-AddTeacherFormContainer.propTypes = {
+AddCourseStudentDialogContainer.propTypes = {
     open: PropTypes.bool.isRequired,
     handleClose: PropTypes.func.isRequired,
     studentId: PropTypes.string.isRequired,
 };
 
-export default AddTeacherFormContainer;
+export default AddCourseStudentDialogContainer;

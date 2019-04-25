@@ -19,6 +19,16 @@ export const GET_STUDENT = gql`
                 }
                 role
             }
+            cards {
+                id
+                expirationDate
+                active
+                validCount
+                paid
+                useHistory {
+                    id
+                }
+            }
         }
     }
 `;
@@ -42,6 +52,33 @@ export const UPDATE_STUDENT = gql`
 export const DELETE_COURSE_STUDENT = gql`
     mutation StudentDetailDeleteCourseStudent($id: ID!) {
         deleteCourseStudent(id: $id) {
+            id
+        }
+    }
+`;
+
+export const CREATE_CARD = gql`
+    mutation StudentDetailCreateCard(
+        $studentId: ID!
+        $expirationDate: DateTime!
+        $validCount: Int!
+    ) {
+        createCard(
+            studentId: $studentId
+            expirationDate: $expirationDate
+            validCount: $validCount
+        ) {
+            id
+            validCount
+            expirationDate
+            active
+        }
+    }
+`;
+
+export const DELETE_CARD = gql`
+    mutation StudentDetailDeleteCard($id: ID!) {
+        deleteCard(id: $id) {
             id
         }
     }

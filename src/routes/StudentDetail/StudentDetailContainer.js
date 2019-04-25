@@ -5,7 +5,13 @@ import { Redirect } from 'react-router-dom';
 import { Query, Mutation } from 'react-apollo';
 import { Adopt } from 'react-adopt';
 
-import { GET_STUDENT, DELETE_COURSE_STUDENT, UPDATE_STUDENT } from './graphql';
+import {
+    GET_STUDENT,
+    DELETE_COURSE_STUDENT,
+    UPDATE_STUDENT,
+    CREATE_CARD,
+    DELETE_CARD,
+} from './graphql';
 import StudentDetail from './StudentDetail';
 
 const getStudent = ({ render, id }) => (
@@ -16,6 +22,40 @@ const getStudent = ({ render, id }) => (
 
 const updateStudent = ({ render }) => (
     <Mutation mutation={UPDATE_STUDENT}>
+        {(mutation, result) => render({ mutation, result })}
+    </Mutation>
+);
+
+const createCard = ({ render, id }) => (
+    <Mutation
+        mutation={CREATE_CARD}
+        update={(cache, { data: { createCard } }) => {
+            const { student } = cache.readQuery({
+                query: GET_STUDENT,
+                variables: {
+                    id,
+                },
+            });
+            cache.writeQuery({
+                query: GET_STUDENT,
+                variables: {
+                    id,
+                },
+                data: {
+                    student: {
+                        ...student,
+                        cards: student.cards.concat([createCard]),
+                    },
+                },
+            });
+        }}
+    >
+        {(mutation, result) => render({ mutation, result })}
+    </Mutation>
+);
+
+const deleteCard = ({ render }) => (
+    <Mutation mutation={DELETE_CARD}>
         {(mutation, result) => render({ mutation, result })}
     </Mutation>
 );
@@ -55,6 +95,8 @@ const mapper = {
     getStudent,
     deleteCourseStudent,
     updateStudent,
+    createCard,
+    deleteCard,
 };
 
 const StudioDetailContainer = ({ location }) => {
@@ -69,6 +111,8 @@ const StudioDetailContainer = ({ location }) => {
                         mutation: deleteCourseStudentMutation,
                     },
                     updateStudent: { mutation: updateStudentMutation },
+                    deleteCard: { mutation: deleteCardMutation },
+                    createCard: { mutation: createCardMutation },
                 }) => {
                     if (loading) return null;
                     if (error) return `Error: ${error}`;
@@ -78,6 +122,8 @@ const StudioDetailContainer = ({ location }) => {
                             student={data.student}
                             deleteCourseStudent={deleteCourseStudentMutation}
                             updateStudent={updateStudentMutation}
+                            deleteCard={deleteCardMutation}
+                            createCard={createCardMutation}
                         />
                     );
                 }}

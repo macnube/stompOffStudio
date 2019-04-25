@@ -74,7 +74,7 @@ const parseCoursesToTableData = (courses, studentId) =>
         []
     );
 
-class AddCourseStudentForm extends Component {
+class AddCourseStudentDialog extends Component {
     //Having to add each individually because prisma has a bug
     //where cascading adds don't work for deleteMany
     //https://github.com/prisma/prisma/issues/3587
@@ -117,7 +117,7 @@ class AddCourseStudentForm extends Component {
     }
 }
 
-AddCourseStudentForm.propTypes = {
+AddCourseStudentDialog.propTypes = {
     open: PropTypes.bool.isRequired,
     handleClose: PropTypes.func.isRequired,
     courses: PropTypes.array.isRequired,
@@ -125,4 +125,4 @@ AddCourseStudentForm.propTypes = {
     studentId: PropTypes.string.isRequired,
 };
 
-export default AddCourseStudentForm;
+export default AddCourseStudentDialog;

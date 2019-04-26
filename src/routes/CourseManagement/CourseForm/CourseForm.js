@@ -59,8 +59,6 @@ class CourseForm extends React.Component {
         // this.props.navigateToStudio(newStudio);
     };
 
-    handleCreateClass = () => {};
-
     clearForm = () => {
         this.setState({
             id: '',

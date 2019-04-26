@@ -16,6 +16,7 @@ import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
 import { CustomAddToolbar, SelectedDeleteToolbar } from 'components';
 import AddCourseStudentDialog from './AddCourseStudentDialog';
 import CardDialog from './CardDialog';
+import PaymentDialog from './PaymentDialog';
 import StudentDetailHeader from './StudentDetailHeader';
 
 const courseStudentsColumns = [
@@ -57,6 +58,23 @@ const cardsColumns = [
     },
 ];
 
+const paymentsColumns = [
+    {
+        name: 'ID',
+        options: {
+            display: 'false',
+        },
+    },
+    {
+        name: 'Amount',
+    },
+    {
+        name: 'Payment Date',
+    },
+    {
+        name: 'Reason',
+    },
+];
 const parseCourseStudentsToTableData = courseStudents =>
     reduce(
         courseStudents,
@@ -86,7 +104,23 @@ const parseCardsToTableData = cards =>
                 format(parseISO(card.expirationDate), 'MMM do, yyyy'),
                 card.validCount - uses,
                 toString(card.active),
-                toString(card.paid),
+                toString(!!card.payment),
+            ];
+            acc.push(result);
+            return acc;
+        },
+        []
+    );
+
+const parsePaymentsToTableData = payments =>
+    reduce(
+        payments,
+        (acc, payment) => {
+            const result = [
+                payment.id,
+                payment.amount,
+                format(parseISO(payment.date), 'MMM do, yyyy'),
+                payment.type,
             ];
             acc.push(result);
             return acc;
@@ -98,6 +132,7 @@ class StudentDetail extends Component {
     state = {
         openCourseStudentDialog: false,
         openCardDialog: false,
+        openPaymentDialog: false,
     };
 
     handleChange = (name, isNumber = false) => event => {
@@ -156,6 +191,14 @@ class StudentDetail extends Component {
         />
     );
 
+    renderPaymentSelectedToolbar = (selectedRows, displayData) => (
+        <SelectedDeleteToolbar
+            selectedRows={selectedRows}
+            displayData={displayData}
+            handleOnDeletePress={this.handleOnDeletePaymentsPress}
+        />
+    );
+
     handleClickAddCourseOpen = () => {
         this.setState({ openCourseStudentDialog: true });
     };
@@ -164,10 +207,15 @@ class StudentDetail extends Component {
         this.setState({ openCardDialog: true });
     };
 
+    handleClickAddPaymentOpen = () => {
+        this.setState({ openPaymentDialog: true });
+    };
+
     handleClose = () => {
         this.setState({
             openCourseStudentDialog: false,
             openCardDialog: false,
+            openPaymentDialog: false,
         });
     };
 
@@ -191,6 +239,16 @@ class StudentDetail extends Component {
         });
     };
 
+    handleOnDeletePaymentsPress = ids => {
+        const { deletePayment } = this.props;
+
+        forEach(ids, id => {
+            deletePayment({
+                variables: { id },
+            });
+        });
+    };
+
     handleUpdateStudent = student => {
         const { updateStudent } = this.props;
         const { id, name, email, mobile } = student;
@@ -203,6 +261,15 @@ class StudentDetail extends Component {
                 mobile,
             },
         });
+    };
+
+    handleCreatePayment = payment => {
+        this.props.createPayment({
+            variables: {
+                ...payment,
+            },
+        });
+        this.handleClose();
     };
 
     render() {
@@ -230,11 +297,22 @@ class StudentDetail extends Component {
             ),
             customToolbarSelect: this.renderCardSelectedToolbar,
         };
+        const paymentOptions = {
+            ...baseOptions,
+            customToolbar: () => (
+                <CustomAddToolbar
+                    title={'Add Payment'}
+                    handleAddPress={this.handleClickAddPaymentOpen}
+                />
+            ),
+            customToolbarSelect: this.renderPaymentSelectedToolbar,
+        };
         const { student, createCard } = this.props;
-        const { openCourseStudentDialog, openCardDialog } = this.state;
-        console.log('student is: ', student);
-        const cardData = parseCardsToTableData(student.cards);
-        console.log('cardData', cardData);
+        const {
+            openCourseStudentDialog,
+            openCardDialog,
+            openPaymentDialog,
+        } = this.state;
         return (
             <div>
                 <Paper>
@@ -256,9 +334,17 @@ class StudentDetail extends Component {
                     <MuiThemeProvider theme={this.getMuiTheme()}>
                         <MUIDataTable
                             title={'Cards'}
-                            data={cardData}
+                            data={parseCardsToTableData(student.cards)}
                             columns={cardsColumns}
                             options={cardOptions}
+                        />
+                    </MuiThemeProvider>
+                    <MuiThemeProvider theme={this.getMuiTheme()}>
+                        <MUIDataTable
+                            title={'Payments'}
+                            data={parsePaymentsToTableData(student.payments)}
+                            columns={paymentsColumns}
+                            options={paymentOptions}
                         />
                     </MuiThemeProvider>
                 </Paper>
@@ -273,6 +359,12 @@ class StudentDetail extends Component {
                     handleClose={this.handleClose}
                     studentId={student.id}
                 />
+                <PaymentDialog
+                    open={openPaymentDialog}
+                    handleCreate={this.handleCreatePayment}
+                    handleClose={this.handleClose}
+                    student={student}
+                />
             </div>
         );
     }
@@ -284,6 +376,8 @@ StudentDetail.propTypes = {
     deleteCourseStudent: PropTypes.func.isRequired,
     createCard: PropTypes.func.isRequired,
     deleteCard: PropTypes.func.isRequired,
+    createPayment: PropTypes.func.isRequired,
+    deletePayment: PropTypes.func.isRequired,
 };
 
 export default withRouter(StudentDetail);

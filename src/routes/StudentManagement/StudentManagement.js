@@ -40,9 +40,9 @@ const columns = [
     },
 ];
 
-const parseStudentsToTableData = studentManagement =>
+const parseStudentsToTableData = students =>
     reduce(
-        studentManagement,
+        students,
         (acc, student) => {
             const courseNames = map(
                 student.courses,

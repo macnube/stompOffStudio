@@ -24,8 +24,19 @@ export const GET_STUDENT = gql`
                 expirationDate
                 active
                 validCount
-                paid
                 useHistory {
+                    id
+                }
+                payment {
+                    id
+                }
+            }
+            payments {
+                id
+                amount
+                date
+                type
+                card {
                     id
                 }
             }
@@ -72,7 +83,36 @@ export const CREATE_CARD = gql`
             validCount
             expirationDate
             active
-            paid
+            payment {
+                id
+            }
+            useHistory {
+                id
+            }
+        }
+    }
+`;
+
+export const UPDATE_CARD = gql`
+    mutation StudentDetailUpdateCard(
+        $id: ID!
+        $studentId: ID!
+        $expirationDate: DateTime!
+        $validCount: Int!
+    ) {
+        updateCard(
+            id: $id
+            studentId: $studentId
+            expirationDate: $expirationDate
+            validCount: $validCount
+        ) {
+            id
+            validCount
+            expirationDate
+            active
+            payment {
+                id
+            }
             useHistory {
                 id
             }
@@ -83,6 +123,53 @@ export const CREATE_CARD = gql`
 export const DELETE_CARD = gql`
     mutation StudentDetailDeleteCard($id: ID!) {
         deleteCard(id: $id) {
+            id
+        }
+    }
+`;
+
+export const CREATE_PAYMENT = gql`
+    mutation StudentDetailCreatePayment(
+        $type: PaymentType!
+        $date: DateTime!
+        $amount: Int!
+        $studentId: ID!
+        $cardId: ID!
+    ) {
+        createPayment(
+            type: $type
+            date: $date
+            amount: $amount
+            studentId: $studentId
+            cardId: $cardId
+        ) {
+            id
+            type
+            date
+            amount
+            student {
+                id
+                name
+                payments {
+                    id
+                    card {
+                        id
+                    }
+                }
+            }
+            card {
+                id
+                payment {
+                    id
+                }
+            }
+        }
+    }
+`;
+
+export const DELETE_PAYMENT = gql`
+    mutation StudentDetailDeletePayment($id: ID!) {
+        deletePayment(id: $id) {
             id
         }
     }

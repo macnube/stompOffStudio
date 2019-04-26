@@ -22,9 +22,9 @@ class CardDialog extends React.Component {
         this.setState({ [name]: event.target.value });
     };
 
-    handleSetExpirationDate = startTime => {
+    handleSetExpirationDate = expirationDate => {
         this.setState({
-            startTime,
+            expirationDate,
         });
     };
 

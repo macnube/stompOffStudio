@@ -1,5 +1,6 @@
 import React from 'react';
 import filter from 'lodash/filter';
+import find from 'lodash/find';
 import { parse } from 'query-string';
 import { Redirect } from 'react-router-dom';
 import { Query, Mutation } from 'react-apollo';
@@ -11,6 +12,8 @@ import {
     UPDATE_STUDENT,
     CREATE_CARD,
     DELETE_CARD,
+    CREATE_PAYMENT,
+    DELETE_PAYMENT,
 } from './graphql';
 import StudentDetail from './StudentDetail';
 
@@ -116,12 +119,59 @@ const deleteCourseStudent = ({ render, id }) => (
     </Mutation>
 );
 
+const deletePayment = ({ render, id }) => (
+    <Mutation
+        mutation={DELETE_PAYMENT}
+        update={(cache, { data: { deletePayment } }) => {
+            const { student } = cache.readQuery({
+                query: GET_STUDENT,
+                variables: { id },
+            });
+            const payment = find(student.payments, { id: deletePayment.id });
+            let newStudent = {
+                ...student,
+                payments: filter(
+                    student.payments,
+                    payment => payment.id !== deletePayment.id
+                ),
+            };
+            if (payment.card) {
+                const card = find(student.cards, { id: payment.card.id });
+                const cards = filter(
+                    student.cards,
+                    card => card.id !== payment.card.id
+                );
+                const newCard = { ...card, payment: null };
+                const newCards = cards.concat([newCard]);
+                newStudent = { ...newStudent, cards: newCards };
+            }
+            cache.writeQuery({
+                query: GET_STUDENT,
+                variables: { id },
+                data: {
+                    student: newStudent,
+                },
+            });
+        }}
+    >
+        {(mutation, result) => render({ mutation, result })}
+    </Mutation>
+);
+
+const createPayment = ({ render }) => (
+    <Mutation mutation={CREATE_PAYMENT}>
+        {(mutation, result) => render({ mutation, result })}
+    </Mutation>
+);
+
 const mapper = {
     getStudent,
     deleteCourseStudent,
     updateStudent,
     createCard,
     deleteCard,
+    createPayment,
+    deletePayment,
 };
 
 const StudioDetailContainer = ({ location }) => {
@@ -138,6 +188,8 @@ const StudioDetailContainer = ({ location }) => {
                     updateStudent: { mutation: updateStudentMutation },
                     deleteCard: { mutation: deleteCardMutation },
                     createCard: { mutation: createCardMutation },
+                    createPayment: { mutation: createPaymentMutation },
+                    deletePayment: { mutation: deletePaymentMutation },
                 }) => {
                     if (loading) return null;
                     if (error) return `Error: ${error}`;
@@ -149,6 +201,8 @@ const StudioDetailContainer = ({ location }) => {
                             updateStudent={updateStudentMutation}
                             deleteCard={deleteCardMutation}
                             createCard={createCardMutation}
+                            createPayment={createPaymentMutation}
+                            deletePayment={deletePaymentMutation}
                         />
                     );
                 }}

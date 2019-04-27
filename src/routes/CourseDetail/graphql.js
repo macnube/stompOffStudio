@@ -94,3 +94,12 @@ export const DELETE_COURSE_STUDENT = gql`
         }
     }
 `;
+
+export const GET_STUDENT_FRAGMENT = gql`
+    fragment CourseDetailStudent on Student {
+        id
+        courses {
+            id
+        }
+    }
+`;

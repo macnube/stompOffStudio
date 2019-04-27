@@ -5,6 +5,7 @@ import some from 'lodash/some';
 import forEach from 'lodash/forEach';
 import MUIDataTable from 'mui-datatables';
 
+import * as gql from 'constants/gql';
 import { FullScreenDialog, SelectedAddToolbar } from 'components';
 
 const columns = [
@@ -57,7 +58,14 @@ class AddStudentsToCourseForm extends Component {
     };
 
     render() {
-        const { students, open, handleClose, courseId, role } = this.props;
+        const {
+            students,
+            open,
+            handleClose,
+            courseId,
+            role,
+            title,
+        } = this.props;
         const options = {
             responsive: 'scroll',
             customToolbarSelect: (selectedRows, displayData) => (
@@ -72,7 +80,7 @@ class AddStudentsToCourseForm extends Component {
         return (
             <FullScreenDialog
                 open={open}
-                title={`Add Students as ${role}`}
+                title={title}
                 handleClose={handleClose}
             >
                 <MUIDataTable
@@ -92,7 +100,8 @@ AddStudentsToCourseForm.propTypes = {
     students: PropTypes.array.isRequired,
     createCourseStudent: PropTypes.func.isRequired,
     courseId: PropTypes.string.isRequired,
-    role: PropTypes.oneOf(['Leader', 'Follower', 'Solo']).isRequired,
+    role: PropTypes.oneOf(gql.DANCE_ROLES).isRequired,
+    title: PropTypes.string.isRequired,
 };
 
 export default AddStudentsToCourseForm;

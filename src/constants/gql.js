@@ -1,3 +1,9 @@
-export const PAYMENT_TYPES = ['Card', 'Private', 'DropIn'];
+export const PAYMENT_TYPES = ['CARD', 'PRIVATE', 'DROP_IN'];
 
-export const DANCE_ROLE = ['Leader', 'Follower', 'Solo'];
+export const DANCE_ROLE = {
+    LEADER: 'LEADER',
+    FOLLOWER: 'FOLLOWER',
+    SOLO: 'SOLO',
+};
+
+export const DANCE_ROLES = ['LEADER', 'FOLLOWER', 'SOLO'];

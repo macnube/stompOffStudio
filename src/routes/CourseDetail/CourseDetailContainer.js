@@ -12,8 +12,8 @@ import {
     UPDATE_COURSE,
     REMOVE_TEACHER_FROM_COURSE,
     DELETE_COURSE_STUDENT,
+    GET_STUDENT_FRAGMENT,
 } from './graphql';
-import { GET_STUDENT } from 'routes/StudentDetail';
 import CourseDetail from './CourseDetail';
 
 const getCourse = ({ render, id }) => (
@@ -47,11 +47,9 @@ const deleteCourseStudent = ({ render, id }) => (
             const courseStudent = find(course.courseStudents, {
                 id: deleteCourseStudent.id,
             });
-            const { student } = cache.readQuery({
-                query: GET_STUDENT,
-                variables: {
-                    id: courseStudent.student.id,
-                },
+            const student = cache.readFragment({
+                id: `Student:${courseStudent.student.id}`,
+                fragment: GET_STUDENT_FRAGMENT,
             });
             cache.writeQuery({
                 query: GET_COURSE,
@@ -69,21 +67,19 @@ const deleteCourseStudent = ({ render, id }) => (
                     },
                 },
             });
-            cache.writeQuery({
-                query: GET_STUDENT,
-                variables: {
-                    id: student.id,
-                },
-                data: {
-                    student: {
+            if (student) {
+                cache.writeFragment({
+                    id: `Student:${student.id}`,
+                    fragment: GET_STUDENT_FRAGMENT,
+                    data: {
                         ...student,
                         courses: filter(
                             student.courses,
                             courses => courses.id !== deleteCourseStudent.id
                         ),
                     },
-                },
-            });
+                });
+            }
         }}
     >
         {(mutation, result) => render({ mutation, result })}

@@ -17,6 +17,7 @@ import { CustomAddToolbar, SelectedDeleteToolbar } from 'components';
 import CourseDetailHeader from './CourseDetailHeader';
 import AddTeacherForm from './AddTeacherForm';
 import AddStudentsToCourseForm from './AddStudentsToCourseForm';
+import { DANCE_ROLE } from 'constants/gql';
 
 const columns = [
     {
@@ -242,7 +243,7 @@ class CourseDetail extends Component {
                             title={'Leaders'}
                             data={parseCourseStudentsToTableData(
                                 course.courseStudents,
-                                'Leader'
+                                DANCE_ROLE.LEADER
                             )}
                             columns={columns}
                             options={leadersOptions}
@@ -253,7 +254,7 @@ class CourseDetail extends Component {
                             title={'Followers'}
                             data={parseCourseStudentsToTableData(
                                 course.courseStudents,
-                                'Follower'
+                                DANCE_ROLE.FOLLOWER
                             )}
                             columns={columns}
                             options={followersOptions}
@@ -279,7 +280,8 @@ class CourseDetail extends Component {
                             open={openCourseLeadersForm}
                             handleClose={this.handleClose}
                             courseId={course.id}
-                            role="Leader"
+                            role={DANCE_ROLE.LEADER}
+                            title="Add Students as Leader"
                         />
                     ) : null}
                     {course && course.id ? (
@@ -287,7 +289,8 @@ class CourseDetail extends Component {
                             open={openCourseFollowersForm}
                             handleClose={this.handleClose}
                             courseId={course.id}
-                            role="Follower"
+                            role={DANCE_ROLE.FOLLOWER}
+                            title="Add Students as Follower"
                         />
                     ) : null}
                 </Paper>

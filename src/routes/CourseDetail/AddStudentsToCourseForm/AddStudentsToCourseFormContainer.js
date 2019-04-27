@@ -5,7 +5,7 @@ import { Adopt } from 'react-adopt';
 
 import { GET_STUDENTS, CREATE_COURSE_STUDENT } from './graphql';
 import AddStudentsToCourseForm from './AddStudentsToCourseForm';
-import { DANCE_ROLE } from 'constants/gql';
+import { DANCE_ROLES } from 'constants/gql';
 
 const getStudents = ({ render }) => (
     <Query query={GET_STUDENTS}>{render}</Query>
@@ -27,6 +27,7 @@ const AddStudentsToCourseFormContainer = ({
     handleClose,
     courseId,
     role,
+    title,
 }) => (
     <Adopt mapper={mapper}>
         {({
@@ -43,6 +44,7 @@ const AddStudentsToCourseFormContainer = ({
                     createCourseStudent={createCourseStudentMutation}
                     students={data.students}
                     role={role}
+                    title={title}
                 />
             );
         }}
@@ -53,7 +55,7 @@ AddStudentsToCourseFormContainer.propTypes = {
     open: PropTypes.bool.isRequired,
     handleClose: PropTypes.func.isRequired,
     courseId: PropTypes.string.isRequired,
-    role: PropTypes.oneOf(DANCE_ROLE).isRequired,
+    role: PropTypes.oneOf(DANCE_ROLES).isRequired,
 };
 
 export default AddStudentsToCourseFormContainer;

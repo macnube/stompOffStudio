@@ -237,15 +237,6 @@ class CourseDetail extends Component {
                         handleOnCancel={this.navigateToCourseManagement}
                         handleOnSave={this.handleUpdateCourse}
                     />
-
-                    <MuiThemeProvider theme={this.getMuiTheme()}>
-                        <MUIDataTable
-                            title={'Teachers'}
-                            data={parseTeachersToTableData(course.teachers)}
-                            columns={columns}
-                            options={teacherOptions}
-                        />
-                    </MuiThemeProvider>
                     <MuiThemeProvider theme={this.getMuiTheme()}>
                         <MUIDataTable
                             title={'Leaders'}
@@ -266,6 +257,14 @@ class CourseDetail extends Component {
                             )}
                             columns={columns}
                             options={followersOptions}
+                        />
+                    </MuiThemeProvider>
+                    <MuiThemeProvider theme={this.getMuiTheme()}>
+                        <MUIDataTable
+                            title={'Teachers'}
+                            data={parseTeachersToTableData(course.teachers)}
+                            columns={columns}
+                            options={teacherOptions}
                         />
                     </MuiThemeProvider>
                     {course && course.id ? (

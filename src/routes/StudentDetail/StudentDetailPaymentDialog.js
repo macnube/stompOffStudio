@@ -4,7 +4,6 @@ import format from 'date-fns/format';
 import React from 'react';
 import PropTypes from 'prop-types';
 import map from 'lodash/map';
-import reduce from 'lodash/reduce';
 import filter from 'lodash/filter';
 import isNil from 'lodash/isNil';
 import toNumber from 'lodash/toNumber';
@@ -18,11 +17,11 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import MenuItem from '@material-ui/core/MenuItem';
-import styles from 'routes/CourseManagement/styles';
+import styles from './styles';
 
-class PaymentDialog extends React.Component {
+class StudentDetailPaymentDialog extends React.Component {
     state = {
-        type: 'Course',
+        type: 'Card',
         amount: 0,
         date: new Date(),
         cardId: '',
@@ -52,7 +51,7 @@ class PaymentDialog extends React.Component {
 
     clearForm = () => {
         this.setState({
-            type: 'Course',
+            type: 'Card',
             amount: 0,
             date: new Date(),
             cardId: '',
@@ -67,7 +66,7 @@ class PaymentDialog extends React.Component {
     renderForm = () => {
         const { classes } = this.props;
         const { type, amount, date, cardId } = this.state;
-        const PAYMENT_TYPES = ['Course', 'Private', 'DropIn'];
+        const PAYMENT_TYPES = ['Card', 'Private', 'DropIn'];
         return (
             <React.Fragment>
                 <TextField
@@ -159,7 +158,7 @@ class PaymentDialog extends React.Component {
     }
 }
 
-PaymentDialog.propTypes = {
+StudentDetailPaymentDialog.propTypes = {
     classes: PropTypes.object.isRequired,
     open: PropTypes.bool.isRequired,
     handleCreate: PropTypes.func.isRequired,
@@ -167,4 +166,4 @@ PaymentDialog.propTypes = {
     student: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(PaymentDialog);
+export default withStyles(styles)(StudentDetailPaymentDialog);

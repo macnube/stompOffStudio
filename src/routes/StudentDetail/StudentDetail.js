@@ -16,7 +16,7 @@ import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
 import { CustomAddToolbar, SelectedDeleteToolbar } from 'components';
 import AddCourseStudentDialog from './AddCourseStudentDialog';
 import CardDialog from './CardDialog';
-import PaymentDialog from './PaymentDialog';
+import StudentDetailPaymentDialog from './StudentDetailPaymentDialog';
 import StudentDetailHeader from './StudentDetailHeader';
 
 const courseStudentsColumns = [
@@ -359,7 +359,7 @@ class StudentDetail extends Component {
                     handleClose={this.handleClose}
                     studentId={student.id}
                 />
-                <PaymentDialog
+                <StudentDetailPaymentDialog
                     open={openPaymentDialog}
                     handleCreate={this.handleCreatePayment}
                     handleClose={this.handleClose}

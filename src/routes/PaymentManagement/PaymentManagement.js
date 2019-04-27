@@ -11,7 +11,7 @@ import AddIcon from '@material-ui/icons/Add';
 import Fab from '@material-ui/core/Fab';
 
 import { ContentToolbar, SelectedDeleteToolbar } from 'components';
-import PaymentDialog from './PaymentDialog';
+import PaymentManagementPaymentDialog from './PaymentManagementPaymentDialog';
 
 const columns = [
     {
@@ -120,7 +120,7 @@ class StudioManagement extends Component {
                         <AddIcon />
                     </Fab>
                 </ContentToolbar>
-                <PaymentDialog
+                <PaymentManagementPaymentDialog
                     open={open}
                     payment={find(payments, { id: selectedPaymentId })}
                     handleClose={this.handleClose}

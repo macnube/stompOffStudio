@@ -10,11 +10,7 @@ import toNumber from 'lodash/toNumber';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
-import {
-    MuiPickersUtilsProvider,
-    TimePicker,
-    DatePicker,
-} from 'material-ui-pickers';
+import { MuiPickersUtilsProvider, DatePicker } from 'material-ui-pickers';
 import MUIDataTable from 'mui-datatables';
 import DateFnsUtils from '@date-io/date-fns';
 import Dialog from '@material-ui/core/Dialog';
@@ -47,7 +43,7 @@ const parseStudentsToTableData = students =>
         []
     );
 
-class PaymentDialog extends React.Component {
+class PaymentManagementPaymentDialog extends React.Component {
     state = {
         type: 'Course',
         amount: 0,
@@ -120,7 +116,7 @@ class PaymentDialog extends React.Component {
     renderForm = () => {
         const { classes } = this.props;
         const { type, amount, date, cardId } = this.state;
-        const PAYMENT_TYPES = ['Course', 'PRIVATE', 'DropIn'];
+        const PAYMENT_TYPES = ['Card', 'PRIVATE', 'DropIn'];
         return (
             <React.Fragment>
                 <TextField
@@ -216,7 +212,7 @@ class PaymentDialog extends React.Component {
     }
 }
 
-PaymentDialog.propTypes = {
+PaymentManagementPaymentDialog.propTypes = {
     classes: PropTypes.object.isRequired,
     students: PropTypes.array.isRequired,
     open: PropTypes.bool.isRequired,
@@ -224,4 +220,4 @@ PaymentDialog.propTypes = {
     handleClose: PropTypes.func.isRequired,
 };
 
-export default withStyles(styles)(PaymentDialog);
+export default withStyles(styles)(PaymentManagementPaymentDialog);

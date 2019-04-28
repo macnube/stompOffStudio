@@ -67,7 +67,6 @@ const StudioManagementContainer = () => (
                 return `Error: Studios is empty. Please create one or handle this error more gracefully`;
             }
             if (createStudioResult.data) {
-                console.log('createStudioResult is: ', createStudioResult);
                 return (
                     <Redirect
                         to={{

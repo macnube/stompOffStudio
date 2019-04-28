@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import reduce from 'lodash/reduce';
 import forEach from 'lodash/forEach';
 import MUIDataTable from 'mui-datatables';
 
 import { SelectedAddToolbar, FullScreenDialog } from 'components';
+import { parseTeachersToTableData } from 'routes/CourseDetail/parse';
 
 const columns = [
     {
@@ -20,17 +20,6 @@ const columns = [
         name: 'Email',
     },
 ];
-
-const parseTeachersToTableData = teachers =>
-    reduce(
-        teachers,
-        (acc, teacher) => {
-            const result = [teacher.id, teacher.name, teacher.email];
-            acc.push(result);
-            return acc;
-        },
-        []
-    );
 
 class AddTeacherForm extends Component {
     //Having to delete each teacher individually because prisma has a bug

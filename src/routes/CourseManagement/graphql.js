@@ -24,7 +24,7 @@ export const GET_COURSES = gql`
                 }
                 role
             }
-            courseHistory {
+            instances {
                 id
             }
             studentLimit
@@ -78,7 +78,7 @@ export const CREATE_COURSE = gql`
                 }
                 role
             }
-            courseHistory {
+            instances {
                 id
             }
             studentLimit

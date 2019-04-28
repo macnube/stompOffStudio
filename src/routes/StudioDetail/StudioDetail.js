@@ -86,7 +86,7 @@ class StudioDetail extends Component {
             variables: {
                 name,
                 capacity,
-                studioId: this.state.id,
+                studioId: this.props.studio.id,
             },
         });
         this.handleClose();

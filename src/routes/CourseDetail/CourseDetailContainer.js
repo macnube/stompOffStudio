@@ -8,11 +8,13 @@ import { Query, Mutation } from 'react-apollo';
 import { Adopt } from 'react-adopt';
 
 import {
-    GET_COURSE,
     UPDATE_COURSE,
     REMOVE_TEACHER_FROM_COURSE,
     DELETE_COURSE_STUDENT,
     GET_STUDENT_FRAGMENT,
+    CREATE_COURSE_INSTANCE,
+    DELETE_COURSE_INSTANCE,
+    GET_COURSE,
 } from './graphql';
 import CourseDetail from './CourseDetail';
 
@@ -86,11 +88,51 @@ const deleteCourseStudent = ({ render, id }) => (
     </Mutation>
 );
 
+const deleteCourseInstance = ({ render, id }) => (
+    <Mutation
+        mutation={DELETE_COURSE_INSTANCE}
+        update={(cache, { data: { deleteCourseInstance } }) => {
+            const { course } = cache.readQuery({
+                query: GET_COURSE,
+                variables: {
+                    id,
+                },
+            });
+            cache.writeQuery({
+                query: GET_COURSE,
+                variables: {
+                    id,
+                },
+                data: {
+                    course: {
+                        ...course,
+                        instances: filter(
+                            course.instances,
+                            courseInstance =>
+                                courseInstance.id !== deleteCourseInstance.id
+                        ),
+                    },
+                },
+            });
+        }}
+    >
+        {(mutation, result) => render({ mutation, result })}
+    </Mutation>
+);
+
+const createCourseInstance = ({ render }) => (
+    <Mutation mutation={CREATE_COURSE_INSTANCE}>
+        {(mutation, result) => render({ mutation, result })}
+    </Mutation>
+);
+
 const mapper = {
     getCourse,
     updateCourse,
     removeTeacherFromCourse,
     deleteCourseStudent,
+    createCourseInstance,
+    deleteCourseInstance,
 };
 
 const CourseDetailContainer = ({ location }) => {
@@ -107,10 +149,16 @@ const CourseDetailContainer = ({ location }) => {
                     deleteCourseStudent: {
                         mutation: deleteCourseStudentMutation,
                     },
+                    createCourseInstance: {
+                        mutation: createCourseInstanceMutation,
+                    },
+                    deleteCourseInstance: {
+                        mutation: deleteCourseInstanceMutation,
+                    },
                 }) => {
                     if (loading) return null;
                     if (error) return `Error: ${error}`;
-                    if (!data.course) return `Error: 404`;
+                    console.log('data is: ', data);
                     return (
                         <CourseDetail
                             course={data.course}
@@ -119,6 +167,8 @@ const CourseDetailContainer = ({ location }) => {
                             removeTeacherFromCourse={
                                 removeTeacherFromCourseMutation
                             }
+                            createCourseInstance={createCourseInstanceMutation}
+                            deleteCourseInstance={deleteCourseInstanceMutation}
                         />
                     );
                 }}

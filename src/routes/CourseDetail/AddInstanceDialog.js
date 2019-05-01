@@ -59,6 +59,8 @@ class AddInstanceDialog extends React.Component {
             <MuiPickersUtilsProvider utils={DateFnsUtils}>
                 <Dialog
                     open={open}
+                    fullWidth
+                    maxWidth="md"
                     onClose={handleClose.bind(null, this.clearForm)}
                     aria-labelledby="form-dialog-title"
                 >
@@ -75,6 +77,13 @@ class AddInstanceDialog extends React.Component {
                             margin="normal"
                             autoFocus
                         />
+                        <DatePicker
+                            margin="normal"
+                            label="Date"
+                            value={date}
+                            className={classes.textField}
+                            onChange={this.handleSetDate}
+                        />
                         <TextField
                             id="standard-name"
                             label="Recap URL"
@@ -88,16 +97,9 @@ class AddInstanceDialog extends React.Component {
                             label="Notes"
                             variant="outlined"
                             value={notes}
-                            className={classes.textField}
                             onChange={this.handleChange('notes')}
                             margin="normal"
-                        />
-                        <DatePicker
-                            margin="normal"
-                            label="Date"
-                            value={date}
-                            className={classes.textField}
-                            onChange={this.handleSetDate}
+                            fullWidth
                         />
                     </DialogContent>
                     <DialogActions>

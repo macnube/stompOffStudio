@@ -32,19 +32,9 @@ const DETAIL_COURSE_FRAGMENT = gql`
             topic
             notes
             recapUrl
-            attendees {
+            participants {
                 id
-                student {
-                    id
-                    name
-                }
-            }
-            absentees {
-                id
-                student {
-                    id
-                    name
-                }
+                status
             }
         }
         room {

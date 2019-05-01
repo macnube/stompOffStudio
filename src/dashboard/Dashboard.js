@@ -25,6 +25,7 @@ import {
     StudioManagement,
     StudioDetail,
     PaymentManagement,
+    CourseInstance,
 } from 'routes';
 import ListItems from './ListItems';
 import styles from './styles';
@@ -155,6 +156,11 @@ class Dashboard extends React.Component {
                         exact
                         path="/paymentManagement"
                         component={PaymentManagement}
+                    />
+                    <Route
+                        exact
+                        path="/courseInstance"
+                        component={CourseInstance}
                     />
                 </main>
             </div>

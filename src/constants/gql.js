@@ -6,4 +6,18 @@ export const DANCE_ROLE = {
     SOLO: 'SOLO',
 };
 
-export const DANCE_ROLES = ['LEADER', 'FOLLOWER', 'SOLO'];
+export const DANCE_ROLES = [
+    DANCE_ROLE.LEADER,
+    DANCE_ROLE.FOLLOWER,
+    DANCE_ROLE.SOLO,
+];
+
+export const PARTICIPANT_STATUS = {
+    PRESENT: 'PRESENT',
+    ABSENT: 'ABSENT',
+};
+
+export const PARTICIPANT_STATUSES = [
+    PARTICIPANT_STATUS.PRESENT,
+    PARTICIPANT_STATUS.ABSENT,
+];

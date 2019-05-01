@@ -96,6 +96,17 @@ class CourseDetail extends Component {
         });
     };
 
+    navigateToInstance = instanceId => {
+        this.props.history.push({
+            pathname: './courseInstance',
+            search: `id=${instanceId}`,
+        });
+    };
+
+    handleNavigateToInstance = rowData => {
+        this.navigateToInstance(rowData[0]);
+    };
+
     handleNavigateToStudentDetail = rowData => {
         const { course } = this.props;
         const courseStudent = find(course.courseStudents, {
@@ -266,6 +277,7 @@ class CourseDetail extends Component {
         };
         const instanceOptions = {
             ...baseOptions,
+            onRowClick: this.handleNavigateToInstance,
             customToolbar: () => (
                 <CustomAddToolbar
                     title={'Add a Course Instance'}
@@ -281,7 +293,6 @@ class CourseDetail extends Component {
             openCourseFollowersForm,
             openInstanceForm,
         } = this.state;
-        console.log('course is: ', course);
         return (
             <MuiPickersUtilsProvider utils={DateFnsUtils}>
                 <Paper>

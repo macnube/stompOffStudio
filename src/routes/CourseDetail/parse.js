@@ -1,6 +1,7 @@
 import filter from 'lodash/filter';
 import reduce from 'lodash/reduce';
 
+import { PARTICIPANT_STATUS } from 'constants/gql';
 import { getTableDate } from 'utils/date';
 
 export const parseCourseStudentsToTableData = (courseStudents, role) =>
@@ -26,8 +27,17 @@ export const parseTeachersToTableData = teachers =>
         []
     );
 
-const getNumberOfParticipants = participants =>
-    participants && participants.length ? participants.length : 0;
+const getNumberOfParticipants = (participants, status) =>
+    reduce(
+        participants,
+        (result, participant) => {
+            if (participant.status === status) {
+                return ++result;
+            }
+            return result;
+        },
+        0
+    );
 
 export const parseInstancesToTableData = instances =>
     reduce(
@@ -37,8 +47,14 @@ export const parseInstancesToTableData = instances =>
                 instance.id,
                 getTableDate(instance.date),
                 instance.topic,
-                getNumberOfParticipants(instance.attendees),
-                getNumberOfParticipants(instance.absentees),
+                getNumberOfParticipants(
+                    instance.participants,
+                    PARTICIPANT_STATUS.PRESENT
+                ),
+                getNumberOfParticipants(
+                    instance.participants,
+                    PARTICIPANT_STATUS.ABSENT
+                ),
             ];
             acc.push(result);
             return acc;

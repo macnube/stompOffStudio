@@ -1,3 +1,3 @@
-import Overview from './Overview';
+import OverviewContainer from './OverviewContainer';
 
-export default Overview;
+export default OverviewContainer;

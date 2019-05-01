@@ -1,32 +1,98 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-import SimpleLineChart from './SimpleLineChart';
-import SimpleTable from './SimpleTable';
-import styles from './styles';
+import filter from 'lodash/filter';
+import { isAfter, parseISO } from 'date-fns';
+import { withRouter } from 'react-router-dom';
+import MUIDataTable from 'mui-datatables';
+import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
+import Paper from '@material-ui/core/Paper';
 
-const Overview = ({ classes }) => {
-    return (
-        <Fragment>
-            <Typography variant="h4" gutterBottom component="h2">
-                Orders
-            </Typography>
-            <Typography component="div" className={classes.chartContainer}>
-                <SimpleLineChart />
-            </Typography>
-            <Typography variant="h4" gutterBottom component="h2">
-                Products
-            </Typography>
-            <div className={classes.tableContainer}>
-                <SimpleTable />
-            </div>
-        </Fragment>
-    );
-};
+import { parseInstancesToTableData } from './parse';
+
+const instanceColumns = [
+    {
+        name: 'ID',
+        options: {
+            display: 'false',
+        },
+    },
+    {
+        name: 'Date',
+    },
+    {
+        name: 'Topic',
+    },
+    {
+        name: '# of Attendees',
+    },
+    {
+        name: '# of Absentees',
+    },
+];
+
+class Overview extends React.Component {
+    getMuiTheme = () =>
+        createMuiTheme({
+            overrides: {
+                MuiPaper: {
+                    elevation4: {
+                        boxShadow: '0 0 0 0',
+                    },
+                },
+            },
+        });
+
+    navigateToInstance = instanceId => {
+        this.props.history.push({
+            pathname: './courseInstance',
+            search: `id=${instanceId}`,
+        });
+    };
+
+    handleNavigateToInstance = rowData => {
+        this.navigateToInstance(rowData[0]);
+    };
+
+    render() {
+        const instanceOptions = {
+            responsive: 'scroll',
+            selectableRows: 'none',
+            onRowClick: this.handleNavigateToInstance,
+        };
+
+        const { instances } = this.props;
+        const now = new Date();
+        const recentInstances = filter(instances, instance => {
+            return isAfter(now, parseISO(instance.date));
+        });
+        const upcomingInstances = filter(instances, instance =>
+            isAfter(parseISO(instance.date), now)
+        );
+        return (
+            <Paper>
+                <MuiThemeProvider theme={this.getMuiTheme()}>
+                    <MUIDataTable
+                        title={'Recent Instances'}
+                        data={parseInstancesToTableData(recentInstances)}
+                        columns={instanceColumns}
+                        options={instanceOptions}
+                    />
+                </MuiThemeProvider>
+                <MuiThemeProvider theme={this.getMuiTheme()}>
+                    <MUIDataTable
+                        title={'Upcoming Instances'}
+                        data={parseInstancesToTableData(upcomingInstances)}
+                        columns={instanceColumns}
+                        options={instanceOptions}
+                    />
+                </MuiThemeProvider>
+            </Paper>
+        );
+    }
+}
 
 Overview.propTypes = {
-    classes: PropTypes.object.isRequired,
+    instances: PropTypes.array.isRequired,
 };
 
-export default withStyles(styles)(Overview);
+export default withRouter(Overview);

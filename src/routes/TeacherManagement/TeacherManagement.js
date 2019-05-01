@@ -29,12 +29,6 @@ const columns = [
         name: 'Mobile',
     },
     {
-        name: 'ClassIds',
-        options: {
-            display: 'false',
-        },
-    },
-    {
         name: 'Classes Taught',
     },
 ];
@@ -43,7 +37,7 @@ const parseTeachersToTableData = teachers =>
     reduce(
         teachers,
         (acc, teacher) => {
-            const classNames = map(teacher.classes, c => c.name).join(', ');
+            const classNames = map(teacher.courses, c => c.name).join(', ');
             const result = [
                 teacher.id,
                 teacher.name,

@@ -128,6 +128,15 @@ export const DELETE_CARD = gql`
     }
 `;
 
+export const PAY_CARD = gql`
+    mutation StudentDetailPayCard($id: ID!) {
+        payCard(id: $id) {
+            id
+            paid
+        }
+    }
+`;
+
 export const CREATE_PAYMENT = gql`
     mutation StudentDetailCreatePayment(
         $type: PaymentType!

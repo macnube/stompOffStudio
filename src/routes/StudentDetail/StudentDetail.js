@@ -264,11 +264,18 @@ class StudentDetail extends Component {
     };
 
     handleCreatePayment = payment => {
-        this.props.createPayment({
+        const { createPayment, payCard } = this.props;
+        createPayment({
             variables: {
                 ...payment,
             },
         });
+        payCard({
+            variables: {
+                id: payment.cardId,
+            },
+        });
+
         this.handleClose();
     };
 
@@ -378,6 +385,7 @@ StudentDetail.propTypes = {
     deleteCard: PropTypes.func.isRequired,
     createPayment: PropTypes.func.isRequired,
     deletePayment: PropTypes.func.isRequired,
+    payCard: PropTypes.func.isRequired,
 };
 
 export default withRouter(StudentDetail);

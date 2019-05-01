@@ -17,11 +17,13 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import MenuItem from '@material-ui/core/MenuItem';
+
+import { PAYMENT_TYPE, PAYMENT_TYPES } from 'constants/gql';
 import styles from './styles';
 
 class StudentDetailPaymentDialog extends React.Component {
     state = {
-        type: 'Card',
+        type: PAYMENT_TYPE.CARD,
         amount: 0,
         date: new Date(),
         cardId: '',
@@ -43,7 +45,6 @@ class StudentDetailPaymentDialog extends React.Component {
 
     handleCreatePayment = () => {
         const { handleCreate, student } = this.props;
-        console.log('here in handleCreatePayment with: ', this.state);
         handleCreate({ ...this.state, studentId: student.id });
         this.clearForm();
         // this.props.navigateToStudio(newStudio);
@@ -66,7 +67,6 @@ class StudentDetailPaymentDialog extends React.Component {
     renderForm = () => {
         const { classes } = this.props;
         const { type, amount, date, cardId } = this.state;
-        const PAYMENT_TYPES = ['Card', 'Private', 'DropIn'];
         return (
             <React.Fragment>
                 <TextField

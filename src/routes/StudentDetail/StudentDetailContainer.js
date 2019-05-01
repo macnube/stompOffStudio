@@ -14,6 +14,7 @@ import {
     DELETE_CARD,
     CREATE_PAYMENT,
     DELETE_PAYMENT,
+    PAY_CARD,
 } from './graphql';
 import StudentDetail from './StudentDetail';
 
@@ -164,6 +165,12 @@ const createPayment = ({ render }) => (
     </Mutation>
 );
 
+const payCard = ({ render }) => (
+    <Mutation mutation={PAY_CARD}>
+        {(mutation, result) => render({ mutation, result })}
+    </Mutation>
+);
+
 const mapper = {
     getStudent,
     deleteCourseStudent,
@@ -172,11 +179,11 @@ const mapper = {
     deleteCard,
     createPayment,
     deletePayment,
+    payCard,
 };
 
 const StudioDetailContainer = ({ location }) => {
     const params = parse(location.search);
-    console.log('params are: ', params);
     if (params.id) {
         return (
             <Adopt mapper={mapper} id={params.id}>
@@ -190,6 +197,7 @@ const StudioDetailContainer = ({ location }) => {
                     createCard: { mutation: createCardMutation },
                     createPayment: { mutation: createPaymentMutation },
                     deletePayment: { mutation: deletePaymentMutation },
+                    payCard: { mutation: payCardMutation },
                 }) => {
                     if (loading) return null;
                     if (error) return `Error: ${error}`;
@@ -203,6 +211,7 @@ const StudioDetailContainer = ({ location }) => {
                             createCard={createCardMutation}
                             createPayment={createPaymentMutation}
                             deletePayment={deletePaymentMutation}
+                            payCard={payCardMutation}
                         />
                     );
                 }}

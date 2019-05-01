@@ -14,7 +14,7 @@ import styles from './styles';
 
 class CardDialog extends React.Component {
     state = {
-        expirationDate: addWeeks(new Date(), 8),
+        expirationDate: addWeeks(new Date(), 10),
         validCount: 8,
     };
 

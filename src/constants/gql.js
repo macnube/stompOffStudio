@@ -1,3 +1,9 @@
+export const PAYMENT_TYPE = {
+    CARD: 'CARD',
+    PRIVATE: 'PRIVATE',
+    DROP_IN: 'DROP_IN',
+};
+
 export const PAYMENT_TYPES = ['CARD', 'PRIVATE', 'DROP_IN'];
 
 export const DANCE_ROLE = {

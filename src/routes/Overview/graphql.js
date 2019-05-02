@@ -31,24 +31,6 @@ export const GET_OVERVIEW_INSTANCES = gql`
     }
 `;
 
-export const GET_PAYMENTS = gql`
-    query OverviewGetPayments {
-        payments {
-            id
-            type
-            date
-            amount
-            student {
-                id
-                name
-            }
-            card {
-                id
-            }
-        }
-    }
-`;
-
 export const GET_UNPAID_CARDS = gql`
     query OverviewGetUnpaidCards {
         unpaidCards {
@@ -60,8 +42,12 @@ export const GET_UNPAID_CARDS = gql`
                 id
                 name
             }
+            useHistory {
+                id
+            }
             paid
-            validCount
+            expirationDate
+            value
         }
     }
 `;

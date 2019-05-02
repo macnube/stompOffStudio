@@ -15,7 +15,7 @@ import styles from './styles';
 class CardDialog extends React.Component {
     state = {
         expirationDate: addWeeks(new Date(), 10),
-        validCount: 8,
+        value: 8,
     };
 
     handleChange = name => event => {
@@ -30,11 +30,11 @@ class CardDialog extends React.Component {
 
     handleCreate = () => {
         const { createCard, handleClose, studentId } = this.props;
-        const { expirationDate, validCount } = this.state;
+        const { expirationDate, value } = this.state;
         createCard({
             variables: {
                 expirationDate,
-                validCount,
+                value,
                 studentId,
             },
         });
@@ -51,7 +51,7 @@ class CardDialog extends React.Component {
 
     render() {
         const { classes, open, handleClose } = this.props;
-        const { validCount, expirationDate } = this.state;
+        const { value, expirationDate } = this.state;
         return (
             <MuiPickersUtilsProvider utils={DateFnsUtils}>
                 <Dialog
@@ -65,9 +65,9 @@ class CardDialog extends React.Component {
                     <DialogContent>
                         <TextField
                             id="filled-number"
-                            label="Valid Count"
-                            value={validCount}
-                            onChange={this.handleChange('validCount', true)}
+                            label="Value"
+                            value={value}
+                            onChange={this.handleChange('value', true)}
                             type="number"
                             className={classes.textField}
                             InputLabelProps={{

@@ -15,7 +15,10 @@ import {
     CREATE_PAYMENT,
     DELETE_PAYMENT,
     PAY_CARD,
+    UNPAY_CARD,
+    GET_CARD_FRAGMENT,
 } from './graphql';
+import { GET_PAYMENTS } from 'routes/PaymentManagement/graphql';
 import StudentDetail from './StudentDetail';
 
 const getStudent = ({ render, id }) => (
@@ -142,7 +145,7 @@ const deletePayment = ({ render, id }) => (
                     student.cards,
                     card => card.id !== payment.card.id
                 );
-                const newCard = { ...card, payment: null };
+                const newCard = { ...card, payment: null, paid: false };
                 const newCards = cards.concat([newCard]);
                 newStudent = { ...newStudent, cards: newCards };
             }
@@ -160,13 +163,74 @@ const deletePayment = ({ render, id }) => (
 );
 
 const createPayment = ({ render }) => (
-    <Mutation mutation={CREATE_PAYMENT}>
+    <Mutation
+        mutation={CREATE_PAYMENT}
+        update={(cache, { data: { createPayment } }) => {
+            const { payments } = cache.readQuery({
+                query: GET_PAYMENTS,
+            });
+            let newPayments;
+            if (payments) {
+                newPayments = payments.concat([createPayment]);
+            } else {
+                newPayments = [createPayment];
+            }
+            cache.writeQuery({
+                query: GET_PAYMENTS,
+                data: {
+                    payments: newPayments,
+                },
+            });
+        }}
+    >
         {(mutation, result) => render({ mutation, result })}
     </Mutation>
 );
 
 const payCard = ({ render }) => (
-    <Mutation mutation={PAY_CARD}>
+    <Mutation
+        mutation={PAY_CARD}
+        update={(cache, { data: { payCard } }) => {
+            const card = cache.readFragment({
+                id: `Card:${payCard.id}`,
+                fragment: GET_CARD_FRAGMENT,
+            });
+            if (card) {
+                cache.writeFragment({
+                    id: `Card:${card.id}`,
+                    fragment: GET_CARD_FRAGMENT,
+                    data: {
+                        ...card,
+                        paid: true,
+                    },
+                });
+            }
+        }}
+    >
+        {(mutation, result) => render({ mutation, result })}
+    </Mutation>
+);
+
+const unpayCard = ({ render }) => (
+    <Mutation
+        mutation={UNPAY_CARD}
+        update={(cache, { data: { unpayCard } }) => {
+            const card = cache.readFragment({
+                id: `Card:${unpayCard.id}`,
+                fragment: GET_CARD_FRAGMENT,
+            });
+            if (card) {
+                cache.writeFragment({
+                    id: `Card:${card.id}`,
+                    fragment: GET_CARD_FRAGMENT,
+                    data: {
+                        ...card,
+                        paid: false,
+                    },
+                });
+            }
+        }}
+    >
         {(mutation, result) => render({ mutation, result })}
     </Mutation>
 );
@@ -180,6 +244,7 @@ const mapper = {
     createPayment,
     deletePayment,
     payCard,
+    unpayCard,
 };
 
 const StudioDetailContainer = ({ location }) => {
@@ -198,6 +263,7 @@ const StudioDetailContainer = ({ location }) => {
                     createPayment: { mutation: createPaymentMutation },
                     deletePayment: { mutation: deletePaymentMutation },
                     payCard: { mutation: payCardMutation },
+                    unpayCard: { mutation: unpayCardMutation },
                 }) => {
                     if (loading) return null;
                     if (error) return `Error: ${error}`;
@@ -212,6 +278,7 @@ const StudioDetailContainer = ({ location }) => {
                             createPayment={createPaymentMutation}
                             deletePayment={deletePaymentMutation}
                             payCard={payCardMutation}
+                            unpayCard={unpayCardMutation}
                         />
                     );
                 }}

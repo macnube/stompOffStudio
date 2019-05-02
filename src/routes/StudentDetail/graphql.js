@@ -23,13 +23,15 @@ export const GET_STUDENT = gql`
                 id
                 expirationDate
                 active
-                validCount
+                value
                 useHistory {
                     id
                 }
                 payment {
                     id
+                    date
                 }
+                paid
             }
             payments {
                 id
@@ -68,19 +70,35 @@ export const DELETE_COURSE_STUDENT = gql`
     }
 `;
 
+export const GET_CARD_FRAGMENT = gql`
+    fragment StudentDetailCard on Card {
+        id
+        value
+        expirationDate
+        active
+        payment {
+            id
+        }
+        useHistory {
+            id
+        }
+        paid
+    }
+`;
+
 export const CREATE_CARD = gql`
     mutation StudentDetailCreateCard(
         $studentId: ID!
         $expirationDate: DateTime!
-        $validCount: Int!
+        $value: Int!
     ) {
         createCard(
             studentId: $studentId
             expirationDate: $expirationDate
-            validCount: $validCount
+            value: $value
         ) {
             id
-            validCount
+            value
             expirationDate
             active
             payment {
@@ -89,6 +107,7 @@ export const CREATE_CARD = gql`
             useHistory {
                 id
             }
+            paid
         }
     }
 `;
@@ -98,20 +117,21 @@ export const UPDATE_CARD = gql`
         $id: ID!
         $studentId: ID!
         $expirationDate: DateTime!
-        $validCount: Int!
+        $value: Int!
     ) {
         updateCard(
             id: $id
             studentId: $studentId
             expirationDate: $expirationDate
-            validCount: $validCount
+            value: $value
         ) {
             id
-            validCount
+            value
             expirationDate
             active
             payment {
                 id
+                date
             }
             useHistory {
                 id
@@ -131,6 +151,15 @@ export const DELETE_CARD = gql`
 export const PAY_CARD = gql`
     mutation StudentDetailPayCard($id: ID!) {
         payCard(id: $id) {
+            id
+            paid
+        }
+    }
+`;
+
+export const UNPAY_CARD = gql`
+    mutation StudentDetailUnpayCard($id: ID!) {
+        unpayCard(id: $id) {
             id
             paid
         }
@@ -164,12 +193,14 @@ export const CREATE_PAYMENT = gql`
                     card {
                         id
                     }
+                    date
                 }
             }
             card {
                 id
                 payment {
                     id
+                    date
                 }
             }
         }

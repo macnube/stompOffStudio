@@ -7,7 +7,7 @@ import MUIDataTable from 'mui-datatables';
 import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 
-import { parseInstancesToTableData } from './parse';
+import { parseInstancesToTableData, parseCardsToTableData } from './parse';
 
 const instanceColumns = [
     {
@@ -30,6 +30,27 @@ const instanceColumns = [
     },
     {
         name: '# of Followers',
+    },
+];
+
+const cardsColumns = [
+    {
+        name: 'ID',
+        options: {
+            display: 'false',
+        },
+    },
+    {
+        name: 'Student',
+    },
+    {
+        name: 'Value',
+    },
+    {
+        name: 'Expiration Date',
+    },
+    {
+        name: 'Remaining Value',
     },
 ];
 
@@ -56,6 +77,17 @@ class Overview extends React.Component {
         this.navigateToInstance(rowData[0]);
     };
 
+    navigateToStudent = studentId => {
+        this.props.history.push({
+            pathname: './studentDetail',
+            search: `id=${studentId}`,
+        });
+    };
+
+    handleNavigateToStudent = rowData => {
+        this.navigateToStudent(rowData[0]);
+    };
+
     render() {
         const instanceOptions = {
             responsive: 'scroll',
@@ -63,7 +95,13 @@ class Overview extends React.Component {
             onRowClick: this.handleNavigateToInstance,
         };
 
-        const { instances } = this.props;
+        const cardOptions = {
+            responsive: 'scroll',
+            selectableRows: 'none',
+            onRowClick: this.handleNavigateToStudent,
+        };
+
+        const { instances, unpaidCards } = this.props;
         const now = new Date();
         const recentInstances = filter(instances, instance => {
             return isAfter(now, parseISO(instance.date));
@@ -73,6 +111,14 @@ class Overview extends React.Component {
         );
         return (
             <Paper>
+                <MuiThemeProvider theme={this.getMuiTheme()}>
+                    <MUIDataTable
+                        title={'Unpaid Cards'}
+                        data={parseCardsToTableData(unpaidCards)}
+                        columns={cardsColumns}
+                        options={cardOptions}
+                    />
+                </MuiThemeProvider>
                 <MuiThemeProvider theme={this.getMuiTheme()}>
                     <MUIDataTable
                         title={'Recent Instances'}
@@ -96,6 +142,7 @@ class Overview extends React.Component {
 
 Overview.propTypes = {
     instances: PropTypes.array.isRequired,
+    unpaidCards: PropTypes.array.isRequired,
 };
 
 export default withRouter(Overview);

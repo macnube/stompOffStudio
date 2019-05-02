@@ -8,7 +8,7 @@ export const GET_STUDENTS = gql`
             cards {
                 id
                 expirationDate
-                validCount
+                value
                 payment {
                     id
                 }

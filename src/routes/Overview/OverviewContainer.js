@@ -2,20 +2,20 @@ import React from 'react';
 import { Query } from 'react-apollo';
 import { Adopt } from 'react-adopt';
 
-import { GET_OVERVIEW_INSTANCES, GET_PAYMENTS } from './graphql';
+import { GET_OVERVIEW_INSTANCES, GET_UNPAID_CARDS } from './graphql';
 import Overview from './Overview';
 
 const getOverviewInstances = ({ render }) => (
     <Query query={GET_OVERVIEW_INSTANCES}>{render}</Query>
 );
 
-const getPayments = ({ render }) => (
-    <Query query={GET_PAYMENTS}>{render}</Query>
+const getUnpaidCards = ({ render }) => (
+    <Query query={GET_UNPAID_CARDS}>{render}</Query>
 );
 
 const mapper = {
     getOverviewInstances,
-    getPayments,
+    getUnpaidCards,
 };
 
 const OverviewContainer = () => (
@@ -26,21 +26,21 @@ const OverviewContainer = () => (
                 error: overviewInstancesError,
                 loading: overviewLoading,
             },
-            getPayments: {
-                data: paymentsData,
-                error: paymentsError,
-                loading: paymentsLoading,
+            getUnpaidCards: {
+                data: cardsData,
+                error: cardsError,
+                loading: cardsLoading,
             },
         }) => {
-            if (overviewLoading || paymentsLoading) return null;
+            if (overviewLoading || cardsLoading) return null;
             if (overviewInstancesError)
                 return `Error: ${overviewInstancesError}`;
-            if (paymentsError) return `Error: ${paymentsError}`;
-            if (overviewInstancesData && paymentsData) {
+            if (cardsError) return `Error: ${cardsError}`;
+            if (overviewInstancesData && cardsData) {
                 return (
                     <Overview
                         instances={overviewInstancesData.overviewInstances}
-                        payments={paymentsData.payments}
+                        unpaidCards={cardsData.unpaidCards}
                     />
                 );
             }

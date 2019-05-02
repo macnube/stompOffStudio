@@ -1,12 +1,8 @@
 import 'date-fns';
-import parseISO from 'date-fns/parseISO';
-import format from 'date-fns/format';
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import toNumber from 'lodash/toNumber';
-import toString from 'lodash/toString';
 import find from 'lodash/find';
-import reduce from 'lodash/reduce';
 import forEach from 'lodash/forEach';
 import PropTypes from 'prop-types';
 import MUIDataTable from 'mui-datatables';
@@ -18,6 +14,12 @@ import AddCourseStudentDialog from './AddCourseStudentDialog';
 import CardDialog from './CardDialog';
 import StudentDetailPaymentDialog from './StudentDetailPaymentDialog';
 import StudentDetailHeader from './StudentDetailHeader';
+import {
+    parseCardsToTableData,
+    parsePaymentsToTableData,
+    parseCourseStudentsToTableData,
+} from './parse';
+import { PAYMENT_TYPE } from 'constants/gql';
 
 const courseStudentsColumns = [
     {
@@ -42,7 +44,7 @@ const cardsColumns = [
         },
     },
     {
-        name: 'Valid Count',
+        name: 'Value',
     },
     {
         name: 'Expiration Date',
@@ -66,6 +68,12 @@ const paymentsColumns = [
         },
     },
     {
+        name: 'CARD_ID',
+        options: {
+            display: 'false',
+        },
+    },
+    {
         name: 'Amount',
     },
     {
@@ -75,58 +83,6 @@ const paymentsColumns = [
         name: 'Reason',
     },
 ];
-const parseCourseStudentsToTableData = courseStudents =>
-    reduce(
-        courseStudents,
-        (acc, courseStudent) => {
-            const result = [
-                courseStudent.id,
-                courseStudent.course.name,
-                courseStudent.role,
-            ];
-            acc.push(result);
-            return acc;
-        },
-        []
-    );
-
-const parseCardsToTableData = cards =>
-    reduce(
-        cards,
-        (acc, card) => {
-            const uses =
-                card.useHistory && card.useHistory.length
-                    ? card.useHistory.length
-                    : 0;
-            const result = [
-                card.id,
-                card.validCount,
-                format(parseISO(card.expirationDate), 'MMM do, yyyy'),
-                card.validCount - uses,
-                toString(card.active),
-                toString(!!card.payment),
-            ];
-            acc.push(result);
-            return acc;
-        },
-        []
-    );
-
-const parsePaymentsToTableData = payments =>
-    reduce(
-        payments,
-        (acc, payment) => {
-            const result = [
-                payment.id,
-                payment.amount,
-                format(parseISO(payment.date), 'MMM do, yyyy'),
-                payment.type,
-            ];
-            acc.push(result);
-            return acc;
-        },
-        []
-    );
 
 class StudentDetail extends Component {
     state = {
@@ -240,12 +196,20 @@ class StudentDetail extends Component {
     };
 
     handleOnDeletePaymentsPress = ids => {
-        const { deletePayment } = this.props;
+        const { deletePayment, unpayCard, student } = this.props;
 
         forEach(ids, id => {
             deletePayment({
                 variables: { id },
             });
+            const card = find(student.cards, { payment: { id } });
+            if (card) {
+                unpayCard({
+                    variables: {
+                        id: card.id,
+                    },
+                });
+            }
         });
     };
 
@@ -270,11 +234,13 @@ class StudentDetail extends Component {
                 ...payment,
             },
         });
-        payCard({
-            variables: {
-                id: payment.cardId,
-            },
-        });
+        if (payment.type === PAYMENT_TYPE.CARD && payment.cardId) {
+            payCard({
+                variables: {
+                    id: payment.cardId,
+                },
+            });
+        }
 
         this.handleClose();
     };
@@ -386,6 +352,7 @@ StudentDetail.propTypes = {
     createPayment: PropTypes.func.isRequired,
     deletePayment: PropTypes.func.isRequired,
     payCard: PropTypes.func.isRequired,
+    unpayCard: PropTypes.func.isRequired,
 };
 
 export default withRouter(StudentDetail);

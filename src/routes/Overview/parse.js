@@ -1,7 +1,5 @@
 import reduce from 'lodash/reduce';
-import map from 'lodash/map';
 import includes from 'lodash/includes';
-import filter from 'lodash/filter';
 
 import { PARTICIPANT_STATUS, DANCE_ROLE } from 'constants/gql';
 import { getTableDate } from 'utils/date';
@@ -23,15 +21,13 @@ const getRoleCount = (instance, role) => {
     const absentCourseStudentIds = getAbsentParticipantCourseIds(
         instance.participants
     );
-    const nonAbsentCourseStudents = filter(
-        instance.course.courseStudents,
-        courseStudent => !includes(absentCourseStudentIds, courseStudent.id)
-    );
-    console.log('nonAbsentCourseStudents are: ', nonAbsentCourseStudents);
     return reduce(
-        nonAbsentCourseStudents,
+        instance.course.courseStudents,
         (result, courseStudent) => {
-            if (courseStudent.role === role) {
+            if (
+                courseStudent.role === role &&
+                !includes(absentCourseStudentIds, courseStudent.id)
+            ) {
                 return ++result;
             }
             return result;
@@ -62,17 +58,19 @@ export const parseCardsToTableData = cards =>
     reduce(
         cards,
         (acc, card) => {
+            if (card.paid) {
+                return acc;
+            }
             const uses =
                 card.useHistory && card.useHistory.length
                     ? card.useHistory.length
                     : 0;
             const result = [
-                card.id,
-                card.validCount,
+                card.student.id,
+                card.student.name,
+                card.value,
                 getTableDate(card.expirationDate),
-                card.validCount - uses,
-                toString(card.active),
-                toString(!!card.payment),
+                card.value - uses,
             ];
             acc.push(result);
             return acc;

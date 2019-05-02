@@ -11,6 +11,21 @@ export const GET_OVERVIEW_INSTANCES = gql`
             participants {
                 id
                 status
+                courseStudent {
+                    id
+                }
+            }
+            course {
+                id
+                name
+                courseStudents {
+                    id
+                    student {
+                        id
+                        name
+                    }
+                    role
+                }
             }
         }
     }
@@ -30,6 +45,23 @@ export const GET_PAYMENTS = gql`
             card {
                 id
             }
+        }
+    }
+`;
+
+export const GET_UNPAID_CARDS = gql`
+    query OverviewGetUnpaidCards {
+        unpaidCards {
+            id
+            payment {
+                id
+            }
+            student {
+                id
+                name
+            }
+            paid
+            validCount
         }
     }
 `;

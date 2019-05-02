@@ -20,13 +20,16 @@ const instanceColumns = [
         name: 'Date',
     },
     {
+        name: 'Class Name',
+    },
+    {
         name: 'Topic',
     },
     {
-        name: '# of Attendees',
+        name: '# of Leaders',
     },
     {
-        name: '# of Absentees',
+        name: '# of Followers',
     },
 ];
 

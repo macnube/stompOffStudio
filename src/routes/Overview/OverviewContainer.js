@@ -36,12 +36,14 @@ const OverviewContainer = () => (
             if (overviewInstancesError)
                 return `Error: ${overviewInstancesError}`;
             if (paymentsError) return `Error: ${paymentsError}`;
-            return (
-                <Overview
-                    instances={overviewInstancesData.overviewInstances}
-                    payments={paymentsData.payments}
-                />
-            );
+            if (overviewInstancesData && paymentsData) {
+                return (
+                    <Overview
+                        instances={overviewInstancesData.overviewInstances}
+                        payments={paymentsData.payments}
+                    />
+                );
+            }
         }}
     </Adopt>
 );

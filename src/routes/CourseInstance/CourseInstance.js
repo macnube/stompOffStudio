@@ -3,6 +3,8 @@ import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import forEach from 'lodash/forEach';
 import map from 'lodash/map';
+import isNil from 'lodash/isNil';
+import find from 'lodash/find';
 import PropTypes from 'prop-types';
 import MUIDataTable from 'mui-datatables';
 import Paper from '@material-ui/core/Paper';
@@ -10,10 +12,11 @@ import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
 import { MuiPickersUtilsProvider } from 'material-ui-pickers';
 import DateFnsUtils from '@date-io/date-fns';
 
-import { CustomAddToolbar, SelectedDeleteToolbar } from 'components';
+import SelectedAddParticipantToolbar from './SelectedAddParticipantToolbar';
 import CourseInstanceHeader from './CourseInstanceHeader';
-import AddParticipantToInstanceDialog from './AddParticipantToInstanceDialog';
+import { CardDialog } from 'components';
 import { parseParticipantsToTableData } from './parse';
+import { PARTICIPANT_STATUS } from 'constants/gql';
 
 const columns = [
     {
@@ -44,7 +47,9 @@ const columns = [
 
 class CourseInstance extends Component {
     state = {
-        openParticipantForm: false,
+        openCardDialog: false,
+        studentId: '',
+        studentName: '',
     };
 
     getMuiTheme = () =>
@@ -58,11 +63,27 @@ class CourseInstance extends Component {
             },
         });
 
+    handleAddCardOpen = student => {
+        this.setState({
+            openCardDialog: true,
+            studentId: student.id,
+            studentName: student.name,
+        });
+    };
+
+    handleClose = () => {
+        this.setState({
+            openCardDialog: false,
+            studentId: '',
+            studentName: '',
+        });
+    };
+
     renderParticipantSelectedToolbar = (selectedRows, displayData) => (
-        <SelectedDeleteToolbar
+        <SelectedAddParticipantToolbar
             selectedRows={selectedRows}
             displayData={displayData}
-            handleOnDeletePress={this.handleOnDeleteParticipantsPress}
+            handleLogParticipantStatus={this.handleLogParticipantStatus}
         />
     );
 
@@ -80,28 +101,52 @@ class CourseInstance extends Component {
         });
     };
 
+    handleParticipantCardUpdate = id => {
+        const {
+            logParticipantStatus,
+            logCardUsage,
+            courseInstance,
+        } = this.props;
+        const participant = find(courseInstance.participants, { id });
+        const activeCard = find(participant.courseStudent.student.cards, {
+            active: true,
+        });
+
+        if (isNil(activeCard)) {
+            return this.handleAddCardOpen(participant.courseStudent.student);
+        }
+        logCardUsage({
+            variables: {
+                id: activeCard.id,
+                courseInstanceId: courseInstance.id,
+                value: activeCard.value - 1,
+            },
+        });
+        logParticipantStatus({
+            variables: {
+                id,
+                status: PARTICIPANT_STATUS.PRESENT,
+            },
+        });
+    };
+
+    handleLogParticipantStatus = status => id => {
+        const { logParticipantStatus } = this.props;
+
+        if (status === PARTICIPANT_STATUS.PRESENT) {
+            this.handleParticipantCardUpdate(id);
+        } else {
+            logParticipantStatus({
+                variables: {
+                    id,
+                    status,
+                },
+            });
+        }
+    };
+
     handleNavigateToStudentDetail = rowData =>
         this.navigateToStudentDetail(rowData[1]);
-
-    handleClickAddParticipantOpen = () => {
-        this.setState({ openParticipantForm: true });
-    };
-
-    handleClose = () => {
-        this.setState({
-            openParticipantForm: false,
-        });
-    };
-
-    handleOnDeleteParticipantsPress = ids => {
-        const { deleteParticipant } = this.props;
-
-        forEach(ids, id => {
-            deleteParticipant({
-                variables: { id },
-            });
-        });
-    };
 
     handleUpdateCourseInstance = courseInstance => {
         const { updateCourseInstance } = this.props;
@@ -121,17 +166,12 @@ class CourseInstance extends Component {
     render() {
         const options = {
             responsive: 'scroll',
-            customToolbar: () => (
-                <CustomAddToolbar
-                    title={'Add Participant'}
-                    handleAddPress={this.handleClickAddParticipantOpen}
-                />
-            ),
+            selectableRows: 'single',
             customToolbarSelect: this.renderParticipantSelectedToolbar,
             onRowClick: this.handleNavigateToStudentDetail,
         };
-        const { courseInstance } = this.props;
-        const { openParticipantForm } = this.state;
+        const { courseInstance, createCard } = this.props;
+        const { openCardDialog, studentId, studentName } = this.state;
         return (
             <MuiPickersUtilsProvider utils={DateFnsUtils}>
                 <Paper>
@@ -150,15 +190,13 @@ class CourseInstance extends Component {
                             options={options}
                         />
                     </MuiThemeProvider>
-                    {courseInstance && courseInstance.id ? (
-                        <AddParticipantToInstanceDialog
-                            open={openParticipantForm}
+                    {studentName ? (
+                        <CardDialog
+                            title={`No active card found - Please add a new card for ${studentName}`}
+                            open={openCardDialog}
+                            createCard={createCard}
                             handleClose={this.handleClose}
-                            courseInstanceId={courseInstance.id}
-                            participantCourseStudentIds={map(
-                                courseInstance.participants,
-                                p => p.courseStudent.id
-                            )}
+                            studentId={studentId}
                         />
                     ) : null}
                 </Paper>
@@ -170,7 +208,9 @@ class CourseInstance extends Component {
 CourseInstance.propTypes = {
     courseInstance: PropTypes.object.isRequired,
     updateCourseInstance: PropTypes.func.isRequired,
-    deleteParticipant: PropTypes.func.isRequired,
+    logParticipantStatus: PropTypes.func.isRequired,
+    logCardUsage: PropTypes.func.isRequired,
+    createCard: PropTypes.func.isRequired,
 };
 
 export default withRouter(CourseInstance);

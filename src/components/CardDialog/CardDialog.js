@@ -55,7 +55,7 @@ class CardDialog extends React.Component {
     };
 
     render() {
-        const { classes, open, handleClose } = this.props;
+        const { classes, open, handleClose, title } = this.props;
         const { value, expirationDate } = this.state;
         return (
             <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -64,9 +64,7 @@ class CardDialog extends React.Component {
                     onClose={handleClose.bind(null, this.clearForm)}
                     aria-labelledby="form-dialog-title"
                 >
-                    <DialogTitle id="form-dialog-title">
-                        Add New Card to Student
-                    </DialogTitle>
+                    <DialogTitle id="form-dialog-title">{title}</DialogTitle>
                     <DialogContent>
                         <TextField
                             id="filled-number"
@@ -111,6 +109,7 @@ CardDialog.propTypes = {
     handleClose: PropTypes.func.isRequired,
     createCard: PropTypes.func.isRequired,
     studentId: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
 };
 
 export default withStyles(styles)(CardDialog);

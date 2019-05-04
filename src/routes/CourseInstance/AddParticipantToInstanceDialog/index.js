@@ -1,3 +1,0 @@
-import AddParticipantToInstanceDialogContainer from './AddParticipantToInstanceDialogContainer';
-
-export default AddParticipantToInstanceDialogContainer;

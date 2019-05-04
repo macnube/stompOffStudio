@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import reduce from 'lodash/reduce';
-import keys from 'lodash/keys';
+import find from 'lodash/find';
 import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Add';
 import { withStyles } from '@material-ui/core/styles';
@@ -11,25 +10,17 @@ import styles from './styles';
 
 const SelectedAddParticipantToolbar = ({
     classes,
-    handleAddParticipantPress,
+    handleLogParticipantStatus,
     selectedRows,
     displayData,
 }) => {
-    const selectedIds = reduce(
-        displayData,
-        (result, row, index) => {
-            if (keys(selectedRows.lookup).includes(index.toString())) {
-                result.push(row.data[0]);
-                return result;
-            }
-            return result;
-        },
-        []
-    );
-    const handleAddAsPresentPress = handleAddParticipantPress(
+    const selectedDataIndex = selectedRows.data[0].dataIndex;
+    const selectedId = find(displayData, { dataIndex: selectedDataIndex })
+        .data[0];
+    const handleLogAsPresentPress = handleLogParticipantStatus(
         PARTICIPANT_STATUS.PRESENT
     );
-    const handleAddAsAbsentPress = handleAddParticipantPress(
+    const handleLogAsAbsentPress = handleLogParticipantStatus(
         PARTICIPANT_STATUS.ABSENT
     );
     return (
@@ -38,7 +29,7 @@ const SelectedAddParticipantToolbar = ({
                 variant="contained"
                 size="small"
                 className={classes.button}
-                onClick={() => handleAddAsAbsentPress(selectedIds)}
+                onClick={() => handleLogAsAbsentPress(selectedId)}
                 color="primary"
             >
                 <AddIcon className={classes.leftIcon} />
@@ -48,7 +39,7 @@ const SelectedAddParticipantToolbar = ({
                 variant="contained"
                 size="small"
                 className={classes.button}
-                onClick={() => handleAddAsPresentPress(selectedIds)}
+                onClick={() => handleLogAsPresentPress(selectedId)}
                 color="primary"
             >
                 <AddIcon className={classes.leftIcon} />
@@ -60,7 +51,7 @@ const SelectedAddParticipantToolbar = ({
 
 SelectedAddParticipantToolbar.propTypes = {
     classes: PropTypes.object.isRequired,
-    handleAddParticipantPress: PropTypes.func.isRequired,
+    handleLogParticipantStatus: PropTypes.func.isRequired,
     selectedRows: PropTypes.object.isRequired,
     displayData: PropTypes.array.isRequired,
 };

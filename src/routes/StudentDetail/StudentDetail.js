@@ -9,9 +9,12 @@ import MUIDataTable from 'mui-datatables';
 import Paper from '@material-ui/core/Paper';
 import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
 
-import { CustomAddToolbar, SelectedDeleteToolbar } from 'components';
+import {
+    CustomAddToolbar,
+    SelectedDeleteToolbar,
+    CardDialog,
+} from 'components';
 import AddCourseStudentDialog from './AddCourseStudentDialog';
-import CardDialog from './CardDialog';
 import StudentDetailPaymentDialog from './StudentDetailPaymentDialog';
 import StudentDetailHeader from './StudentDetailHeader';
 import {
@@ -345,6 +348,7 @@ class StudentDetail extends Component {
                     studentId={student.id}
                 />
                 <CardDialog
+                    title="Add New Card to Student"
                     open={openCardDialog}
                     createCard={createCard}
                     handleClose={this.handleClose}

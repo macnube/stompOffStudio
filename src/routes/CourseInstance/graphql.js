@@ -16,6 +16,20 @@ export const GET_COURSE_INSTANCE = gql`
                         id
                         name
                         email
+                        cards {
+                            id
+                            expirationDate
+                            active
+                            value
+                            useHistory {
+                                id
+                            }
+                            payment {
+                                id
+                                date
+                            }
+                            paid
+                        }
                     }
                     role
                 }
@@ -60,10 +74,57 @@ export const UPDATE_COURSE_INSTANCE = gql`
     }
 `;
 
-export const DELETE_PARTICIPANT = gql`
-    mutation CourseInstanceDeleteParticipant($id: ID!) {
-        deleteParticipant(id: $id) {
+export const LOG_PARTICIPANT_STATUS = gql`
+    mutation CourseInstanceLogParticipantStatus(
+        $id: ID!
+        $status: ParticipantStatus!
+    ) {
+        logParticipantStatus(id: $id, status: $status) {
             id
+            status
+            courseInstance {
+                id
+                participants {
+                    id
+                    courseStudent {
+                        id
+                        student {
+                            id
+                            name
+                            email
+                        }
+                        role
+                    }
+                    status
+                }
+            }
+        }
+    }
+`;
+
+export const LOG_CARD_USAGE = gql`
+    mutation CourseInstanceLogCardUsage(
+        $id: ID!
+        $courseInstanceId: ID!
+        $value: Int!
+    ) {
+        logCardUsage(
+            id: $id
+            courseInstanceId: $courseInstanceId
+            value: $value
+        ) {
+            id
+            expirationDate
+            active
+            value
+            useHistory {
+                id
+            }
+            payment {
+                id
+                date
+            }
+            paid
         }
     }
 `;

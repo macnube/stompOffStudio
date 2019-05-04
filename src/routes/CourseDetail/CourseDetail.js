@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import find from 'lodash/find';
 import forEach from 'lodash/forEach';
+import map from 'lodash/map';
 import PropTypes from 'prop-types';
 import MUIDataTable from 'mui-datatables';
 import Paper from '@material-ui/core/Paper';
@@ -197,6 +198,10 @@ class CourseDetail extends Component {
     handleCreateCourseInstance = instance => {
         const { createCourseInstance, course } = this.props;
         const { topic, notes, recapUrl, date } = instance;
+        const courseStudentIds = map(
+            course.courseStudents,
+            courseStudent => courseStudent.id
+        );
         createCourseInstance({
             variables: {
                 topic,
@@ -204,6 +209,7 @@ class CourseDetail extends Component {
                 recapUrl,
                 date,
                 courseId: course.id,
+                courseStudentIds,
             },
         });
         this.handleClose();
@@ -211,27 +217,10 @@ class CourseDetail extends Component {
 
     handleUpdateCourse = course => {
         const { updateCourse } = this.props;
-        const {
-            id,
-            name,
-            description,
-            duration,
-            startTime,
-            studioName,
-            startDate,
-            studentLimit,
-        } = course;
 
         updateCourse({
             variables: {
-                id,
-                name,
-                description,
-                duration,
-                startTime,
-                studioName,
-                startDate,
-                studentLimit,
+                ...course,
             },
         });
     };

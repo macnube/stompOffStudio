@@ -187,7 +187,7 @@ const createPayment = ({ render }) => (
     </Mutation>
 );
 
-const payCard = ({ render }) => (
+export const payCard = ({ render }) => (
     <Mutation
         mutation={PAY_CARD}
         update={(cache, { data: { payCard } }) => {
@@ -211,7 +211,7 @@ const payCard = ({ render }) => (
     </Mutation>
 );
 
-const unpayCard = ({ render }) => (
+export const unpayCard = ({ render }) => (
     <Mutation
         mutation={UNPAY_CARD}
         update={(cache, { data: { unpayCard } }) => {

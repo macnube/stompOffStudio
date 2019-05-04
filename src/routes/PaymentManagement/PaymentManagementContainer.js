@@ -1,5 +1,4 @@
 import React from 'react';
-import { Redirect } from 'react-router-dom';
 import filter from 'lodash/filter';
 import { Query, Mutation } from 'react-apollo';
 import { Adopt } from 'react-adopt';

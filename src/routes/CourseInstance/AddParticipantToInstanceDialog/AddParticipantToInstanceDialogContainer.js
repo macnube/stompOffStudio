@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import filter from 'lodash/filter';
 import { Query, Mutation } from 'react-apollo';
 import { Adopt } from 'react-adopt';
 

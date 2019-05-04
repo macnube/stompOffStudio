@@ -6,7 +6,7 @@ export const GET_COURSES = gql`
             id
             name
             description
-            startDate
+            day
             startTime
             duration
             teachers {
@@ -50,6 +50,7 @@ export const CREATE_COURSE = gql`
         $duration: Int
         $studentLimit: Int
         $roomId: ID!
+        $day: CourseDay
     ) {
         createCourse(
             name: $name
@@ -59,6 +60,7 @@ export const CREATE_COURSE = gql`
             duration: $duration
             studentLimit: $studentLimit
             roomId: $roomId
+            day: $day
         ) {
             id
             name
@@ -66,6 +68,7 @@ export const CREATE_COURSE = gql`
             startDate
             startTime
             duration
+            day
             teachers {
                 id
                 name

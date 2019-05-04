@@ -27,3 +27,23 @@ export const PARTICIPANT_STATUSES = [
     PARTICIPANT_STATUS.PRESENT,
     PARTICIPANT_STATUS.ABSENT,
 ];
+
+export const COURSE_DAY = {
+    MON: 'MON',
+    TUE: 'TUE',
+    WED: 'WED',
+    THU: 'THU',
+    FRI: 'FRI',
+    SAT: 'SAT',
+    SUN: 'SUN',
+};
+
+export const COURSE_DAYS = [
+    COURSE_DAY.MON,
+    COURSE_DAY.TUE,
+    COURSE_DAY.WED,
+    COURSE_DAY.THU,
+    COURSE_DAY.FRI,
+    COURSE_DAY.SAT,
+    COURSE_DAY.SUN,
+];

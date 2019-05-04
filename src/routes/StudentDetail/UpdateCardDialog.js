@@ -1,4 +1,3 @@
-import { addWeeks } from 'date-fns';
 import React from 'react';
 import PropTypes from 'prop-types';
 import toNumber from 'lodash/toNumber';
@@ -11,13 +10,27 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { MuiPickersUtilsProvider, DatePicker } from 'material-ui-pickers';
 import DateFnsUtils from '@date-io/date-fns';
+
 import styles from './styles';
 
-class CardDialog extends React.Component {
+class UpdateCardDialog extends React.Component {
     state = {
-        expirationDate: addWeeks(new Date(), 10),
+        id: '',
+        expirationDate: new Date(),
         value: 8,
     };
+
+    componentDidUpdate() {
+        const { card } = this.props;
+        if (card && card.id !== this.state.id) {
+            const { id, expirationDate, value } = card;
+            return this.setState({
+                id,
+                value,
+                expirationDate,
+            });
+        }
+    }
 
     handleChange = (name, isNumber = false) => event => {
         let value = event.target.value;
@@ -33,14 +46,14 @@ class CardDialog extends React.Component {
         });
     };
 
-    handleCreate = () => {
-        const { createCard, handleClose, studentId } = this.props;
+    handleUpdate = () => {
+        const { updateCard, handleClose, card } = this.props;
         const { expirationDate, value } = this.state;
-        createCard({
+        updateCard({
             variables: {
                 expirationDate,
                 value,
-                studentId,
+                id: card.id,
             },
         });
         handleClose(this.clearForm);
@@ -65,7 +78,7 @@ class CardDialog extends React.Component {
                     aria-labelledby="form-dialog-title"
                 >
                     <DialogTitle id="form-dialog-title">
-                        Add New Card to Student
+                        Update Student Card
                     </DialogTitle>
                     <DialogContent>
                         <TextField
@@ -95,8 +108,8 @@ class CardDialog extends React.Component {
                         >
                             Cancel
                         </Button>
-                        <Button onClick={this.handleCreate} color="primary">
-                            Add
+                        <Button onClick={this.handleUpdate} color="primary">
+                            save
                         </Button>
                     </DialogActions>
                 </Dialog>
@@ -105,12 +118,12 @@ class CardDialog extends React.Component {
     }
 }
 
-CardDialog.propTypes = {
+UpdateCardDialog.propTypes = {
     classes: PropTypes.object.isRequired,
     open: PropTypes.bool.isRequired,
     handleClose: PropTypes.func.isRequired,
-    createCard: PropTypes.func.isRequired,
-    studentId: PropTypes.string.isRequired,
+    updateCard: PropTypes.func.isRequired,
+    card: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(CardDialog);
+export default withStyles(styles)(UpdateCardDialog);

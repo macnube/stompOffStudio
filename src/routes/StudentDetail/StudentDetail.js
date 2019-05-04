@@ -89,6 +89,8 @@ class StudentDetail extends Component {
         openCourseStudentDialog: false,
         openCardDialog: false,
         openPaymentDialog: false,
+        openUpdateCardDialog: false,
+        card: null,
     };
 
     handleChange = (name, isNumber = false) => event => {
@@ -167,11 +169,17 @@ class StudentDetail extends Component {
         this.setState({ openPaymentDialog: true });
     };
 
+    handleClickUpdateCardOpen = () => {
+        this.setState({ openUpdateCardDialog: true });
+    };
+
     handleClose = () => {
         this.setState({
             openCourseStudentDialog: false,
             openCardDialog: false,
             openPaymentDialog: false,
+            openUpdateCardDialog: false,
+            card: null,
         });
     };
 
@@ -245,6 +253,15 @@ class StudentDetail extends Component {
         this.handleClose();
     };
 
+    navigateToCardDetail = id => {
+        this.props.history.push({
+            pathname: './cardDetail',
+            search: `id=${id}`,
+        });
+    };
+
+    handleOnCardClick = rowData => this.navigateToCardDetail(rowData[0]);
+
     render() {
         const baseOptions = {
             responsive: 'scroll',
@@ -269,6 +286,7 @@ class StudentDetail extends Component {
                 />
             ),
             customToolbarSelect: this.renderCardSelectedToolbar,
+            onRowClick: this.handleOnCardClick,
         };
         const paymentOptions = {
             ...baseOptions,

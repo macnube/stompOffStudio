@@ -115,16 +115,10 @@ export const CREATE_CARD = gql`
 export const UPDATE_CARD = gql`
     mutation StudentDetailUpdateCard(
         $id: ID!
-        $studentId: ID!
         $expirationDate: DateTime!
         $value: Int!
     ) {
-        updateCard(
-            id: $id
-            studentId: $studentId
-            expirationDate: $expirationDate
-            value: $value
-        ) {
+        updateCard(id: $id, expirationDate: $expirationDate, value: $value) {
             id
             value
             expirationDate

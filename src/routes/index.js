@@ -1,6 +1,7 @@
 export { default as Overview } from './Overview';
 export { default as StudentManagement } from './StudentManagement';
 export { default as StudentDetail } from './StudentDetail';
+export { default as CardDetail } from './CardDetail';
 export { default as CourseInstance } from './CourseInstance';
 export { default as CourseManagement } from './CourseManagement';
 export { default as CourseDetail } from './CourseDetail';

@@ -7,6 +7,7 @@ const DETAIL_COURSE_FRAGMENT = gql`
         description
         startDate
         startTime
+        day
         duration
         studentLimit
         teachers {
@@ -80,6 +81,7 @@ export const UPDATE_COURSE = gql`
         $startTime: String
         $duration: Int
         $studentLimit: Int
+        $day: CourseDay
     ) {
         updateCourse(
             id: $id
@@ -89,6 +91,7 @@ export const UPDATE_COURSE = gql`
             startTime: $startTime
             duration: $duration
             studentLimit: $studentLimit
+            day: $day
         ) {
             id
             name
@@ -97,6 +100,7 @@ export const UPDATE_COURSE = gql`
             startTime
             duration
             studentLimit
+            day
         }
     }
 `;
@@ -139,6 +143,7 @@ export const CREATE_COURSE_INSTANCE = gql`
         $date: DateTime!
         $recapUrl: String
         $courseId: ID!
+        $courseStudentIds: [ID!]!
     ) {
         createCourseInstance(
             topic: $topic
@@ -146,6 +151,7 @@ export const CREATE_COURSE_INSTANCE = gql`
             date: $date
             recapUrl: $recapUrl
             courseId: $courseId
+            courseStudentIds: $courseStudentIds
         ) {
             ...CreateCourseInstanceFragment
         }

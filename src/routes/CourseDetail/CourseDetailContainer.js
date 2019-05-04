@@ -158,19 +158,27 @@ const CourseDetailContainer = ({ location }) => {
                 }) => {
                     if (loading) return null;
                     if (error) return `Error: ${error}`;
-                    console.log('data is: ', data);
-                    return (
-                        <CourseDetail
-                            course={data.course}
-                            updateCourse={updateCourseMutation}
-                            deleteCourseStudent={deleteCourseStudentMutation}
-                            removeTeacherFromCourse={
-                                removeTeacherFromCourseMutation
-                            }
-                            createCourseInstance={createCourseInstanceMutation}
-                            deleteCourseInstance={deleteCourseInstanceMutation}
-                        />
-                    );
+                    if (data.course) {
+                        return (
+                            <CourseDetail
+                                course={data.course}
+                                updateCourse={updateCourseMutation}
+                                deleteCourseStudent={
+                                    deleteCourseStudentMutation
+                                }
+                                removeTeacherFromCourse={
+                                    removeTeacherFromCourseMutation
+                                }
+                                createCourseInstance={
+                                    createCourseInstanceMutation
+                                }
+                                deleteCourseInstance={
+                                    deleteCourseInstanceMutation
+                                }
+                            />
+                        );
+                    }
+                    return null;
                 }}
             </Adopt>
         );

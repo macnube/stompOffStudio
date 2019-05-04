@@ -18,6 +18,8 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import MenuItem from '@material-ui/core/MenuItem';
+
+import { COURSE_DAYS, COURSE_DAY } from 'constants/gql';
 import styles from 'routes/CourseManagement/styles';
 
 class CourseForm extends React.Component {
@@ -30,6 +32,7 @@ class CourseForm extends React.Component {
         roomId: '',
         startDate: new Date(),
         studentLimit: 0,
+        day: COURSE_DAY.MON,
     };
 
     handleChange = (name, isNumber = false) => event => {
@@ -70,6 +73,7 @@ class CourseForm extends React.Component {
             roomId: '',
             startDate: new Date(),
             studentLimit: 0,
+            day: COURSE_DAY.MON,
         });
     };
 
@@ -84,6 +88,7 @@ class CourseForm extends React.Component {
             startDate,
             startTime,
             studentLimit,
+            day,
         } = this.state;
         return (
             <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -147,6 +152,21 @@ class CourseForm extends React.Component {
                                         </MenuItem>
                                     )
                                 )}
+                        </TextField>
+                        <TextField
+                            id="standard-select-room-native"
+                            select
+                            label="Select Day of Week"
+                            value={day}
+                            className={classes.textField}
+                            onChange={this.handleChange('day')}
+                            margin="normal"
+                        >
+                            {map(COURSE_DAYS, day => (
+                                <MenuItem key={day} value={day}>
+                                    {day}
+                                </MenuItem>
+                            ))}
                         </TextField>
                         <DatePicker
                             margin="normal"

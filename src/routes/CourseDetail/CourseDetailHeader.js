@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import toNumber from 'lodash/toNumber';
+import map from 'lodash/map';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
+import MenuItem from '@material-ui/core/MenuItem';
 import { TimePicker, DatePicker } from 'material-ui-pickers';
 import { withStyles } from '@material-ui/core/styles';
 
+import { COURSE_DAY, COURSE_DAYS } from 'constants/gql';
 import { DetailHeader } from 'components';
 import styles from './styles';
 
@@ -21,6 +24,7 @@ class CourseDetailHeader extends Component {
         startDate: new Date(),
         studentLimit: 0,
         canSave: false,
+        day: COURSE_DAY.MON,
     };
 
     componentDidMount() {
@@ -35,6 +39,7 @@ class CourseDetailHeader extends Component {
                 room,
                 startDate,
                 studentLimit,
+                day,
             } = course;
             this.setState({
                 id,
@@ -46,6 +51,7 @@ class CourseDetailHeader extends Component {
                 studioName: room.studio.name,
                 startDate,
                 studentLimit,
+                day,
             });
         }
     }
@@ -80,6 +86,7 @@ class CourseDetailHeader extends Component {
             room,
             startDate,
             studentLimit,
+            day,
         } = this.state;
         this.props.handleOnSave({
             id,
@@ -90,6 +97,7 @@ class CourseDetailHeader extends Component {
             room,
             startDate,
             studentLimit,
+            day,
         });
         this.setState({
             canSave: false,
@@ -107,6 +115,7 @@ class CourseDetailHeader extends Component {
             startDate,
             studentLimit,
             roomName,
+            day,
         } = this.state;
         return (
             <form>
@@ -142,6 +151,21 @@ class CourseDetailHeader extends Component {
                     className={classes.textField}
                     margin="normal"
                 />
+                <TextField
+                    id="standard-select-room-native"
+                    select
+                    label="Select Day of Week"
+                    value={day}
+                    className={classes.textField}
+                    onChange={this.handleChange('day')}
+                    margin="normal"
+                >
+                    {map(COURSE_DAYS, day => (
+                        <MenuItem key={day} value={day}>
+                            {day}
+                        </MenuItem>
+                    ))}
+                </TextField>
                 <DatePicker
                     margin="normal"
                     label="Start Date"

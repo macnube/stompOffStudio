@@ -1,11 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import compose from 'recompose/compose';
-import format from 'date-fns/format';
-import parseISO from 'date-fns/parseISO';
 import { withRouter } from 'react-router-dom';
-import reduce from 'lodash/reduce';
 import find from 'lodash/find';
-import map from 'lodash/map';
 import forEach from 'lodash/forEach';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
@@ -15,6 +11,8 @@ import CourseForm from './CourseForm';
 import AddIcon from '@material-ui/icons/Add';
 import Fab from '@material-ui/core/Fab';
 import { ContentToolbar, SelectedDeleteToolbar } from 'components';
+
+import { parseCoursesToTableData } from './parse';
 
 const columns = [
     {
@@ -36,31 +34,9 @@ const columns = [
         name: 'Teachers',
     },
     {
-        name: 'Start Date',
+        name: 'Day',
     },
 ];
-
-const parseCoursesToTableData = courses =>
-    reduce(
-        courses,
-        (acc, course) => {
-            const teacherNames = map(
-                course.teachers,
-                teacher => teacher.name
-            ).join(', ');
-            const result = [
-                course.id,
-                course.name,
-                course.room.studio.name,
-                course.room.name,
-                teacherNames,
-                format(parseISO(course.startDate), 'MMM do, yyyy'),
-            ];
-            acc.push(result);
-            return acc;
-        },
-        []
-    );
 
 class CourseManagement extends Component {
     state = {

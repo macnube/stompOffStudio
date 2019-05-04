@@ -14,11 +14,16 @@ import { CustomAddToolbar, SelectedDeleteToolbar } from 'components';
 import CourseInstanceHeader from './CourseInstanceHeader';
 import AddParticipantToInstanceDialog from './AddParticipantToInstanceDialog';
 import { parseParticipantsToTableData } from './parse';
-import { PARTICIPANT_STATUS } from 'constants/gql';
 
 const columns = [
     {
         name: 'ID',
+        options: {
+            display: 'false',
+        },
+    },
+    {
+        name: 'Student ID',
         options: {
             display: 'false',
         },
@@ -68,6 +73,16 @@ class CourseInstance extends Component {
         });
     };
 
+    navigateToStudentDetail = id => {
+        this.props.history.push({
+            pathname: './studentDetail',
+            search: `id=${id}`,
+        });
+    };
+
+    handleNavigateToStudentDetail = rowData =>
+        this.navigateToStudentDetail(rowData[1]);
+
     handleClickAddParticipantOpen = () => {
         this.setState({ openParticipantForm: true });
     };
@@ -113,10 +128,10 @@ class CourseInstance extends Component {
                 />
             ),
             customToolbarSelect: this.renderParticipantSelectedToolbar,
+            onRowClick: this.handleNavigateToStudentDetail,
         };
         const { courseInstance } = this.props;
         const { openParticipantForm } = this.state;
-        console.log('courseInstance is: ', courseInstance);
         return (
             <MuiPickersUtilsProvider utils={DateFnsUtils}>
                 <Paper>

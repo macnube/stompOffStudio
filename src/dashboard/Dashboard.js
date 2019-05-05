@@ -25,6 +25,7 @@ import {
     StudioManagement,
     StudioDetail,
     PaymentManagement,
+    CourseAttendance,
     CourseInstance,
     CardDetail,
 } from 'routes';
@@ -117,7 +118,7 @@ class Dashboard extends React.Component {
                 </Drawer>
                 <main className={classes.content}>
                     <div className={classes.appBarSpacer} />
-                    <Route exact path="/overview" component={Overview} />
+                    <Route exact path="/" component={Overview} />
                     <Route
                         exact
                         path="/studentManagement"
@@ -164,6 +165,11 @@ class Dashboard extends React.Component {
                         component={CourseInstance}
                     />
                     <Route exact path="/cardDetail" component={CardDetail} />
+                    <Route
+                        exact
+                        path="/courseAttendance"
+                        component={CourseAttendance}
+                    />
                 </main>
             </div>
         );

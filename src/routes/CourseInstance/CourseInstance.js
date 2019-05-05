@@ -50,6 +50,7 @@ class CourseInstance extends Component {
         openCardDialog: false,
         studentId: '',
         studentName: '',
+        numberOfCourses: 1,
     };
 
     getMuiTheme = () =>
@@ -68,6 +69,7 @@ class CourseInstance extends Component {
             openCardDialog: true,
             studentId: student.id,
             studentName: student.name,
+            numberOfCourses: student.courses.length,
         });
     };
 
@@ -100,6 +102,16 @@ class CourseInstance extends Component {
             search: `id=${id}`,
         });
     };
+
+    navigateToCourseAttendance = id => {
+        this.props.history.push({
+            pathname: './courseAttendance',
+            search: `id=${id}`,
+        });
+    };
+
+    handleNavigateToCourseAttendance = () =>
+        this.navigateToCourseAttendance(this.props.courseInstance.id);
 
     handleParticipantCardUpdate = id => {
         const {
@@ -171,7 +183,12 @@ class CourseInstance extends Component {
             onRowClick: this.handleNavigateToStudentDetail,
         };
         const { courseInstance, createCard } = this.props;
-        const { openCardDialog, studentId, studentName } = this.state;
+        const {
+            openCardDialog,
+            studentId,
+            studentName,
+            numberOfCourses,
+        } = this.state;
         return (
             <MuiPickersUtilsProvider utils={DateFnsUtils}>
                 <Paper>
@@ -179,6 +196,9 @@ class CourseInstance extends Component {
                         courseInstance={courseInstance}
                         handleOnCancel={this.navigateToCourseDetail}
                         handleOnSave={this.handleUpdateCourseInstance}
+                        handleNavigateToCourseAttendance={
+                            this.handleNavigateToCourseAttendance
+                        }
                     />
                     <MuiThemeProvider theme={this.getMuiTheme()}>
                         <MUIDataTable
@@ -197,6 +217,7 @@ class CourseInstance extends Component {
                             createCard={createCard}
                             handleClose={this.handleClose}
                             studentId={studentId}
+                            numberOfCourses={numberOfCourses}
                         />
                     ) : null}
                 </Paper>

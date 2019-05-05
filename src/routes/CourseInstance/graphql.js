@@ -16,6 +16,9 @@ export const GET_COURSE_INSTANCE = gql`
                         id
                         name
                         email
+                        courses {
+                            id
+                        }
                         cards {
                             id
                             expirationDate

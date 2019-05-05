@@ -104,10 +104,17 @@ class CourseInstanceHeader extends Component {
     };
 
     render() {
-        const { handleOnCancel } = this.props;
+        const { handleOnCancel, handleNavigateToCourseAttendance } = this.props;
 
         return (
             <DetailHeader renderForm={this.renderForm}>
+                <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={handleNavigateToCourseAttendance}
+                >
+                    Attendance Tool
+                </Button>
                 <Button variant="contained" onClick={handleOnCancel}>
                     Cancel
                 </Button>
@@ -129,6 +136,7 @@ CourseInstanceHeader.propTypes = {
     courseInstance: PropTypes.object.isRequired,
     handleOnSave: PropTypes.func.isRequired,
     handleOnCancel: PropTypes.func.isRequired,
+    handleNavigateToCourseAttendance: PropTypes.func.isRequired,
 };
 
 export default withStyles(styles)(CourseInstanceHeader);

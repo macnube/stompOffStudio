@@ -19,6 +19,15 @@ class CardDialog extends React.Component {
         value: 8,
     };
 
+    componentDidMount() {
+        const { numberOfCourses } = this.props;
+        if (numberOfCourses) {
+            this.setState({
+                value: numberOfCourses * 8,
+            });
+        }
+    }
+
     handleChange = (name, isNumber = false) => event => {
         let value = event.target.value;
         if (isNumber) {
@@ -110,6 +119,7 @@ CardDialog.propTypes = {
     createCard: PropTypes.func.isRequired,
     studentId: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
+    numberOfCourses: PropTypes.number,
 };
 
 export default withStyles(styles)(CardDialog);

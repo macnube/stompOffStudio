@@ -1,3 +1,3 @@
-import CourseInstanceContainer from './CourseInstanceContainer';
+import CourseAttendanceContainer from './CourseAttendanceContainer';
 
-export default CourseInstanceContainer;
+export default CourseAttendanceContainer;

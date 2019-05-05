@@ -1,0 +1,87 @@
+import React from 'react';
+import PropTypes from 'prop-types';
+import { parse } from 'query-string';
+import { Redirect } from 'react-router-dom';
+import { Query, Mutation } from 'react-apollo';
+import { Adopt } from 'react-adopt';
+
+import {
+    GET_COURSE_INSTANCE,
+    LOG_CARD_USAGE,
+    LOG_PARTICIPANT_STATUS,
+} from 'routes/CourseInstance/graphql';
+import { CREATE_CARD } from 'routes/StudentDetail/graphql';
+import CourseAttendance from './CourseAttendance';
+
+const getCourseInstance = ({ render, id }) => (
+    <Query query={GET_COURSE_INSTANCE} variables={{ id }}>
+        {render}
+    </Query>
+);
+
+const logParticipantStatus = ({ render, id }) => (
+    <Mutation mutation={LOG_PARTICIPANT_STATUS}>
+        {(mutation, result) => render({ mutation, result })}
+    </Mutation>
+);
+
+const logCardUsage = ({ render, id }) => (
+    <Mutation mutation={LOG_CARD_USAGE}>
+        {(mutation, result) => render({ mutation, result })}
+    </Mutation>
+);
+
+const createCard = ({ render }) => (
+    <Mutation mutation={CREATE_CARD}>
+        {(mutation, result) => render({ mutation, result })}
+    </Mutation>
+);
+
+const mapper = {
+    getCourseInstance,
+    logParticipantStatus,
+    logCardUsage,
+    createCard,
+};
+
+const CourseAttendanceContainer = ({ location }) => {
+    const params = parse(location.search);
+    if (params.id) {
+        return (
+            <Adopt mapper={mapper} id={params.id}>
+                {({
+                    getCourseInstance: { data, loading, error },
+                    logParticipantStatus: {
+                        mutation: logParticipantStatusMutation,
+                    },
+                    logCardUsage: { mutation: logCardUsageMutation },
+                    createCard: { mutation: createCardMutation },
+                }) => {
+                    if (loading) return null;
+                    if (error) return `Error: ${error}`;
+                    return (
+                        <CourseAttendance
+                            courseInstance={data.courseInstance}
+                            logParticipantStatus={logParticipantStatusMutation}
+                            logCardUsage={logCardUsageMutation}
+                            createCard={createCardMutation}
+                        />
+                    );
+                }}
+            </Adopt>
+        );
+    }
+    return (
+        <Redirect
+            to={{
+                pathname: '/courseAttendance',
+            }}
+        />
+    );
+};
+
+CourseAttendanceContainer.propTypes = {
+    location: PropTypes.object.isRequired,
+};
+
+export default CourseAttendanceContainer;

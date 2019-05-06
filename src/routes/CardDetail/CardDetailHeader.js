@@ -29,6 +29,14 @@ class CardDetailHeader extends Component {
         }
     }
 
+    componentDidUpdate() {
+        if (this.state.value !== this.props.card.value) {
+            this.setState({
+                value: this.props.card.value,
+            });
+        }
+    }
+
     handleChange = (name, isNumber = false) => event => {
         let value = event.target.value;
         if (isNumber) {
@@ -52,6 +60,7 @@ class CardDetailHeader extends Component {
     handleSetExpirationDate = expirationDate => {
         this.setState({
             expirationDate,
+            canSave: true,
         });
     };
 

@@ -24,7 +24,7 @@ export const GET_COURSE_INSTANCE = gql`
                             expirationDate
                             active
                             value
-                            useHistory {
+                            participationHistory {
                                 id
                             }
                             payment {
@@ -105,22 +105,22 @@ export const LOG_PARTICIPANT_STATUS = gql`
     }
 `;
 
-export const LOG_CARD_USAGE = gql`
-    mutation CourseInstanceLogCardUsage(
+export const LOG_CARD_PARTICIPATION = gql`
+    mutation CourseInstanceLogCardParticipation(
         $id: ID!
-        $courseInstanceId: ID!
+        $participantId: ID!
         $value: Int!
     ) {
-        logCardUsage(
+        logCardParticipation(
             id: $id
-            courseInstanceId: $courseInstanceId
+            participantId: $participantId
             value: $value
         ) {
             id
             expirationDate
             active
             value
-            useHistory {
+            participationHistory {
                 id
             }
             payment {
@@ -128,6 +128,15 @@ export const LOG_CARD_USAGE = gql`
                 date
             }
             paid
+        }
+    }
+`;
+
+export const DEACTIVATE_CARD = gql`
+    mutation CourseInstanceDeactivateCard($id: ID!) {
+        deactivateCard(id: $id) {
+            id
+            active
         }
     }
 `;

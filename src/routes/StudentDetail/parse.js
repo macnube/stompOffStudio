@@ -21,15 +21,11 @@ export const parseCardsToTableData = cards =>
     reduce(
         cards,
         (acc, card) => {
-            const uses =
-                card.useHistory && card.useHistory.length
-                    ? card.useHistory.length
-                    : 0;
             const result = [
                 card.id,
-                card.value,
+                card.originalValue,
                 getTableDate(card.expirationDate),
-                card.value - uses,
+                card.value,
                 card.active ? 'Active' : 'Expired',
                 card.paid && card.payment
                     ? `Paid on ${getTableDate(card.payment.date)}`

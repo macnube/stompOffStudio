@@ -24,7 +24,8 @@ export const GET_STUDENT = gql`
                 expirationDate
                 active
                 value
-                useHistory {
+                originalValue
+                participationHistory {
                     id
                 }
                 payment {
@@ -79,7 +80,7 @@ export const GET_CARD_FRAGMENT = gql`
         payment {
             id
         }
-        useHistory {
+        participationHistory {
             id
         }
         paid
@@ -104,7 +105,7 @@ export const CREATE_CARD = gql`
             payment {
                 id
             }
-            useHistory {
+            participationHistory {
                 id
             }
             paid
@@ -127,7 +128,7 @@ export const UPDATE_CARD = gql`
                 id
                 date
             }
-            useHistory {
+            participationHistory {
                 id
             }
         }

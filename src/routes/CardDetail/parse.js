@@ -1,13 +1,15 @@
 import reduce from 'lodash/reduce';
 
+import { getTableDate } from 'utils/date';
+
 export const parseCardDataToArray = card =>
     reduce(
-        card.useHistory,
-        (acc, courseInstance) => {
+        card.participationHistory,
+        (acc, participant) => {
             const result = [
-                courseInstance.id,
-                courseInstance.topic,
-                courseInstance.date,
+                participant.id,
+                participant.courseInstance.topic,
+                getTableDate(participant.courseInstance.date),
             ];
             acc.push(result);
             return acc;

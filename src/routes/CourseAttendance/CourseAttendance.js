@@ -17,7 +17,26 @@ class CourseAttendance extends Component {
         studentId: '',
         participantId: '',
         numberOfCourses: 1,
+        cardId: '',
     };
+
+    componentDidUpdate() {
+        const { card, logCardParticipation } = this.props;
+
+        if (card && card.id !== this.state.cardId) {
+            this.handleLogParticipationPresent(this.state.participantId);
+            logCardParticipation({
+                variables: {
+                    id: card.id,
+                    participantId: this.state.participantId,
+                    value: card.value - 1,
+                },
+            });
+            this.setState({
+                cardId: card.id,
+            });
+        }
+    }
 
     handleAddCardOpen = ({ id, courseStudent }) => {
         this.setState({
@@ -45,7 +64,7 @@ class CourseAttendance extends Component {
         return 'default';
     };
 
-    handleLogParticipationStatus = id => {
+    handleLogParticipationPresent = id => {
         this.props.logParticipantStatus({
             variables: {
                 id,
@@ -55,7 +74,7 @@ class CourseAttendance extends Component {
     };
 
     handleParticipantClick = id => {
-        const { logCardUsage, courseInstance } = this.props;
+        const { logCardParticipation, courseInstance } = this.props;
         const participant = find(courseInstance.participants, { id });
         const activeCard = find(participant.courseStudent.student.cards, {
             active: true,
@@ -64,14 +83,14 @@ class CourseAttendance extends Component {
         if (isNil(activeCard)) {
             return this.handleAddCardOpen(participant);
         }
-        logCardUsage({
+        logCardParticipation({
             variables: {
                 id: activeCard.id,
-                courseInstanceId: courseInstance.id,
+                participantId: id,
                 value: activeCard.value - 1,
             },
         });
-        this.handleLogParticipationStatus(id);
+        this.handleLogParticipationPresent(id);
     };
 
     handleCreateCard = (value, expirationDate) => {
@@ -83,7 +102,6 @@ class CourseAttendance extends Component {
                 studentId: this.state.studentId,
             },
         });
-        this.handleLogParticipationStatus(this.state.participantId);
         this.handleClose();
     };
 
@@ -124,8 +142,9 @@ class CourseAttendance extends Component {
 CourseAttendance.propTypes = {
     courseInstance: PropTypes.object.isRequired,
     logParticipantStatus: PropTypes.func.isRequired,
-    logCardUsage: PropTypes.func.isRequired,
+    logCardParticipation: PropTypes.func.isRequired,
     createCard: PropTypes.func.isRequired,
+    card: PropTypes.object,
 };
 
 export default withRouter(CourseAttendance);

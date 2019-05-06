@@ -42,7 +42,7 @@ export const GET_UNPAID_CARDS = gql`
                 id
                 name
             }
-            useHistory {
+            participationHistory {
                 id
             }
             paid

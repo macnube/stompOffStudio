@@ -1,8 +1,5 @@
-import 'date-fns';
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
-import forEach from 'lodash/forEach';
-import map from 'lodash/map';
 import isNil from 'lodash/isNil';
 import find from 'lodash/find';
 import PropTypes from 'prop-types';
@@ -17,6 +14,7 @@ import CourseInstanceHeader from './CourseInstanceHeader';
 import { CardDialog } from 'components';
 import { parseParticipantsToTableData } from './parse';
 import { PARTICIPANT_STATUS } from 'constants/gql';
+import { isExpired } from 'utils/date';
 
 const columns = [
     {
@@ -51,7 +49,28 @@ class CourseInstance extends Component {
         studentId: '',
         studentName: '',
         numberOfCourses: 1,
+        title: '',
+        participantId: '',
+        cardId: '',
     };
+
+    componentDidUpdate() {
+        const { card, logCardParticipation } = this.props;
+
+        if (card && card.id !== this.state.cardId) {
+            this.handleLogParticipationPresent(this.state.participantId);
+            logCardParticipation({
+                variables: {
+                    id: card.id,
+                    participantId: this.state.participantId,
+                    value: card.value - 1,
+                },
+            });
+            this.setState({
+                cardId: card.id,
+            });
+        }
+    }
 
     getMuiTheme = () =>
         createMuiTheme({
@@ -64,12 +83,14 @@ class CourseInstance extends Component {
             },
         });
 
-    handleAddCardOpen = student => {
+    handleAddCardOpen = (student, title, participantId) => {
         this.setState({
             openCardDialog: true,
             studentId: student.id,
             studentName: student.name,
             numberOfCourses: student.courses.length,
+            participantId,
+            title,
         });
     };
 
@@ -113,11 +134,21 @@ class CourseInstance extends Component {
     handleNavigateToCourseAttendance = () =>
         this.navigateToCourseAttendance(this.props.courseInstance.id);
 
+    handleLogParticipationPresent = id => {
+        this.props.logParticipantStatus({
+            variables: {
+                id,
+                status: PARTICIPANT_STATUS.PRESENT,
+            },
+        });
+    };
+
     handleParticipantCardUpdate = id => {
         const {
             logParticipantStatus,
-            logCardUsage,
+            logCardParticipation,
             courseInstance,
+            deactivateCard,
         } = this.props;
         const participant = find(courseInstance.participants, { id });
         const activeCard = find(participant.courseStudent.student.cards, {
@@ -125,12 +156,31 @@ class CourseInstance extends Component {
         });
 
         if (isNil(activeCard)) {
-            return this.handleAddCardOpen(participant.courseStudent.student);
+            const title = `No active card found - Please add a new card for ${
+                participant.courseStudent.student.name
+            }`;
+            return this.handleAddCardOpen(
+                participant.courseStudent.student,
+                title,
+                id
+            );
+        } else if (isExpired(activeCard.expirationDate)) {
+            deactivateCard({
+                variables: { id: activeCard.id },
+            });
+            const title = `Card has expired - Please add a new card for ${
+                participant.courseStudent.student.name
+            }`;
+            return this.handleAddCardOpen(
+                participant.courseStudent.student,
+                title,
+                id
+            );
         }
-        logCardUsage({
+        logCardParticipation({
             variables: {
                 id: activeCard.id,
-                courseInstanceId: courseInstance.id,
+                participantId: id,
                 value: activeCard.value - 1,
             },
         });
@@ -188,6 +238,7 @@ class CourseInstance extends Component {
             studentId,
             studentName,
             numberOfCourses,
+            title,
         } = this.state;
         return (
             <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -212,7 +263,7 @@ class CourseInstance extends Component {
                     </MuiThemeProvider>
                     {studentName ? (
                         <CardDialog
-                            title={`No active card found - Please add a new card for ${studentName}`}
+                            title={title}
                             open={openCardDialog}
                             createCard={createCard}
                             handleClose={this.handleClose}
@@ -230,8 +281,9 @@ CourseInstance.propTypes = {
     courseInstance: PropTypes.object.isRequired,
     updateCourseInstance: PropTypes.func.isRequired,
     logParticipantStatus: PropTypes.func.isRequired,
-    logCardUsage: PropTypes.func.isRequired,
+    logCardParticipation: PropTypes.func.isRequired,
     createCard: PropTypes.func.isRequired,
+    deactivateCard: PropTypes.func.isRequired,
 };
 
 export default withRouter(CourseInstance);

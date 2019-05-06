@@ -9,6 +9,12 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
+const numberToCourseMap = {
+    1: 'Single',
+    2: 'Double',
+    3: 'Triple',
+};
+
 class NewCardDialog extends React.Component {
     state = {
         expirationDate: addWeeks(new Date(), 10),
@@ -40,7 +46,7 @@ class NewCardDialog extends React.Component {
 
     handleOrder = () =>
         this.props.handleCreate(
-            this.state.numberOfCourses * 8 - 1,
+            this.state.numberOfCourses * 8,
             this.state.expirationDate
         );
 
@@ -60,7 +66,9 @@ class NewCardDialog extends React.Component {
                 </DialogTitle>
                 <DialogContent>
                     <DialogContentText>
-                        {`You no longer have an active card, would you like to order a new ${numberOfCourses} class card that will expire on ${this.getUserReadableDate(
+                        {`You no longer have an active card, would you like to order a new ${
+                            numberToCourseMap[numberOfCourses]
+                        } class card that will expire on ${this.getUserReadableDate(
                             expirationDate
                         )}`}
                     </DialogContentText>

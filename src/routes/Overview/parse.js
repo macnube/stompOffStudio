@@ -62,8 +62,8 @@ export const parseCardsToTableData = cards =>
                 return acc;
             }
             const uses =
-                card.useHistory && card.useHistory.length
-                    ? card.useHistory.length
+                card.participationHistory && card.participationHistory.length
+                    ? card.participationHistory.length
                     : 0;
             const result = [
                 card.student.id,

@@ -7,10 +7,13 @@ export const GET_CARD = gql`
             expirationDate
             active
             value
-            useHistory {
+            participationHistory {
                 id
-                date
-                topic
+                courseInstance {
+                    id
+                    date
+                    topic
+                }
             }
             student {
                 id
@@ -21,6 +24,15 @@ export const GET_CARD = gql`
                 date
                 amount
             }
+        }
+    }
+`;
+
+export const GET_PARTICIPANT_BY_STUDENT = gql`
+    query CardDetailGetParticipantByStudent($id: ID!) {
+        getParticipantByStudent(id: $id) {
+            id
+            status
         }
     }
 `;
@@ -40,10 +52,36 @@ export const UPDATE_CARD = gql`
                 id
                 date
             }
-            useHistory {
+            participationHistory {
                 id
             }
         }
     }
 `;
 
+export const REMOVE_CARD_PARTICIPATION = gql`
+    mutation CardDetailRemoveCardParticipation(
+        $id: ID!
+        $participantId: ID!
+        $value: Int!
+    ) {
+        removeCardParticipation(
+            id: $id
+            participantId: $participantId
+            value: $value
+        ) {
+            id
+            expirationDate
+            active
+            value
+            participationHistory {
+                id
+            }
+            payment {
+                id
+                date
+            }
+            paid
+        }
+    }
+`;

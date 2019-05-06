@@ -7,13 +7,8 @@ import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
 import TrashIcon from '@material-ui/icons/Delete';
 
-const SelectedDeleteToolbar = ({
-    selectedRows,
-    displayData,
-    handleOnDeletePress,
-    renderChildren = noop,
-}) => {
-    const selectedIds = reduce(
+const defaultGetIds = (selectedRows, displayData) =>
+    reduce(
         displayData,
         (result, row, index) => {
             if (keys(selectedRows.lookup).includes(index.toString())) {
@@ -24,6 +19,15 @@ const SelectedDeleteToolbar = ({
         },
         []
     );
+
+const SelectedDeleteToolbar = ({
+    selectedRows,
+    displayData,
+    handleOnDeletePress,
+    renderChildren = noop,
+    getIds = defaultGetIds,
+}) => {
+    const selectedIds = getIds(selectedRows, displayData);
     return (
         <div>
             {renderChildren(selectedIds)}
@@ -41,6 +45,7 @@ SelectedDeleteToolbar.propTypes = {
     handleOnDeletePress: PropTypes.func.isRequired,
     selectedRows: PropTypes.object.isRequired,
     displayData: PropTypes.array.isRequired,
+    getIds: PropTypes.func,
 };
 
 export default SelectedDeleteToolbar;

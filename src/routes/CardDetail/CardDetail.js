@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
+import find from 'lodash/find';
 import PropTypes from 'prop-types';
 import MUIDataTable from 'mui-datatables';
 import Paper from '@material-ui/core/Paper';
@@ -9,6 +10,8 @@ import DateFnsUtils from '@date-io/date-fns';
 
 import { parseCardDataToArray } from './parse';
 import CardDetailHeader from './CardDetailHeader';
+import { SelectedDeleteToolbar } from 'components';
+import { PARTICIPANT_STATUS } from 'constants/gql';
 
 const columns = [
     {
@@ -21,7 +24,7 @@ const columns = [
         name: 'Name',
     },
     {
-        name: 'Capacity',
+        name: 'Date',
     },
 ];
 
@@ -65,10 +68,49 @@ class CardDetail extends Component {
         });
     };
 
+    handleOnDeleteInstancePress = id => {
+        const {
+            removeCardParticipation,
+            logParticipantStatus,
+            card,
+        } = this.props;
+
+        removeCardParticipation({
+            variables: {
+                id: card.id,
+                participantId: id,
+                value: ++card.value,
+            },
+        });
+
+        logParticipantStatus({
+            variables: {
+                id,
+                status: PARTICIPANT_STATUS.PRESENT,
+            },
+        });
+    };
+
+    renderInstanceSelectedToolbar = (selectedRows, displayData) => (
+        <SelectedDeleteToolbar
+            selectedRows={selectedRows}
+            displayData={displayData}
+            handleOnDeletePress={this.handleOnDeleteInstancePress}
+            getIds={this.getRowId}
+        />
+    );
+
+    getRowId = (selectedRows, displayData) => {
+        const selectedDataIndex = selectedRows.data[0].dataIndex;
+        return find(displayData, { dataIndex: selectedDataIndex }).data[0];
+    };
+
     render() {
         const options = {
             responsive: 'scroll',
+            selectedRows: 'single',
             onRowClick: this.handleInstanceClick,
+            customToolbarSelect: this.renderInstanceSelectedToolbar,
         };
         const { card } = this.props;
         return (
@@ -95,6 +137,8 @@ class CardDetail extends Component {
 
 CardDetail.propTypes = {
     updateCard: PropTypes.func.isRequired,
+    removeCardParticipation: PropTypes.func.isRequired,
+    logParticipantStatus: PropTypes.func.isRequired,
     card: PropTypes.object.isRequired,
 };
 

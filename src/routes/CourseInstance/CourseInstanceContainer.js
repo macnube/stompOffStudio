@@ -9,7 +9,8 @@ import {
     UPDATE_COURSE_INSTANCE,
     LOG_PARTICIPANT_STATUS,
     GET_COURSE_INSTANCE,
-    LOG_CARD_USAGE,
+    LOG_CARD_PARTICIPATION,
+    DEACTIVATE_CARD,
 } from './graphql';
 import { CREATE_CARD } from 'routes/StudentDetail/graphql';
 import CourseInstance from './CourseInstance';
@@ -32,8 +33,8 @@ const logParticipantStatus = ({ render, id }) => (
     </Mutation>
 );
 
-const logCardUsage = ({ render, id }) => (
-    <Mutation mutation={LOG_CARD_USAGE}>
+const logCardParticipation = ({ render, id }) => (
+    <Mutation mutation={LOG_CARD_PARTICIPATION}>
         {(mutation, result) => render({ mutation, result })}
     </Mutation>
 );
@@ -44,12 +45,19 @@ const createCard = ({ render }) => (
     </Mutation>
 );
 
+const deactivateCard = ({ render }) => (
+    <Mutation mutation={DEACTIVATE_CARD}>
+        {(mutation, result) => render({ mutation, result })}
+    </Mutation>
+);
+
 const mapper = {
     getCourseInstance,
     updateCourseInstance,
     logParticipantStatus,
-    logCardUsage,
+    logCardParticipation,
     createCard,
+    deactivateCard,
 };
 
 const CourseInstanceContainer = ({ location }) => {
@@ -63,18 +71,42 @@ const CourseInstanceContainer = ({ location }) => {
                     logParticipantStatus: {
                         mutation: logParticipantStatusMutation,
                     },
-                    logCardUsage: { mutation: logCardUsageMutation },
-                    createCard: { mutation: createCardMutation },
+                    logCardParticipation: {
+                        mutation: logCardParticipationMutation,
+                    },
+                    createCard: {
+                        mutation: createCardMutation,
+                        result: createCardResult,
+                    },
+                    deactivateCard: { mutation: deactivateCardMutation },
                 }) => {
                     if (loading) return null;
                     if (error) return `Error: ${error}`;
+                    if (createCardResult.data) {
+                        return (
+                            <CourseInstance
+                                courseInstance={data.courseInstance}
+                                updateCourseInstance={updateCourseMutation}
+                                logParticipantStatus={
+                                    logParticipantStatusMutation
+                                }
+                                logCardParticipation={
+                                    logCardParticipationMutation
+                                }
+                                createCard={createCardMutation}
+                                deactivateCard={deactivateCardMutation}
+                                card={createCardResult.data.createCard}
+                            />
+                        );
+                    }
                     return (
                         <CourseInstance
                             courseInstance={data.courseInstance}
                             updateCourseInstance={updateCourseMutation}
                             logParticipantStatus={logParticipantStatusMutation}
-                            logCardUsage={logCardUsageMutation}
+                            logCardParticipation={logCardParticipationMutation}
                             createCard={createCardMutation}
+                            deactivateCard={deactivateCardMutation}
                         />
                     );
                 }}

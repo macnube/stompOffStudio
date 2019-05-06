@@ -4,7 +4,8 @@ import { Redirect } from 'react-router-dom';
 import { Query, Mutation } from 'react-apollo';
 import { Adopt } from 'react-adopt';
 
-import { GET_CARD, UPDATE_CARD } from './graphql';
+import { GET_CARD, UPDATE_CARD, REMOVE_CARD_PARTICIPATION } from './graphql';
+import { LOG_PARTICIPANT_STATUS } from 'routes/CourseInstance/graphql';
 import CardDetail from './CardDetail';
 
 const getCard = ({ render, id }) => (
@@ -13,8 +14,20 @@ const getCard = ({ render, id }) => (
     </Query>
 );
 
-const updateCard = ({ render, id }) => (
+const updateCard = ({ render }) => (
     <Mutation mutation={UPDATE_CARD}>
+        {(mutation, result) => render({ mutation, result })}
+    </Mutation>
+);
+
+const removeCardParticipation = ({ render }) => (
+    <Mutation mutation={REMOVE_CARD_PARTICIPATION}>
+        {(mutation, result) => render({ mutation, result })}
+    </Mutation>
+);
+
+const logParticipantStatus = ({ render }) => (
+    <Mutation mutation={LOG_PARTICIPANT_STATUS}>
         {(mutation, result) => render({ mutation, result })}
     </Mutation>
 );
@@ -22,6 +35,8 @@ const updateCard = ({ render, id }) => (
 const mapper = {
     getCard,
     updateCard,
+    removeCardParticipation,
+    logParticipantStatus,
 };
 
 const CardDetailContainer = ({ location }) => {
@@ -32,6 +47,12 @@ const CardDetailContainer = ({ location }) => {
                 {({
                     getCard: { data, loading, error },
                     updateCard: { mutation: updateCardMutation },
+                    removeCardParticipation: {
+                        mutation: removeCardParticipationMutation,
+                    },
+                    logParticipantStatus: {
+                        mutation: logParticipantStatusMutation,
+                    },
                 }) => {
                     if (loading) return null;
                     if (error) return `Error: ${error}`;
@@ -39,6 +60,10 @@ const CardDetailContainer = ({ location }) => {
                         <CardDetail
                             card={data.card}
                             updateCard={updateCardMutation}
+                            removeCardParticipation={
+                                removeCardParticipationMutation
+                            }
+                            logParticipantStatus={logParticipantStatusMutation}
                         />
                     );
                 }}

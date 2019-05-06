@@ -7,7 +7,7 @@ import { Adopt } from 'react-adopt';
 
 import {
     GET_COURSE_INSTANCE,
-    LOG_CARD_USAGE,
+    LOG_CARD_PARTICIPATION,
     LOG_PARTICIPANT_STATUS,
 } from 'routes/CourseInstance/graphql';
 import { CREATE_CARD } from 'routes/StudentDetail/graphql';
@@ -25,8 +25,8 @@ const logParticipantStatus = ({ render, id }) => (
     </Mutation>
 );
 
-const logCardUsage = ({ render, id }) => (
-    <Mutation mutation={LOG_CARD_USAGE}>
+const logCardParticipation = ({ render, id }) => (
+    <Mutation mutation={LOG_CARD_PARTICIPATION}>
         {(mutation, result) => render({ mutation, result })}
     </Mutation>
 );
@@ -40,7 +40,7 @@ const createCard = ({ render }) => (
 const mapper = {
     getCourseInstance,
     logParticipantStatus,
-    logCardUsage,
+    logCardParticipation,
     createCard,
 };
 
@@ -54,16 +54,37 @@ const CourseAttendanceContainer = ({ location }) => {
                     logParticipantStatus: {
                         mutation: logParticipantStatusMutation,
                     },
-                    logCardUsage: { mutation: logCardUsageMutation },
-                    createCard: { mutation: createCardMutation },
+                    logCardParticipation: {
+                        mutation: logCardParticipationMutation,
+                    },
+                    createCard: {
+                        mutation: createCardMutation,
+                        result: createCardResult,
+                    },
                 }) => {
                     if (loading) return null;
                     if (error) return `Error: ${error}`;
+
+                    if (createCardResult.data) {
+                        return (
+                            <CourseAttendance
+                                courseInstance={data.courseInstance}
+                                logParticipantStatus={
+                                    logParticipantStatusMutation
+                                }
+                                logCardParticipation={
+                                    logCardParticipationMutation
+                                }
+                                createCard={createCardMutation}
+                                card={createCardResult.data.createCard}
+                            />
+                        );
+                    }
                     return (
                         <CourseAttendance
                             courseInstance={data.courseInstance}
                             logParticipantStatus={logParticipantStatusMutation}
-                            logCardUsage={logCardUsageMutation}
+                            logCardParticipation={logCardParticipationMutation}
                             createCard={createCardMutation}
                         />
                     );

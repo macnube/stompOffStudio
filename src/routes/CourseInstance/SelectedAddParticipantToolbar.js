@@ -23,8 +23,21 @@ const SelectedAddParticipantToolbar = ({
     const handleLogAsAbsentPress = handleLogParticipantStatus(
         PARTICIPANT_STATUS.ABSENT
     );
+    const handleResetLogPress = handleLogParticipantStatus(
+        PARTICIPANT_STATUS.NOT_LOGGED
+    );
     return (
         <div>
+            <Button
+                variant="contained"
+                size="small"
+                className={classes.button}
+                onClick={() => handleResetLogPress(selectedId)}
+                color="primary"
+            >
+                <AddIcon className={classes.leftIcon} />
+                Reset
+            </Button>
             <Button
                 variant="contained"
                 size="small"

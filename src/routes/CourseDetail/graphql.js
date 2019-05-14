@@ -26,6 +26,7 @@ const DETAIL_COURSE_FRAGMENT = gql`
                 id
             }
             role
+            status
         }
         instances {
             id
@@ -119,10 +120,62 @@ export const REMOVE_TEACHER_FROM_COURSE = gql`
     }
 `;
 
+export const CREATE_COURSE_STUDENT = gql`
+    mutation StudentDetailCreateCourseStudent(
+        $courseId: ID!
+        $studentId: ID!
+        $role: DanceRole!
+        $status: CourseStudentStatus
+    ) {
+        createCourseStudent(
+            courseId: $courseId
+            studentId: $studentId
+            role: $role
+            status: $status
+        ) {
+            id
+            role
+            course {
+                ...DetailCourseFragment
+            }
+            student {
+                id
+                name
+                email
+                courses {
+                    id
+                }
+            }
+        }
+    }
+    ${DETAIL_COURSE_FRAGMENT}
+`;
+
 export const DELETE_COURSE_STUDENT = gql`
     mutation StudentDetailDeleteCourseStudent($id: ID!) {
         deleteCourseStudent(id: $id) {
             id
+        }
+    }
+`;
+
+export const UPDATE_COURSE_STUDENT_STATUS = gql`
+    mutation StudentDetailUpdateCourseStudentStatus(
+        $id: ID!
+        $status: CourseStudentStatus!
+    ) {
+        updateCourseStudentStatus(id: $id, status: $status) {
+            id
+            student {
+                id
+                email
+                name
+            }
+            course {
+                id
+            }
+            role
+            status
         }
     }
 `;

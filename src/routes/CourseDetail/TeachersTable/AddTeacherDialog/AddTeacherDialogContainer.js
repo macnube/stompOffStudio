@@ -4,7 +4,7 @@ import { Query, Mutation } from 'react-apollo';
 import { Adopt } from 'react-adopt';
 
 import { GET_TEACHERS, ADD_TEACHER_TO_COURSE } from './graphql';
-import AddTeacherForm from './AddTeacherForm';
+import AddTeacherDialog from './AddTeacherDialog';
 
 const getTeachers = ({ render }) => (
     <Query query={GET_TEACHERS}>{render}</Query>
@@ -30,7 +30,7 @@ const AddTeacherFormContainer = ({ open, handleClose, courseId }) => (
             if (loading) return null;
             if (error) return `Error: ${error}`;
             return (
-                <AddTeacherForm
+                <AddTeacherDialog
                     open={open}
                     handleClose={handleClose}
                     courseId={courseId}

@@ -1,82 +1,24 @@
 import 'date-fns';
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
-import find from 'lodash/find';
-import forEach from 'lodash/forEach';
-import map from 'lodash/map';
 import PropTypes from 'prop-types';
-import MUIDataTable from 'mui-datatables';
 import Paper from '@material-ui/core/Paper';
-import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
 import { MuiPickersUtilsProvider } from 'material-ui-pickers';
 import DateFnsUtils from '@date-io/date-fns';
 
-import { CustomAddToolbar, SelectedDeleteToolbar } from 'components';
 import CourseDetailHeader from './CourseDetailHeader';
-import AddTeacherForm from './AddTeacherForm';
-import AddStudentsToCourseForm from './AddStudentsToCourseForm';
-import AddInstanceDialog from './AddInstanceDialog';
-import { DANCE_ROLE } from 'constants/gql';
-import {
-    parseTeachersToTableData,
-    parseCourseStudentsToTableData,
-    parseInstancesToTableData,
-} from './parse';
-
-const columns = [
-    {
-        name: 'ID',
-        options: {
-            display: 'false',
-        },
-    },
-    {
-        name: 'Name',
-    },
-    {
-        name: 'email',
-    },
-];
-
-const instanceColumns = [
-    {
-        name: 'ID',
-        options: {
-            display: 'false',
-        },
-    },
-    {
-        name: 'Date',
-    },
-    {
-        name: 'Topic',
-    },
-    {
-        name: '# of Attendees',
-    },
-    {
-        name: '# of Absentees',
-    },
-];
+import InstancesTable from './InstancesTable';
+import TeachersTable from './TeachersTable';
+import StudentsTables from './StudentsTables';
 
 class CourseDetail extends Component {
     state = {
-        openTeacherForm: false,
+        openTeacherDialog: false,
         openCourseLeadersForm: false,
         openCourseFollowersForm: false,
-        openInstanceForm: false,
+        openInstanceDialog: false,
+        openCourseWaitlistForm: false,
     };
-
-    getMuiTheme = () =>
-        createMuiTheme({
-            overrides: {
-                MuiPaper: {
-                    elevation4: {
-                        boxShadow: '0 0 0 0',
-                    },
-                },
-            },
-        });
 
     navigateToCourseManagement = () => {
         this.props.history.push({
@@ -84,135 +26,18 @@ class CourseDetail extends Component {
         });
     };
 
-    navigateToTeacherManagement = () => {
-        this.props.history.push({
-            pathname: './teacherManagement',
-        });
-    };
-
-    navigateToStudentDetail = student => {
-        this.props.history.push({
-            pathname: './studentDetail',
-            search: `id=${student.id}`,
-        });
-    };
-
-    navigateToInstance = instanceId => {
-        this.props.history.push({
-            pathname: './courseInstance',
-            search: `id=${instanceId}`,
-        });
-    };
-
-    handleNavigateToInstance = rowData => {
-        this.navigateToInstance(rowData[0]);
-    };
-
-    handleNavigateToStudentDetail = rowData => {
-        const { course } = this.props;
-        const courseStudent = find(course.courseStudents, {
-            id: rowData[0],
-        });
-        this.navigateToStudentDetail(courseStudent.student);
-    };
-
-    renderTeacherSelectedToolbar = (selectedRows, displayData) => (
-        <SelectedDeleteToolbar
-            selectedRows={selectedRows}
-            displayData={displayData}
-            handleOnDeletePress={this.handleOnDeleteTeachersPress}
-        />
-    );
-
-    renderCourseStudentSelectedToolbar = (selectedRows, displayData) => (
-        <SelectedDeleteToolbar
-            selectedRows={selectedRows}
-            displayData={displayData}
-            handleOnDeletePress={this.handleOnDeleteCourseStudentsPress}
-        />
-    );
-
-    renderCourseInstanceSelectedToolbar = (selectedRows, displayData) => (
-        <SelectedDeleteToolbar
-            selectedRows={selectedRows}
-            displayData={displayData}
-            handleOnDeletePress={this.handleOnDeleteCourseInstancesPress}
-        />
-    );
-
-    handleClickAddTeacherOpen = () => {
-        this.setState({ openTeacherForm: true });
-    };
-
-    handleClickAddCourseLeadersOpen = () => {
-        this.setState({ openCourseLeadersForm: true });
-    };
-
-    handleClickAddCourseFollowersOpen = () => {
-        this.setState({ openCourseFollowersForm: true });
-    };
-
-    handleClickAddInstanceOpen = () => {
-        this.setState({ openInstanceForm: true });
+    handleOpenDialog = name => {
+        this.setState({ [name]: true });
     };
 
     handleClose = () => {
         this.setState({
-            openTeacherForm: false,
+            openTeacherDialog: false,
             openCourseLeadersForm: false,
             openCourseFollowersForm: false,
-            openInstanceForm: false,
+            openInstanceDialog: false,
+            openCourseWaitlistForm: false,
         });
-    };
-
-    handleOnDeleteTeachersPress = ids => {
-        const { removeTeacherFromCourse } = this.props;
-
-        forEach(ids, teacherId => {
-            removeTeacherFromCourse({
-                variables: { id: this.state.id, teacherId },
-            });
-        });
-    };
-
-    handleOnDeleteCourseStudentsPress = ids => {
-        const { deleteCourseStudent } = this.props;
-
-        forEach(ids, id => {
-            deleteCourseStudent({
-                variables: { id },
-            });
-        });
-    };
-
-    handleOnDeleteCourseInstancesPress = ids => {
-        const { deleteCourseInstance } = this.props;
-
-        forEach(ids, id => {
-            deleteCourseInstance({
-                variables: { id },
-            });
-        });
-    };
-
-    handleCreateCourseInstance = instance => {
-        const { createCourseInstance, course } = this.props;
-        const { topic, notes, recapUrl, date } = instance;
-        const courseStudentIds = map(
-            course.courseStudents,
-            courseStudent => courseStudent.id
-        );
-        createCourseInstance({
-            variables: {
-                topic,
-                notes,
-                recapUrl,
-                date,
-                courseId: course.id,
-                courseStudentIds,
-            },
-        });
-        this.handleClose();
     };
 
     handleUpdateCourse = course => {
@@ -226,61 +51,20 @@ class CourseDetail extends Component {
     };
 
     render() {
-        const baseOptions = {
-            responsive: 'scroll',
-        };
-        const teacherOptions = {
-            ...baseOptions,
-            onRowClick: this.navigateToTeacherManagement,
-            customToolbar: () => (
-                <CustomAddToolbar
-                    title={'Add Teacher'}
-                    handleAddPress={this.handleClickAddTeacherOpen}
-                />
-            ),
-            customToolbarSelect: this.renderTeacherSelectedToolbar,
-        };
-        const studentOptions = {
-            ...baseOptions,
-
-            onRowClick: this.handleNavigateToStudentDetail,
-            customToolbarSelect: this.renderCourseStudentSelectedToolbar,
-        };
-        const leadersOptions = {
-            ...studentOptions,
-            customToolbar: () => (
-                <CustomAddToolbar
-                    title={'Add Students'}
-                    handleAddPress={this.handleClickAddCourseLeadersOpen}
-                />
-            ),
-        };
-        const followersOptions = {
-            ...studentOptions,
-            customToolbar: () => (
-                <CustomAddToolbar
-                    title={'Add Students'}
-                    handleAddPress={this.handleClickAddCourseFollowersOpen}
-                />
-            ),
-        };
-        const instanceOptions = {
-            ...baseOptions,
-            onRowClick: this.handleNavigateToInstance,
-            customToolbar: () => (
-                <CustomAddToolbar
-                    title={'Add a Course Instance'}
-                    handleAddPress={this.handleClickAddInstanceOpen}
-                />
-            ),
-            customToolbarSelect: this.renderCourseInstanceSelectedToolbar,
-        };
-        const { course } = this.props;
         const {
-            openTeacherForm,
+            course,
+            createCourseInstance,
+            deleteCourseInstance,
+            removeTeacherFromCourse,
+            createCourseStudent,
+            updateCourseStudentStatus,
+        } = this.props;
+        const {
+            openTeacherDialog,
             openCourseLeadersForm,
+            openInstanceDialog,
+            openCourseWaitlistForm,
             openCourseFollowersForm,
-            openInstanceForm,
         } = this.state;
         return (
             <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -290,77 +74,36 @@ class CourseDetail extends Component {
                         handleOnCancel={this.navigateToCourseManagement}
                         handleOnSave={this.handleUpdateCourse}
                     />
-                    <MuiThemeProvider theme={this.getMuiTheme()}>
-                        <MUIDataTable
-                            title={'Course Instances'}
-                            data={parseInstancesToTableData(course.instances)}
-                            columns={instanceColumns}
-                            options={instanceOptions}
-                        />
-                    </MuiThemeProvider>
-                    <MuiThemeProvider theme={this.getMuiTheme()}>
-                        <MUIDataTable
-                            title={'Leaders'}
-                            data={parseCourseStudentsToTableData(
-                                course.courseStudents,
-                                DANCE_ROLE.LEADER
-                            )}
-                            columns={columns}
-                            options={leadersOptions}
-                        />
-                    </MuiThemeProvider>
-                    <MuiThemeProvider theme={this.getMuiTheme()}>
-                        <MUIDataTable
-                            title={'Followers'}
-                            data={parseCourseStudentsToTableData(
-                                course.courseStudents,
-                                DANCE_ROLE.FOLLOWER
-                            )}
-                            columns={columns}
-                            options={followersOptions}
-                        />
-                    </MuiThemeProvider>
-                    <MuiThemeProvider theme={this.getMuiTheme()}>
-                        <MUIDataTable
-                            title={'Teachers'}
-                            data={parseTeachersToTableData(course.teachers)}
-                            columns={columns}
-                            options={teacherOptions}
-                        />
-                    </MuiThemeProvider>
-                    {course && course.id ? (
-                        <AddTeacherForm
-                            open={openTeacherForm}
-                            handleClose={this.handleClose}
-                            courseId={course.id}
-                        />
-                    ) : null}
-                    {course && course.id ? (
-                        <AddStudentsToCourseForm
-                            open={openCourseLeadersForm}
-                            handleClose={this.handleClose}
-                            courseId={course.id}
-                            role={DANCE_ROLE.LEADER}
-                            title="Add Students as Leader"
-                        />
-                    ) : null}
-                    {course && course.id ? (
-                        <AddStudentsToCourseForm
-                            open={openCourseFollowersForm}
-                            handleClose={this.handleClose}
-                            courseId={course.id}
-                            role={DANCE_ROLE.FOLLOWER}
-                            title="Add Students as Follower"
-                        />
-                    ) : null}
-                    {course ? (
-                        <AddInstanceDialog
-                            open={openInstanceForm}
-                            handleClose={this.handleClose}
-                            course={course}
-                            handleCreate={this.handleCreateCourseInstance}
-                        />
-                    ) : null}
+                    <InstancesTable
+                        open={openInstanceDialog}
+                        course={course}
+                        createCourseInstance={createCourseInstance}
+                        deleteCourseInstance={deleteCourseInstance}
+                        handleAdd={() =>
+                            this.handleOpenDialog('openInstanceDialog')
+                        }
+                        handleClose={this.handleClose}
+                    />
+                    <StudentsTables
+                        openLeaders={openCourseLeadersForm}
+                        openFollowers={openCourseFollowersForm}
+                        openWaitlist={openCourseWaitlistForm}
+                        course={course}
+                        createCourseStudent={createCourseStudent}
+                        updateCourseStudentStatus={updateCourseStudentStatus}
+                        handleOpenDialog={this.handleOpenDialog}
+                        handleClose={this.handleClose}
+                    />
+                    <TeachersTable
+                        open={openTeacherDialog}
+                        course={course}
+                        createCourseInstance={createCourseInstance}
+                        removeTeacherFromCourse={removeTeacherFromCourse}
+                        handleAdd={() =>
+                            this.handleOpenDialog('openTeacherDialog')
+                        }
+                        handleClose={this.handleClose}
+                    />
                 </Paper>
             </MuiPickersUtilsProvider>
         );
@@ -374,6 +117,9 @@ CourseDetail.propTypes = {
     deleteCourseStudent: PropTypes.func.isRequired,
     createCourseInstance: PropTypes.func.isRequired,
     deleteCourseInstance: PropTypes.func.isRequired,
+    updateCourseStudentStatus: PropTypes.func.isRequired,
+    createCourseStudent: PropTypes.func.isRequired,
+    history: PropTypes.object.isRequired,
 };
 
 export default withRouter(CourseDetail);

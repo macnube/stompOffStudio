@@ -1,15 +1,38 @@
 import filter from 'lodash/filter';
 import reduce from 'lodash/reduce';
 
-import { PARTICIPANT_STATUS } from 'constants/gql';
+import { PARTICIPANT_STATUS, COURSE_STUDENT_STATUS } from 'constants/gql';
 import { getTableDate } from 'utils/date';
 
-export const parseCourseStudentsToTableData = (courseStudents, role) =>
+export const parseActiveCourseStudentsToTableData = (courseStudents, role) =>
     reduce(
-        filter(courseStudents, courseStudent => courseStudent.role === role),
+        filter(
+            courseStudents,
+            courseStudent =>
+                courseStudent.role === role &&
+                courseStudent.status === COURSE_STUDENT_STATUS.ACTIVE
+        ),
         (acc, courseStudent) => {
-            const { name, email } = courseStudent.student;
-            const result = [courseStudent.id, name, email];
+            const { name, email, id } = courseStudent.student;
+            const result = [courseStudent.id, id, name, email];
+            acc.push(result);
+            return acc;
+        },
+        []
+    );
+
+export const parseCourseStudentsByStatusToTableData = (
+    courseStudents,
+    status
+) =>
+    reduce(
+        filter(
+            courseStudents,
+            courseStudent => courseStudent.status === status
+        ),
+        (acc, courseStudent) => {
+            const { name, email, id } = courseStudent.student;
+            const result = [courseStudent.id, id, name, email];
             acc.push(result);
             return acc;
         },

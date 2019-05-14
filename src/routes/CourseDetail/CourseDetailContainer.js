@@ -11,6 +11,8 @@ import {
     UPDATE_COURSE,
     REMOVE_TEACHER_FROM_COURSE,
     DELETE_COURSE_STUDENT,
+    CREATE_COURSE_STUDENT,
+    UPDATE_COURSE_STUDENT_STATUS,
     GET_STUDENT_FRAGMENT,
     CREATE_COURSE_INSTANCE,
     DELETE_COURSE_INSTANCE,
@@ -32,6 +34,12 @@ const updateCourse = ({ render }) => (
 
 const removeTeacherFromCourse = ({ render }) => (
     <Mutation mutation={REMOVE_TEACHER_FROM_COURSE}>
+        {(mutation, result) => render({ mutation, result })}
+    </Mutation>
+);
+
+const updateCourseStudentStatus = ({ render }) => (
+    <Mutation mutation={UPDATE_COURSE_STUDENT_STATUS}>
         {(mutation, result) => render({ mutation, result })}
     </Mutation>
 );
@@ -126,6 +134,12 @@ const createCourseInstance = ({ render }) => (
     </Mutation>
 );
 
+const createCourseStudent = ({ render }) => (
+    <Mutation mutation={CREATE_COURSE_STUDENT}>
+        {(mutation, result) => render({ mutation, result })}
+    </Mutation>
+);
+
 const mapper = {
     getCourse,
     updateCourse,
@@ -133,6 +147,8 @@ const mapper = {
     deleteCourseStudent,
     createCourseInstance,
     deleteCourseInstance,
+    updateCourseStudentStatus,
+    createCourseStudent,
 };
 
 const CourseDetailContainer = ({ location }) => {
@@ -155,6 +171,12 @@ const CourseDetailContainer = ({ location }) => {
                     deleteCourseInstance: {
                         mutation: deleteCourseInstanceMutation,
                     },
+                    updateCourseStudentStatus: {
+                        mutation: updateCourseStudentStatusMutation,
+                    },
+                    createCourseStudent: {
+                        mutation: createCourseStudentMutation,
+                    },
                 }) => {
                     if (loading) return null;
                     if (error) return `Error: ${error}`;
@@ -174,6 +196,12 @@ const CourseDetailContainer = ({ location }) => {
                                 }
                                 deleteCourseInstance={
                                     deleteCourseInstanceMutation
+                                }
+                                updateCourseStudentStatus={
+                                    updateCourseStudentStatusMutation
+                                }
+                                createCourseStudent={
+                                    createCourseStudentMutation
                                 }
                             />
                         );

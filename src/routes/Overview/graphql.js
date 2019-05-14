@@ -48,6 +48,7 @@ export const GET_UNPAID_CARDS = gql`
             paid
             expirationDate
             value
+            originalValue
         }
     }
 `;

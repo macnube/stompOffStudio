@@ -61,16 +61,12 @@ export const parseCardsToTableData = cards =>
             if (card.paid) {
                 return acc;
             }
-            const uses =
-                card.participationHistory && card.participationHistory.length
-                    ? card.participationHistory.length
-                    : 0;
             const result = [
                 card.student.id,
                 card.student.name,
-                card.value,
+                card.originalValue,
                 getTableDate(card.expirationDate),
-                card.value - uses,
+                card.value,
             ];
             acc.push(result);
             return acc;

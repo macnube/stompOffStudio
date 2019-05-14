@@ -4,7 +4,7 @@ import { Query } from 'react-apollo';
 import { Adopt } from 'react-adopt';
 
 import { GET_STUDENTS } from './graphql';
-import AddStudentsToCourseForm from './AddStudentsToCourseForm';
+import AddStudentsToCourseDialog from './AddStudentsToCourseDialog';
 
 const getStudents = ({ render }) => (
     <Query query={GET_STUDENTS}>{render}</Query>
@@ -26,7 +26,7 @@ const AddStudentsToCourseDialogContainer = ({
             if (loading) return null;
             if (error) return `Error: ${error}`;
             return (
-                <AddStudentsToCourseForm
+                <AddStudentsToCourseDialog
                     open={open}
                     handleClose={handleClose}
                     courseId={courseId}

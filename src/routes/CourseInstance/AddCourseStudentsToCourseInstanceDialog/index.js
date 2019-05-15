@@ -1,0 +1,3 @@
+import AddCourseStudentsToCourseInstanceDialogContainer from './AddCourseStudentsToCourseInstanceDialogContainer';
+
+export default AddCourseStudentsToCourseInstanceDialogContainer;

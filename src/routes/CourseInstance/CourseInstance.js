@@ -11,7 +11,8 @@ import DateFnsUtils from '@date-io/date-fns';
 
 import SelectedAddParticipantToolbar from './SelectedAddParticipantToolbar';
 import CourseInstanceHeader from './CourseInstanceHeader';
-import { CardDialog } from 'components';
+import AddCourseStudentsToCourseInstanceDialog from './AddCourseStudentsToCourseInstanceDialog';
+import { CardDialog, CustomAddToolbar } from 'components';
 import { parseInstanceToTableData } from './parse';
 import { PARTICIPANT_STATUS } from 'constants/gql';
 import { isExpired } from 'utils/date';
@@ -46,6 +47,7 @@ const columns = [
 class CourseInstance extends Component {
     state = {
         openCardDialog: false,
+        openAddParticipantDialog: false,
         studentId: '',
         studentName: '',
         numberOfCourses: 1,
@@ -94,9 +96,14 @@ class CourseInstance extends Component {
         });
     };
 
+    handleAddParticipant = () => {
+        this.setState({ openAddParticipantDialog: true });
+    };
+
     handleClose = () => {
         this.setState({
             openCardDialog: false,
+            openAddParticipantDialog: false,
             studentId: '',
             studentName: '',
         });
@@ -217,15 +224,24 @@ class CourseInstance extends Component {
         });
     };
 
+    renderCustomToolbar = () => (
+        <CustomAddToolbar
+            title={'Add Participants'}
+            handleAddPress={this.handleAddParticipant}
+        />
+    );
+
     render() {
         const options = {
             responsive: 'scroll',
             selectableRows: 'single',
+            customToolbar: this.renderCustomToolbar,
             customToolbarSelect: this.renderParticipantSelectedToolbar,
             onRowClick: this.handleNavigateToStudentDetail,
         };
         const { courseInstance, createCard } = this.props;
         const {
+            openAddParticipantDialog,
             openCardDialog,
             studentId,
             studentName,
@@ -261,6 +277,13 @@ class CourseInstance extends Component {
                             numberOfCourses={numberOfCourses}
                         />
                     ) : null}
+                    {courseInstance ? (
+                        <AddCourseStudentsToCourseInstanceDialog
+                            open={openAddParticipantDialog}
+                            handleClose={this.handleClose}
+                            courseInstance={courseInstance}
+                        />
+                    ) : null}
                 </Paper>
             </MuiPickersUtilsProvider>
         );
@@ -274,6 +297,7 @@ CourseInstance.propTypes = {
     logCardParticipation: PropTypes.func.isRequired,
     createCard: PropTypes.func.isRequired,
     deactivateCard: PropTypes.func.isRequired,
+    card: PropTypes.object,
 };
 
 export default withRouter(CourseInstance);

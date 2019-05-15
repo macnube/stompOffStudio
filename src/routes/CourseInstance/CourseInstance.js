@@ -12,7 +12,7 @@ import DateFnsUtils from '@date-io/date-fns';
 import SelectedAddParticipantToolbar from './SelectedAddParticipantToolbar';
 import CourseInstanceHeader from './CourseInstanceHeader';
 import { CardDialog } from 'components';
-import { parseParticipantsToTableData } from './parse';
+import { parseInstanceToTableData } from './parse';
 import { PARTICIPANT_STATUS } from 'constants/gql';
 import { isExpired } from 'utils/date';
 
@@ -151,31 +151,23 @@ class CourseInstance extends Component {
             deactivateCard,
         } = this.props;
         const participant = find(courseInstance.participants, { id });
-        const activeCard = find(participant.courseStudent.student.cards, {
+        const activeCard = find(participant.student.cards, {
             active: true,
         });
 
         if (isNil(activeCard)) {
             const title = `No active card found - Please add a new card for ${
-                participant.courseStudent.student.name
+                participant.student.name
             }`;
-            return this.handleAddCardOpen(
-                participant.courseStudent.student,
-                title,
-                id
-            );
+            return this.handleAddCardOpen(participant.student, title, id);
         } else if (isExpired(activeCard.expirationDate)) {
             deactivateCard({
                 variables: { id: activeCard.id },
             });
             const title = `Card has expired - Please add a new card for ${
-                participant.courseStudent.student.name
+                participant.student.name
             }`;
-            return this.handleAddCardOpen(
-                participant.courseStudent.student,
-                title,
-                id
-            );
+            return this.handleAddCardOpen(participant.student, title, id);
         }
         logCardParticipation({
             variables: {
@@ -254,9 +246,7 @@ class CourseInstance extends Component {
                     <MuiThemeProvider theme={this.getMuiTheme()}>
                         <MUIDataTable
                             title={'Participants'}
-                            data={parseParticipantsToTableData(
-                                courseInstance.participants
-                            )}
+                            data={parseInstanceToTableData(courseInstance)}
                             columns={columns}
                             options={options}
                         />

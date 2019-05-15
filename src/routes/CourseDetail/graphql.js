@@ -196,7 +196,7 @@ export const CREATE_COURSE_INSTANCE = gql`
         $date: DateTime!
         $recapUrl: String
         $courseId: ID!
-        $courseStudentIds: [ID!]!
+        $studentIds: [ID!]!
     ) {
         createCourseInstance(
             topic: $topic
@@ -204,7 +204,7 @@ export const CREATE_COURSE_INSTANCE = gql`
             date: $date
             recapUrl: $recapUrl
             courseId: $courseId
-            courseStudentIds: $courseStudentIds
+            studentIds: $studentIds
         ) {
             ...CreateCourseInstanceFragment
         }

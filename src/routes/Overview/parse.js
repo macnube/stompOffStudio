@@ -4,12 +4,12 @@ import includes from 'lodash/includes';
 import { PARTICIPANT_STATUS, DANCE_ROLE } from 'constants/gql';
 import { getTableDate } from 'utils/date';
 
-const getAbsentParticipantCourseIds = participants =>
+const getAbsentParticipantStudentIds = participants =>
     reduce(
         participants,
         (result, participant) => {
             if (participant.status === PARTICIPANT_STATUS.ABSENT) {
-                result.push(participant.courseStudent.id);
+                result.push(participant.student.id);
                 return result;
             }
             return result;
@@ -18,7 +18,7 @@ const getAbsentParticipantCourseIds = participants =>
     );
 
 const getRoleCount = (instance, role) => {
-    const absentCourseStudentIds = getAbsentParticipantCourseIds(
+    const absentStudentIds = getAbsentParticipantStudentIds(
         instance.participants
     );
     return reduce(
@@ -26,7 +26,7 @@ const getRoleCount = (instance, role) => {
         (result, courseStudent) => {
             if (
                 courseStudent.role === role &&
-                !includes(absentCourseStudentIds, courseStudent.id)
+                !includes(absentStudentIds, courseStudent.student.id)
             ) {
                 return ++result;
             }

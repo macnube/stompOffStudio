@@ -11,7 +11,7 @@ export const GET_OVERVIEW_INSTANCES = gql`
             participants {
                 id
                 status
-                courseStudent {
+                student {
                     id
                 }
             }

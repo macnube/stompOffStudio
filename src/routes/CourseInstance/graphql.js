@@ -10,31 +10,27 @@ export const GET_COURSE_INSTANCE = gql`
             recapUrl
             participants {
                 id
-                courseStudent {
+                student {
                     id
-                    student {
+                    name
+                    email
+                    courses {
                         id
-                        name
-                        email
-                        courses {
-                            id
-                        }
-                        cards {
-                            id
-                            expirationDate
-                            active
-                            value
-                            participationHistory {
-                                id
-                            }
-                            payment {
-                                id
-                                date
-                            }
-                            paid
-                        }
                     }
-                    role
+                    cards {
+                        id
+                        expirationDate
+                        active
+                        value
+                        participationHistory {
+                            id
+                        }
+                        payment {
+                            id
+                            date
+                        }
+                        paid
+                    }
                 }
                 status
             }
@@ -47,6 +43,7 @@ export const GET_COURSE_INSTANCE = gql`
                         name
                         email
                     }
+                    role
                 }
             }
         }
@@ -89,14 +86,10 @@ export const LOG_PARTICIPANT_STATUS = gql`
                 id
                 participants {
                     id
-                    courseStudent {
+                    student {
                         id
-                        student {
-                            id
-                            name
-                            email
-                        }
-                        role
+                        name
+                        email
                     }
                     status
                 }

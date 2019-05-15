@@ -2,11 +2,12 @@ import React, { Fragment } from 'react';
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import forEach from 'lodash/forEach';
-import map from 'lodash/map';
+import reduce from 'lodash/reduce';
 
 import { CustomAddToolbar, SelectedDeleteToolbar, FlatTable } from 'components';
 import AddInstanceDialog from './AddInstanceDialog';
 import { parseInstancesToTableData } from '../parse';
+import { COURSE_STUDENT_STATUS } from 'constants/gql';
 
 const columns = [
     {
@@ -36,12 +37,20 @@ const InstancesTable = ({
     createCourseInstance,
     deleteCourseInstance,
     handleClose,
+    history,
 }) => {
     const handleCreate = instance => {
         const { topic, notes, recapUrl, date } = instance;
-        const courseStudentIds = map(
+        const courseStudentIds = reduce(
             course.courseStudents,
-            courseStudent => courseStudent.id
+            (result, courseStudent) => {
+                if (courseStudent.status === COURSE_STUDENT_STATUS.ACTIVE) {
+                    result.push(courseStudent.id);
+                    return result;
+                }
+                return result;
+            },
+            []
         );
         createCourseInstance({
             variables: {
@@ -53,7 +62,7 @@ const InstancesTable = ({
                 courseStudentIds,
             },
         });
-        this.handleClose();
+        handleClose();
     };
 
     const handleOnDeletePress = ids => {
@@ -65,7 +74,7 @@ const InstancesTable = ({
     };
 
     const handleNavigateToInstance = rowData => {
-        this.props.history.push({
+        history.push({
             pathname: './courseInstance',
             search: `id=${rowData[0]}`,
         });
@@ -119,6 +128,7 @@ InstancesTable.propTypes = {
     createCourseInstance: PropTypes.func.isRequired,
     deleteCourseInstance: PropTypes.func.isRequired,
     open: PropTypes.bool.isRequired,
+    history: PropTypes.object.isRequired,
 };
 
 export default withRouter(InstancesTable);

@@ -10,7 +10,7 @@ import CourseDetailHeader from './CourseDetailHeader';
 import InstancesTable from './InstancesTable';
 import TeachersTable from './TeachersTable';
 import StudentsTables from './StudentsTables';
-
+import { parseTeachersToTableData } from './parse';
 class CourseDetail extends Component {
     state = {
         openTeacherDialog: false,
@@ -58,6 +58,7 @@ class CourseDetail extends Component {
             removeTeacherFromCourse,
             createCourseStudent,
             updateCourseStudentStatus,
+            history,
         } = this.props;
         const {
             openTeacherDialog,
@@ -94,16 +95,20 @@ class CourseDetail extends Component {
                         handleOpenDialog={this.handleOpenDialog}
                         handleClose={this.handleClose}
                     />
-                    <TeachersTable
-                        open={openTeacherDialog}
-                        course={course}
-                        createCourseInstance={createCourseInstance}
-                        removeTeacherFromCourse={removeTeacherFromCourse}
-                        handleAdd={() =>
-                            this.handleOpenDialog('openTeacherDialog')
-                        }
-                        handleClose={this.handleClose}
-                    />
+                    {course ? (
+                        <TeachersTable
+                            open={openTeacherDialog}
+                            data={parseTeachersToTableData(course.teachers)}
+                            courseId={course.id}
+                            createCourseInstance={createCourseInstance}
+                            removeTeacherFromCourse={removeTeacherFromCourse}
+                            handleAdd={() =>
+                                this.handleOpenDialog('openTeacherDialog')
+                            }
+                            handleClose={this.handleClose}
+                            history={history}
+                        />
+                    ) : null}
                 </Paper>
             </MuiPickersUtilsProvider>
         );

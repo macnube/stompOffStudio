@@ -1,11 +1,9 @@
 import React, { Fragment } from 'react';
-import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import forEach from 'lodash/forEach';
 
 import { CustomAddToolbar, SelectedDeleteToolbar, FlatTable } from 'components';
 import AddTeacherDialog from './AddTeacherDialog';
-import { parseTeachersToTableData } from '../parse';
 
 const columns = [
     {
@@ -23,22 +21,24 @@ const columns = [
 ];
 
 const TeachersTable = ({
-    course,
+    courseId,
     open,
     handleAdd,
     removeTeacherFromCourse,
     handleClose,
+    history,
+    data,
 }) => {
     const handleOnDeletePress = ids => {
         forEach(ids, teacherId => {
             removeTeacherFromCourse({
-                variables: { id: course.id, teacherId },
+                variables: { id: courseId, teacherId },
             });
         });
     };
 
     const handleNavigateToTeacherManagement = () => {
-        this.props.history.push({
+        history.push({
             pathname: './teacherManagement',
         });
     };
@@ -65,27 +65,27 @@ const TeachersTable = ({
         <Fragment>
             <FlatTable
                 title={'Teachers'}
-                data={parseTeachersToTableData(course.teachers)}
+                data={data}
                 columns={columns}
                 options={options}
             />
-            {course && course.id ? (
-                <AddTeacherDialog
-                    open={open}
-                    handleClose={handleClose}
-                    courseId={course.id}
-                />
-            ) : null}
+            <AddTeacherDialog
+                open={open}
+                handleClose={handleClose}
+                courseId={courseId}
+            />
         </Fragment>
     );
 };
 
 TeachersTable.propTypes = {
-    course: PropTypes.object.isRequired,
+    courseId: PropTypes.string.isRequired,
+    data: PropTypes.array.isRequired,
     handleAdd: PropTypes.func.isRequired,
     handleClose: PropTypes.func.isRequired,
     removeTeacherFromCourse: PropTypes.func.isRequired,
     open: PropTypes.bool.isRequired,
+    history: PropTypes.object.isRequired,
 };
 
-export default withRouter(TeachersTable);
+export default React.memo(TeachersTable);

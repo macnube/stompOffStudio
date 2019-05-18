@@ -9,13 +9,17 @@ import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 
 import NewCardDialog from './NewCardDialog';
+import CardWarningDialog from './CardWarningDialog';
 import { PARTICIPANT_STATUS } from 'constants/gql';
-import { isBeforeExpiration } from 'utils/date';
+import { isBeforeExpiration, expiresNextWeek } from 'utils/date';
 import { isCardActive } from 'utils/card';
+import { CARD_WARNING_MESSAGE } from './constants';
 
 class CourseAttendance extends Component {
     state = {
         openCardDialog: false,
+        openCardWarningDialog: false,
+        warning: '',
         studentId: '',
         participantId: '',
         numberOfCourses: 1,
@@ -52,6 +56,8 @@ class CourseAttendance extends Component {
     handleClose = () => {
         this.setState({
             openCardDialog: false,
+            openCardWarningDialog: false,
+            warning: '',
             studentId: '',
             studentName: '',
         });
@@ -124,6 +130,18 @@ class CourseAttendance extends Component {
             return this.handleAddCardOpen(participant);
         }
 
+        if (activeCard.value === 1) {
+            this.setState({
+                warning: CARD_WARNING_MESSAGE.LAST_CLASS,
+                openCardWarningDialog: true,
+            });
+        } else if (expiresNextWeek(activeCard.expirationDate)) {
+            this.setState({
+                warning: CARD_WARNING_MESSAGE.EXPIRES_SOON,
+                openCardWarningDialog: true,
+            });
+        }
+
         logCardParticipation({
             variables: {
                 id: activeCard.id,
@@ -148,7 +166,13 @@ class CourseAttendance extends Component {
 
     render() {
         const { courseInstance } = this.props;
-        const { openCardDialog, studentId, numberOfCourses } = this.state;
+        const {
+            openCardDialog,
+            studentId,
+            numberOfCourses,
+            openCardWarningDialog,
+            warning,
+        } = this.state;
         return (
             <Fragment>
                 <Grid container spacing={24}>
@@ -175,6 +199,11 @@ class CourseAttendance extends Component {
                         studentId={studentId}
                     />
                 ) : null}
+                <CardWarningDialog
+                    open={openCardWarningDialog}
+                    message={warning}
+                    handleClose={this.handleClose}
+                />
             </Fragment>
         );
     }

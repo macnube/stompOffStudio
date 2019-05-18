@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import filter from 'lodash/filter';
 import { parse } from 'query-string';
 import { Redirect } from 'react-router-dom';
 import { Query, Mutation } from 'react-apollo';
@@ -11,6 +12,8 @@ import {
     GET_COURSE_INSTANCE,
     LOG_CARD_PARTICIPATION,
     DEACTIVATE_CARD,
+    DELETE_PARTICIPANT,
+    GET_COURSE_INSTANCE_FRAGMENT,
 } from './graphql';
 import { CREATE_CARD } from 'routes/StudentDetail/graphql';
 import CourseInstance from './CourseInstance';
@@ -51,6 +54,31 @@ const deactivateCard = ({ render }) => (
     </Mutation>
 );
 
+const deleteParticipant = ({ render, id }) => (
+    <Mutation
+        mutation={DELETE_PARTICIPANT}
+        update={(cache, { data: { deleteParticipant } }) => {
+            const courseInstance = cache.readFragment({
+                id: `CourseInstance:${id}`,
+                fragment: GET_COURSE_INSTANCE_FRAGMENT,
+            });
+            cache.writeFragment({
+                id: `CourseInstance:${id}`,
+                fragment: GET_COURSE_INSTANCE_FRAGMENT,
+                data: {
+                    ...courseInstance,
+                    participants: filter(
+                        courseInstance.participants,
+                        participant => participant.id !== deleteParticipant.id
+                    ),
+                },
+            });
+        }}
+    >
+        {(mutation, result) => render({ mutation, result })}
+    </Mutation>
+);
+
 const mapper = {
     getCourseInstance,
     updateCourseInstance,
@@ -58,6 +86,7 @@ const mapper = {
     logCardParticipation,
     createCard,
     deactivateCard,
+    deleteParticipant,
 };
 
 const CourseInstanceContainer = ({ location }) => {
@@ -79,6 +108,7 @@ const CourseInstanceContainer = ({ location }) => {
                         result: createCardResult,
                     },
                     deactivateCard: { mutation: deactivateCardMutation },
+                    deleteParticipant: { mutation: deleteParticipantMutation },
                 }) => {
                     if (loading) return null;
                     if (error) return `Error: ${error}`;
@@ -96,6 +126,7 @@ const CourseInstanceContainer = ({ location }) => {
                                 createCard={createCardMutation}
                                 deactivateCard={deactivateCardMutation}
                                 card={createCardResult.data.createCard}
+                                deleteParticipant={deleteParticipantMutation}
                             />
                         );
                     }
@@ -107,6 +138,7 @@ const CourseInstanceContainer = ({ location }) => {
                             logCardParticipation={logCardParticipationMutation}
                             createCard={createCardMutation}
                             deactivateCard={deactivateCardMutation}
+                            deleteParticipant={deleteParticipantMutation}
                         />
                     );
                 }}

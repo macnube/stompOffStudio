@@ -1,5 +1,14 @@
 import gql from 'graphql-tag';
 
+export const GET_COURSE_INSTANCE_FRAGMENT = gql`
+    fragment CourseInstanceFragment on CourseInstance {
+        id
+        participants {
+            id
+        }
+    }
+`;
+
 export const GET_COURSE_INSTANCE = gql`
     query CourseInstanceGetCourseInstance($id: ID!) {
         courseInstance(id: $id) {
@@ -94,6 +103,14 @@ export const LOG_PARTICIPANT_STATUS = gql`
                     status
                 }
             }
+        }
+    }
+`;
+
+export const DELETE_PARTICIPANT = gql`
+    mutation CourseInstanceDeleteParticipant($id: ID!) {
+        deleteParticipant(id: $id) {
+            id
         }
     }
 `;

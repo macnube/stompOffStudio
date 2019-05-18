@@ -3,14 +3,18 @@ import PropTypes from 'prop-types';
 import find from 'lodash/find';
 import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Add';
+import IconButton from '@material-ui/core/IconButton';
+import Tooltip from '@material-ui/core/Tooltip';
+import TrashIcon from '@material-ui/icons/Delete';
 import { withStyles } from '@material-ui/core/styles';
 
 import { PARTICIPANT_STATUS } from 'constants/gql';
 import styles from './styles';
 
-const SelectedAddParticipantToolbar = ({
+const SelectedParticipantToolbar = ({
     classes,
     handleLogParticipantStatus,
+    handleDeleteParticipant,
     selectedRows,
     displayData,
 }) => {
@@ -58,15 +62,25 @@ const SelectedAddParticipantToolbar = ({
                 <AddIcon className={classes.leftIcon} />
                 Present
             </Button>
+            <Button
+                variant="contained"
+                size="small"
+                className={classes.button}
+                onClick={() => handleDeleteParticipant(selectedId)}
+                color="secondary"
+            >
+                Remove
+            </Button>
         </div>
     );
 };
 
-SelectedAddParticipantToolbar.propTypes = {
+SelectedParticipantToolbar.propTypes = {
     classes: PropTypes.object.isRequired,
     handleLogParticipantStatus: PropTypes.func.isRequired,
+    handleDeleteParticipant: PropTypes.func.isRequired,
     selectedRows: PropTypes.object.isRequired,
     displayData: PropTypes.array.isRequired,
 };
 
-export default withStyles(styles)(SelectedAddParticipantToolbar);
+export default withStyles(styles)(SelectedParticipantToolbar);

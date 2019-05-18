@@ -9,7 +9,7 @@ import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
 import { MuiPickersUtilsProvider } from 'material-ui-pickers';
 import DateFnsUtils from '@date-io/date-fns';
 
-import SelectedAddParticipantToolbar from './SelectedAddParticipantToolbar';
+import SelectedParticipantToolbar from './SelectedParticipantToolbar';
 import CourseInstanceHeader from './CourseInstanceHeader';
 import AddCourseStudentsToCourseInstanceDialog from './AddCourseStudentsToCourseInstanceDialog';
 import { CardDialog, CustomAddToolbar } from 'components';
@@ -110,10 +110,11 @@ class CourseInstance extends Component {
     };
 
     renderParticipantSelectedToolbar = (selectedRows, displayData) => (
-        <SelectedAddParticipantToolbar
+        <SelectedParticipantToolbar
             selectedRows={selectedRows}
             displayData={displayData}
             handleLogParticipantStatus={this.handleLogParticipantStatus}
+            handleDeleteParticipant={this.handleDeleteParticipant}
         />
     );
 
@@ -204,6 +205,14 @@ class CourseInstance extends Component {
                 },
             });
         }
+    };
+
+    handleDeleteParticipant = id => {
+        this.props.deleteParticipant({
+            variables: {
+                id,
+            },
+        });
     };
 
     handleNavigateToStudentDetail = rowData =>
@@ -297,6 +306,7 @@ CourseInstance.propTypes = {
     logCardParticipation: PropTypes.func.isRequired,
     createCard: PropTypes.func.isRequired,
     deactivateCard: PropTypes.func.isRequired,
+    deleteParticipant: PropTypes.func.isRequired,
     card: PropTypes.object,
 };
 

@@ -29,19 +29,12 @@ class CardDetailHeader extends Component {
         }
     }
 
-    componentDidUpdate() {
-        if (this.state.value !== this.props.card.value) {
-            this.setState({
-                value: this.props.card.value,
-            });
-        }
-    }
-
     handleChange = (name, isNumber = false) => event => {
         let value = event.target.value;
         if (isNumber) {
             value = toNumber(value);
         }
+        console.log('value is: ', value);
         this.setState({ [name]: value, canSave: true });
     };
 

@@ -5,4 +5,8 @@ import endOfDay from 'date-fns/endOfDay';
 
 export const getTableDate = date => format(parseISO(date), 'MMM do, yyyy');
 
-export const isExpired = date => isBefore(parseISO(date), endOfDay(new Date()));
+export const isPastExpiration = date =>
+    isBefore(parseISO(date), endOfDay(new Date()));
+
+export const isBeforeExpiration = date =>
+    isBefore(endOfDay(new Date()), parseISO(date));

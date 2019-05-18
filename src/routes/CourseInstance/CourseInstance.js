@@ -15,7 +15,7 @@ import AddCourseStudentsToCourseInstanceDialog from './AddCourseStudentsToCourse
 import { CardDialog, CustomAddToolbar } from 'components';
 import { parseInstanceToTableData } from './parse';
 import { PARTICIPANT_STATUS } from 'constants/gql';
-import { isExpired } from 'utils/date';
+import { isPastExpiration } from 'utils/date';
 
 const columns = [
     {
@@ -168,7 +168,7 @@ class CourseInstance extends Component {
                 participant.student.name
             }`;
             return this.handleAddCardOpen(participant.student, title, id);
-        } else if (isExpired(activeCard.expirationDate)) {
+        } else if (isPastExpiration(activeCard.expirationDate)) {
             deactivateCard({
                 variables: { id: activeCard.id },
             });

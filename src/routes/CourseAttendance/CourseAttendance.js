@@ -10,6 +10,8 @@ import Grid from '@material-ui/core/Grid';
 
 import NewCardDialog from './NewCardDialog';
 import { PARTICIPANT_STATUS } from 'constants/gql';
+import { isBeforeExpiration } from 'utils/date';
+import { isCardActive } from 'utils/card';
 
 class CourseAttendance extends Component {
     state = {
@@ -72,17 +74,56 @@ class CourseAttendance extends Component {
             },
         });
     };
+    handleResetParticipationStatus = id => {
+        this.props.logParticipantStatus({
+            variables: {
+                id,
+                status: PARTICIPANT_STATUS.NOT_LOGGED,
+            },
+        });
+    };
+
+    handleRemoveParticipation = (participant, activeCard) => {
+        const { logCardParticipation } = this.props;
+        if (activeCard) {
+            logCardParticipation({
+                variables: {
+                    id: activeCard.id,
+                    participantId: participant.id,
+                    value: activeCard.value + 1,
+                },
+            });
+            this.handleResetParticipationStatus(participant.id);
+        }
+        const recentCard = find(participant.student.cards, card =>
+            isBeforeExpiration(card.expirationDate)
+        );
+        if (recentCard) {
+            logCardParticipation({
+                variables: {
+                    id: recentCard.id,
+                    participantId: participant.id,
+                    value: recentCard.value + 1,
+                },
+            });
+            this.handleResetParticipationStatus(participant.id);
+        }
+    };
 
     handleParticipantClick = id => {
         const { logCardParticipation, courseInstance } = this.props;
         const participant = find(courseInstance.participants, { id });
-        const activeCard = find(participant.student.cards, {
-            active: true,
-        });
+        const activeCard = find(participant.student.cards, card =>
+            isCardActive(card)
+        );
 
+        if (participant.status === PARTICIPANT_STATUS.PRESENT) {
+            return this.handleRemoveParticipation(participant, activeCard);
+        }
         if (isNil(activeCard)) {
             return this.handleAddCardOpen(participant);
         }
+
         logCardParticipation({
             variables: {
                 id: activeCard.id,

@@ -38,11 +38,11 @@ class CourseAttendance extends Component {
         }
     }
 
-    handleAddCardOpen = ({ id, courseStudent }) => {
+    handleAddCardOpen = ({ id, student }) => {
         this.setState({
             openCardDialog: true,
-            studentId: courseStudent.student.id,
-            numberOfCourses: courseStudent.student.courses.length,
+            studentId: student.id,
+            numberOfCourses: student.courses.length,
             participantId: id,
         });
     };
@@ -76,7 +76,7 @@ class CourseAttendance extends Component {
     handleParticipantClick = id => {
         const { logCardParticipation, courseInstance } = this.props;
         const participant = find(courseInstance.participants, { id });
-        const activeCard = find(participant.courseStudent.student.cards, {
+        const activeCard = find(participant.student.cards, {
             active: true,
         });
 
@@ -120,7 +120,7 @@ class CourseAttendance extends Component {
                                     this.handleParticipantClick(participant.id)
                                 }
                             >
-                                {participant.courseStudent.student.name}
+                                {participant.student.name}
                             </Button>
                         </Grid>
                     ))}

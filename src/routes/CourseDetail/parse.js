@@ -32,7 +32,15 @@ export const parseCourseStudentsByStatusToTableData = (
         ),
         (acc, courseStudent) => {
             const { name, email, id } = courseStudent.student;
-            const result = [courseStudent.id, id, name, email];
+            const result = [
+                courseStudent.id,
+                id,
+                name,
+                email,
+                courseStudent.waitlistDate
+                    ? getTableDate(courseStudent.waitlistDate)
+                    : '',
+            ];
             acc.push(result);
             return acc;
         },

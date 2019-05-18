@@ -30,7 +30,14 @@ const columns = [
         name: 'Name',
     },
     {
-        name: 'email',
+        name: 'Email',
+    },
+];
+
+const waitlistColumns = [
+    ...columns,
+    {
+        name: 'Waitlist Date',
     },
 ];
 
@@ -63,7 +70,7 @@ const StudentsTables = ({
                 },
             });
         });
-        this.handleClose();
+        handleClose();
     };
 
     const handleAddWithWaitlistStatusPress = role => ids => {
@@ -77,7 +84,7 @@ const StudentsTables = ({
                 },
             });
         });
-        this.handleClose();
+        handleClose();
     };
 
     const handleUpdateCourseStudentStatus = status => ids => {
@@ -191,7 +198,7 @@ const StudentsTables = ({
                     course.courseStudents,
                     COURSE_STUDENT_STATUS.WAITLIST
                 )}
-                columns={columns}
+                columns={waitlistColumns}
                 options={waitlistOptions}
             />
             <FlatTable

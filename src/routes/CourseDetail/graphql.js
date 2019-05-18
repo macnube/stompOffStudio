@@ -27,6 +27,7 @@ const DETAIL_COURSE_FRAGMENT = gql`
             }
             role
             status
+            waitlistDate
         }
         instances {
             id
@@ -176,6 +177,7 @@ export const UPDATE_COURSE_STUDENT_STATUS = gql`
             }
             role
             status
+            waitlistDate
         }
     }
 `;

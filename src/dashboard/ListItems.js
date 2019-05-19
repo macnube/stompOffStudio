@@ -9,6 +9,7 @@ import EuroIcon from '@material-ui/icons/EuroSymbol';
 import ClassIcon from '@material-ui/icons/CastForEducation';
 import TeacherIcon from '@material-ui/icons/RecordVoiceOver';
 import StudioIcon from '@material-ui/icons/AccountBalance';
+import UserIcon from '@material-ui/icons/Person';
 
 export const ListItems = () => (
     <div>
@@ -78,6 +79,14 @@ export const ListItems = () => (
                     <StudioIcon />
                 </ListItemIcon>
                 <ListItemText primary="Studio Management" />
+            </ListItem>
+        </NavLink>
+        <NavLink exact to="/userManagement" style={{ textDecoration: 'none' }}>
+            <ListItem button>
+                <ListItemIcon>
+                    <UserIcon />
+                </ListItemIcon>
+                <ListItemText primary="User Management" />
             </ListItem>
         </NavLink>
     </div>

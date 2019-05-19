@@ -28,6 +28,7 @@ import {
     CourseAttendance,
     CourseInstance,
     CardDetail,
+    UserManagement,
 } from 'routes';
 import ListItems from './ListItems';
 import styles from './styles';
@@ -169,6 +170,11 @@ class Dashboard extends React.Component {
                         exact
                         path="/courseAttendance"
                         component={CourseAttendance}
+                    />
+                    <Route
+                        exact
+                        path="/userManagement"
+                        component={UserManagement}
                     />
                 </main>
             </div>

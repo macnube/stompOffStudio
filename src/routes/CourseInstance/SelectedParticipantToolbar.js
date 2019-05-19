@@ -3,9 +3,6 @@ import PropTypes from 'prop-types';
 import find from 'lodash/find';
 import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Add';
-import IconButton from '@material-ui/core/IconButton';
-import Tooltip from '@material-ui/core/Tooltip';
-import TrashIcon from '@material-ui/icons/Delete';
 import { withStyles } from '@material-ui/core/styles';
 
 import { PARTICIPANT_STATUS } from 'constants/gql';

@@ -132,6 +132,7 @@ export const CREATE_CARD = gql`
                 id
             }
             paid
+            originalValue
         }
     }
 `;
@@ -145,6 +146,7 @@ export const UPDATE_CARD = gql`
         updateCard(id: $id, expirationDate: $expirationDate, value: $value) {
             id
             value
+            originalValue
             expirationDate
             active
             payment {

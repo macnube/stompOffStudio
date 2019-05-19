@@ -19,7 +19,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import MenuItem from '@material-ui/core/MenuItem';
 
 import { PAYMENT_TYPE, PAYMENT_TYPES } from 'constants/gql';
-import styles from './styles';
+import styles from 'routes/StudentDetail/styles';
 
 class StudentDetailPaymentDialog extends React.Component {
     state = {

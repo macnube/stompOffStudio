@@ -17,6 +17,7 @@ import {
     PAY_CARD,
     UNPAY_CARD,
     GET_CARD_FRAGMENT,
+    CREATE_USER,
 } from './graphql';
 import { GET_PAYMENTS } from 'routes/PaymentManagement/graphql';
 import StudentDetail from './StudentDetail';
@@ -29,6 +30,12 @@ const getStudent = ({ render, id }) => (
 
 const updateStudent = ({ render }) => (
     <Mutation mutation={UPDATE_STUDENT}>
+        {(mutation, result) => render({ mutation, result })}
+    </Mutation>
+);
+
+const createUser = ({ render }) => (
+    <Mutation mutation={CREATE_USER}>
         {(mutation, result) => render({ mutation, result })}
     </Mutation>
 );
@@ -245,6 +252,7 @@ const mapper = {
     deletePayment,
     payCard,
     unpayCard,
+    createUser,
 };
 
 const StudioDetailContainer = ({ location }) => {
@@ -264,6 +272,7 @@ const StudioDetailContainer = ({ location }) => {
                     deletePayment: { mutation: deletePaymentMutation },
                     payCard: { mutation: payCardMutation },
                     unpayCard: { mutation: unpayCardMutation },
+                    createUser: { mutation: createUserMutation },
                 }) => {
                     if (loading) return null;
                     if (error) return `Error: ${error}`;
@@ -279,6 +288,7 @@ const StudioDetailContainer = ({ location }) => {
                             deletePayment={deletePaymentMutation}
                             payCard={payCardMutation}
                             unpayCard={unpayCardMutation}
+                            createUser={createUserMutation}
                         />
                     );
                 }}

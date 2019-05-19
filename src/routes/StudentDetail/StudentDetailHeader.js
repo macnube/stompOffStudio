@@ -85,10 +85,19 @@ class StudentDetailHeader extends Component {
     };
 
     render() {
-        const { handleOnCancel } = this.props;
+        const {
+            handleOnCancel,
+            handleOnCreateUser,
+            canCreateUser,
+        } = this.props;
 
         return (
             <DetailHeader renderForm={this.renderForm}>
+                {canCreateUser ? (
+                    <Button variant="contained" onClick={handleOnCreateUser}>
+                        Create User
+                    </Button>
+                ) : null}
                 <Button variant="contained" onClick={handleOnCancel}>
                     Cancel
                 </Button>
@@ -110,6 +119,8 @@ StudentDetailHeader.propTypes = {
     student: PropTypes.object.isRequired,
     handleOnSave: PropTypes.func.isRequired,
     handleOnCancel: PropTypes.func.isRequired,
+    handleOnCreateUser: PropTypes.func.isRequired,
+    canCreateUser: PropTypes.bool.isRequired,
 };
 
 export default withStyles(styles)(StudentDetailHeader);

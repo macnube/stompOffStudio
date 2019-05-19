@@ -43,6 +43,9 @@ export const GET_STUDENT = gql`
                     id
                 }
             }
+            user {
+                id
+            }
         }
     }
 `;
@@ -84,6 +87,26 @@ export const GET_CARD_FRAGMENT = gql`
             id
         }
         paid
+    }
+`;
+
+export const CREATE_USER = gql`
+    mutation StudentDetailCreateUser(
+        $email: String!
+        $password: String!
+        $studentId: ID!
+    ) {
+        createUser(email: $email, password: $password, studentId: $studentId) {
+            email
+            password
+            student {
+                id
+                user {
+                    id
+                    email
+                }
+            }
+        }
     }
 `;
 

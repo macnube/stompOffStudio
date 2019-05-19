@@ -256,6 +256,18 @@ class StudentDetail extends Component {
         this.handleClose();
     };
 
+    handleOnCreateUser = () => {
+        const { createUser, student } = this.props;
+
+        createUser({
+            variables: {
+                email: student.email,
+                password: student.email,
+                studentId: student.id,
+            },
+        });
+    };
+
     navigateToCardDetail = id => {
         this.props.history.push({
             pathname: './cardDetail',
@@ -314,6 +326,8 @@ class StudentDetail extends Component {
                         student={student}
                         handleOnCancel={this.navigateToStudentManagement}
                         handleOnSave={this.handleUpdateStudent}
+                        handleOnCreateUser={this.handleOnCreateUser}
+                        canCreateUser={!student.user}
                     />
                     <MuiThemeProvider theme={this.getMuiTheme()}>
                         <MUIDataTable
@@ -375,6 +389,7 @@ StudentDetail.propTypes = {
     deletePayment: PropTypes.func.isRequired,
     payCard: PropTypes.func.isRequired,
     unpayCard: PropTypes.func.isRequired,
+    createUser: PropTypes.func.isRequired,
 };
 
 export default withRouter(StudentDetail);

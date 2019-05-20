@@ -11,3 +11,4 @@ export { default as TeacherManagement } from './TeacherManagement';
 export { default as StudioManagement } from './StudioManagement';
 export { default as StudioDetail } from './StudioDetail';
 export { default as UserManagement } from './UserManagement';
+export { default as Login } from './Login';

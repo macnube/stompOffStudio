@@ -119,61 +119,53 @@ class Dashboard extends React.Component {
                 </Drawer>
                 <main className={classes.content}>
                     <div className={classes.appBarSpacer} />
-                    <Route exact path="/" component={Overview} />
+                    <Route path="/dashboard/overview" component={Overview} />
                     <Route
-                        exact
-                        path="/studentManagement"
+                        path="/dashboard/studentManagement"
                         component={StudentManagement}
                     />
                     <Route
-                        exact
-                        path="/studentDetail"
+                        path="/dashboard/studentDetail"
                         component={StudentDetail}
                     />
                     <Route
-                        exact
-                        path="/courseManagement"
+                        path="/dashboard/courseManagement"
                         component={CourseManagement}
                     />
                     <Route
-                        exact
-                        path="/courseDetail"
+                        path="/dashboard/courseDetail"
                         component={CourseDetail}
                     />
                     <Route
-                        exact
-                        path="/teacherManagement"
+                        path="/dashboard/teacherManagement"
                         component={TeacherManagement}
                     />
                     <Route
-                        exact
-                        path="/studioManagement"
+                        path="/dashboard/studioManagement"
                         component={StudioManagement}
                     />
                     <Route
-                        exact
-                        path="/studioDetail"
+                        path="/dashboard/studioDetail"
                         component={StudioDetail}
                     />
                     <Route
-                        exact
-                        path="/paymentManagement"
+                        path="/dashboard/paymentManagement"
                         component={PaymentManagement}
                     />
                     <Route
-                        exact
-                        path="/courseInstance"
+                        path="/dashboard/courseInstance"
                         component={CourseInstance}
                     />
-                    <Route exact path="/cardDetail" component={CardDetail} />
                     <Route
-                        exact
-                        path="/courseAttendance"
+                        path="/dashboard/cardDetail"
+                        component={CardDetail}
+                    />
+                    <Route
+                        path="/dashboard/courseAttendance"
                         component={CourseAttendance}
                     />
                     <Route
-                        exact
-                        path="/userManagement"
+                        path="/dashboard/userManagement"
                         component={UserManagement}
                     />
                 </main>

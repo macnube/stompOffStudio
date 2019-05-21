@@ -27,7 +27,6 @@ class Login extends React.Component {
 
     handleLogin = () => {
         const { email, password } = this.state;
-        console.log('here loggin in with email', email);
         this.props.login({
             variables: {
                 email,
@@ -81,7 +80,6 @@ class Login extends React.Component {
                             label="Remember me"
                         />
                         <Button
-                            type="submit"
                             fullWidth
                             variant="contained"
                             color="primary"

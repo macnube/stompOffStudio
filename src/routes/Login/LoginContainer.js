@@ -20,7 +20,6 @@ const LoginContainer = () => (
     <Adopt mapper={mapper}>
         {({ login: { mutation: loginMutation, result: loginResult } }) => {
             if (loginResult.data) {
-                console.log('login result is: ', loginResult.data);
                 localStorage.setItem('jwtToken', loginResult.data.login.token);
                 return (
                     <Redirect

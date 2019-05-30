@@ -7,7 +7,7 @@ import {
     SelectedDeleteToolbar,
     FlatTable,
     CardDialog,
-} from '~/components';
+} from 'src/components';
 import { parseCardsToTableData } from '../parse';
 
 const columns = [

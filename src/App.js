@@ -7,7 +7,7 @@ import 'video-react/dist/video-react.css';
 import './App.css';
 
 import Dashboard from './dashboard';
-import Login from '~/routes/Login';
+import Login from 'src/routes/Login';
 
 const client = new ApolloClient({
     uri:

@@ -8,9 +8,9 @@ import {
     SelectedDeleteToolbar,
     FlatTable,
     PaymentDialog,
-} from '~/components';
+} from 'src/components';
 import { parsePaymentsToTableData } from '../parse';
-import { PAYMENT_TYPE } from '~/constants/gql';
+import { PAYMENT_TYPE } from 'src/constants/gql';
 
 const columns = [
     {

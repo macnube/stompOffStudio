@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import forEach from 'lodash/forEach';
 import MUIDataTable from 'mui-datatables';
 
-import { SelectedAddToolbar, FullScreenDialog } from '~/components';
-import { parseTeachersToTableData } from '~/routes/CourseDetail/parse';
+import { SelectedAddToolbar, FullScreenDialog } from 'src/components';
+import { parseTeachersToTableData } from 'src/routes/CourseDetail/parse';
 
 const columns = [
     {

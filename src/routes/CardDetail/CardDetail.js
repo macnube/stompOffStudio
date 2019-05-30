@@ -10,8 +10,8 @@ import DateFnsUtils from '@date-io/date-fns';
 
 import { parseCardDataToArray } from './parse';
 import CardDetailHeader from './CardDetailHeader';
-import { SelectedDeleteToolbar } from '~/components';
-import { PARTICIPANT_STATUS } from '~/constants/gql';
+import { SelectedDeleteToolbar } from 'src/components';
+import { PARTICIPANT_STATUS } from 'src/constants/gql';
 
 const columns = [
     {

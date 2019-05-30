@@ -9,7 +9,7 @@ import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import { withStyles } from '@material-ui/core/styles';
 
-import { DetailHeader } from '~/components';
+import { DetailHeader } from 'src/components';
 import styles from './styles';
 
 class StudentDetailHeader extends Component {

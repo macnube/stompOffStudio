@@ -8,10 +8,10 @@ import {
     CustomAddToolbar,
     SelectedDeleteToolbar,
     FlatTable,
-} from '~/components';
+} from 'src/components';
 import AddInstanceDialog from './AddInstanceDialog';
 import { parseInstancesToTableData } from '../parse';
-import { COURSE_STUDENT_STATUS } from '~/constants/gql';
+import { COURSE_STUDENT_STATUS } from 'src/constants/gql';
 
 const columns = [
     {

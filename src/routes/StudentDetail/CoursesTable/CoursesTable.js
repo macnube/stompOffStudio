@@ -7,8 +7,8 @@ import {
     CustomAddToolbar,
     SelectedDeleteToolbar,
     FlatTable,
-} from '~/components';
-import { parseCourseStudentsToTableData } from '~/routes/StudentDetail/parse';
+} from 'src/components';
+import { parseCourseStudentsToTableData } from 'src/routes/StudentDetail/parse';
 import AddCourseStudentDialog from './AddCourseStudentDialog';
 
 const columns = [

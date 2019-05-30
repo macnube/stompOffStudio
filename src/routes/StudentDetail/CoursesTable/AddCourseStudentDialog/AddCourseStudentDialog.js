@@ -7,7 +7,7 @@ import forEach from 'lodash/forEach';
 import MUIDataTable from 'mui-datatables';
 
 import SelectedAddCourseStudentToolbar from './SelectedAddCourseStudentToolbar';
-import { FullScreenDialog } from '~/components';
+import { FullScreenDialog } from 'src/components';
 
 const columns = [
     {

@@ -6,7 +6,7 @@ import {
     CustomAddToolbar,
     SelectedDeleteToolbar,
     FlatTable,
-} from '~/components';
+} from 'src/components';
 import AddTeacherDialog from './AddTeacherDialog';
 
 const columns = [

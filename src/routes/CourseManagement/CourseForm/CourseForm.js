@@ -19,8 +19,8 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import MenuItem from '@material-ui/core/MenuItem';
 
-import { COURSE_DAYS, COURSE_DAY } from '~/constants/gql';
-import styles from '~/routes/CourseManagement/styles';
+import { COURSE_DAYS, COURSE_DAY } from 'src/constants/gql';
+import styles from 'src/routes/CourseManagement/styles';
 
 class CourseForm extends React.Component {
     state = {

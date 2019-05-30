@@ -1,6 +1,6 @@
 import reduce from 'lodash/reduce';
 
-import { getTableDate } from '~/utils/date';
+import { getTableDate } from 'src/utils/date';
 
 export const parseCourseStudentsToTableData = courseStudents =>
     reduce(

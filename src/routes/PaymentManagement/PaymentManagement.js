@@ -10,8 +10,13 @@ import MUIDataTable from 'mui-datatables';
 import AddIcon from '@material-ui/icons/Add';
 import Fab from '@material-ui/core/Fab';
 
-import { ContentToolbar, SelectedDeleteToolbar } from 'components';
-import PaymentManagementPaymentDialog from './PaymentManagementPaymentDialog';
+import {
+    ContentToolbar,
+    SelectedDeleteToolbar,
+    PaymentDialog,
+} from 'components';
+import PaymentManagementStudentSelectDialog from './PaymentManagementStudentSelectDialog';
+import { PAYMENT_TYPE } from 'constants/gql';
 
 const columns = [
     {
@@ -56,40 +61,77 @@ const parsePaymentsToTableData = payments =>
         []
     );
 
-class StudioManagement extends Component {
+class PaymentManagement extends Component {
     state = {
-        open: false,
+        openStudentSelectDialog: false,
+        openPaymentDialog: false,
         selectedPaymentId: null,
+        student: null,
     };
 
     handleClickOpen = () => {
-        this.setState({ open: true });
+        this.setState({ openStudentSelectDialog: true });
     };
 
     handleClose = onClose => {
         if (onClose) {
             onClose();
         }
-        this.setState({ open: false });
+        this.setState({
+            openStudentSelectDialog: false,
+            openPaymentDialog: false,
+            student: null,
+        });
+    };
+
+    handleStudentSelect = student => {
+        this.setState({
+            student,
+            openStudentSelectDialog: false,
+            openPaymentDialog: true,
+        });
     };
 
     handlePaymentClick = rowData => {
-        this.setState({ selectedPaymentId: rowData[0], open: true });
+        this.setState({
+            selectedPaymentId: rowData[0],
+            openPaymentDialog: true,
+        });
     };
 
     handleCreate = payment => {
-        this.props.createPayment({ variables: { ...payment } });
+        const { createPayment, payCard } = this.props;
+        createPayment({ variables: { ...payment } });
+        if (payment.type === PAYMENT_TYPE.CARD && payment.cardId) {
+            payCard({
+                variables: {
+                    id: payment.cardId,
+                },
+            });
+        }
         this.handleClose();
     };
 
-    //Having to delete each studio individually because prisma has a bug
-    //where cascading deletes don't work for deleteMany
-    //https://github.com/prisma/prisma/issues/3587
     handleOnDeletePress = ids => {
-        const { deletePayment } = this.props;
+        const { deletePayment, payments, unpayCard } = this.props;
 
         forEach(ids, id => {
+            const payment = find(payments, { id });
             deletePayment({ variables: { id } });
+            if (payment.card) {
+                unpayCard({
+                    variables: { id: payment.card.id },
+                });
+            }
+        });
+    };
+
+    handleClearBonus = id => {
+        const { clearReferralBonus } = this.props;
+        clearReferralBonus({
+            variables: {
+                id,
+            },
         });
     };
 
@@ -103,7 +145,11 @@ class StudioManagement extends Component {
 
     render() {
         const { payments } = this.props;
-        const { open, selectedPaymentId } = this.state;
+        const {
+            openStudentSelectDialog,
+            openPaymentDialog,
+            student,
+        } = this.state;
         const options = {
             responsive: 'scroll',
             onRowClick: this.handlePaymentClick,
@@ -120,12 +166,19 @@ class StudioManagement extends Component {
                         <AddIcon />
                     </Fab>
                 </ContentToolbar>
-                <PaymentManagementPaymentDialog
-                    open={open}
-                    payment={find(payments, { id: selectedPaymentId })}
-                    handleClose={this.handleClose}
-                    handleCreate={this.handleCreate}
+                <PaymentManagementStudentSelectDialog
+                    open={openStudentSelectDialog}
+                    handleStudentSelect={this.handleStudentSelect}
                 />
+                {student ? (
+                    <PaymentDialog
+                        open={openPaymentDialog}
+                        handleCreate={this.handleCreate}
+                        handleClearBonus={this.handleClearBonus}
+                        handleClose={this.handleClose}
+                        student={student}
+                    />
+                ) : null}
                 <MUIDataTable
                     title={'Payments'}
                     data={parsePaymentsToTableData(payments)}
@@ -137,11 +190,14 @@ class StudioManagement extends Component {
     }
 }
 
-StudioManagement.propTypes = {
+PaymentManagement.propTypes = {
     payments: PropTypes.array.isRequired,
     deletePayment: PropTypes.func.isRequired,
     createPayment: PropTypes.func.isRequired,
+    unpayCard: PropTypes.func.isRequired,
+    payCard: PropTypes.func.isRequired,
+    clearReferralBonus: PropTypes.func.isRequired,
     history: PropTypes.object.isRequired,
 };
 
-export default withRouter(StudioManagement);
+export default withRouter(PaymentManagement);

@@ -12,15 +12,14 @@ import {
     UPDATE_STUDENT,
     CREATE_CARD,
     DELETE_CARD,
-    CREATE_PAYMENT,
-    DELETE_PAYMENT,
     PAY_CARD,
     UNPAY_CARD,
     GET_CARD_FRAGMENT,
     CREATE_USER,
     CLEAR_REFERRAL_BONUS,
 } from './graphql';
-import { GET_PAYMENTS } from 'routes/PaymentManagement/graphql';
+import { DELETE_PAYMENT } from 'routes/PaymentManagement/graphql';
+import { createPayment } from 'routes/PaymentManagement/PaymentManagementContainer';
 import StudentDetail from './StudentDetail';
 
 const getStudent = ({ render, id }) => (
@@ -41,7 +40,7 @@ const createUser = ({ render }) => (
     </Mutation>
 );
 
-const clearReferralBonus = ({ render, id }) => (
+export const clearReferralBonus = ({ render, id }) => (
     <Mutation
         mutation={CLEAR_REFERRAL_BONUS}
         update={cache => {
@@ -198,31 +197,6 @@ const deletePayment = ({ render, id }) => (
     </Mutation>
 );
 
-const createPayment = ({ render }) => (
-    <Mutation
-        mutation={CREATE_PAYMENT}
-        update={(cache, { data: { createPayment } }) => {
-            const { payments } = cache.readQuery({
-                query: GET_PAYMENTS,
-            });
-            let newPayments;
-            if (payments) {
-                newPayments = payments.concat([createPayment]);
-            } else {
-                newPayments = [createPayment];
-            }
-            cache.writeQuery({
-                query: GET_PAYMENTS,
-                data: {
-                    payments: newPayments,
-                },
-            });
-        }}
-    >
-        {(mutation, result) => render({ mutation, result })}
-    </Mutation>
-);
-
 export const payCard = ({ render }) => (
     <Mutation
         mutation={PAY_CARD}
@@ -285,8 +259,9 @@ const mapper = {
     clearReferralBonus,
 };
 
-const StudioDetailContainer = ({ location }) => {
+const StudentDetailContainer = ({ location }) => {
     const params = parse(location.search);
+    console.log('mapper is: ', mapper);
     if (params.id) {
         return (
             <Adopt mapper={mapper} id={params.id}>
@@ -338,4 +313,4 @@ const StudioDetailContainer = ({ location }) => {
     );
 };
 
-export default StudioDetailContainer;
+export default StudentDetailContainer;

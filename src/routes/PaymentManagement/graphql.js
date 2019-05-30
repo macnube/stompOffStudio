@@ -40,11 +40,19 @@ export const CREATE_PAYMENT = gql`
             student {
                 id
                 name
+                payments {
+                    id
+                    card {
+                        id
+                    }
+                    date
+                }
             }
             card {
                 id
                 payment {
                     id
+                    date
                 }
             }
         }

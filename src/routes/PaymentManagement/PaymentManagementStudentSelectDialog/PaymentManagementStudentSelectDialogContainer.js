@@ -2,16 +2,16 @@ import React from 'react';
 import { Query } from 'react-apollo';
 
 import { GET_STUDENTS } from './graphql';
-import PaymentManagementPaymentDialog from './PaymentManagementPaymentDialog';
+import PaymentManagementStudentSelectDialog from './PaymentManagementStudentSelectDialog';
 
-const PaymentManagementPaymentDialogContainer = props => (
+const PaymentManagementStudentSelectDialogContainer = props => (
     <Query query={GET_STUDENTS}>
         {({ loading, error, data, refetch }) => {
             if (loading) return null;
             if (error) return `Error: ${error}`;
             if (!data.students) return `404: Session not found`;
             return data.students ? (
-                <PaymentManagementPaymentDialog
+                <PaymentManagementStudentSelectDialog
                     {...props}
                     students={data.students}
                     refetch={refetch}
@@ -21,4 +21,4 @@ const PaymentManagementPaymentDialogContainer = props => (
     </Query>
 );
 
-export default PaymentManagementPaymentDialogContainer;
+export default PaymentManagementStudentSelectDialogContainer;

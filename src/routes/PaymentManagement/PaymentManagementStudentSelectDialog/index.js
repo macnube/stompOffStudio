@@ -1,0 +1,3 @@
+import PaymentManagementStudentSelectDialogContainer from './PaymentManagementStudentSelectDialogContainer';
+
+export default PaymentManagementStudentSelectDialogContainer;

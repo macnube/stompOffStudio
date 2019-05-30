@@ -3,8 +3,12 @@ import PropTypes from 'prop-types';
 import forEach from 'lodash/forEach';
 import find from 'lodash/find';
 
-import { CustomAddToolbar, SelectedDeleteToolbar, FlatTable } from 'components';
-import StudentDetailPaymentDialog from './StudentDetailPaymentDialog';
+import {
+    CustomAddToolbar,
+    SelectedDeleteToolbar,
+    FlatTable,
+    PaymentDialog,
+} from 'components';
 import { parsePaymentsToTableData } from '../parse';
 import { PAYMENT_TYPE } from 'constants/gql';
 
@@ -109,7 +113,7 @@ const PaymentsTable = ({
                 columns={columns}
                 options={options}
             />
-            <StudentDetailPaymentDialog
+            <PaymentDialog
                 open={open}
                 handleCreate={handleCreatePayment}
                 handleClearBonus={handleClearBonus}

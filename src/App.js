@@ -26,7 +26,8 @@ const client = new ApolloClient({
     },
     onError: ({ graphQLErrors, networkError }) => {
         if (graphQLErrors) {
-            window.location.replace('http://localhost:3000/login');
+            console.log('graphQLErrors are: ', graphQLErrors);
+            //window.location.replace('http://localhost:3000/login');
         }
         if (networkError) {
             console.log('networkError: ', networkError);

@@ -195,55 +195,6 @@ export const UNPAY_CARD = gql`
     }
 `;
 
-export const CREATE_PAYMENT = gql`
-    mutation StudentDetailCreatePayment(
-        $type: PaymentType!
-        $date: DateTime!
-        $amount: Int!
-        $studentId: ID!
-        $cardId: ID!
-    ) {
-        createPayment(
-            type: $type
-            date: $date
-            amount: $amount
-            studentId: $studentId
-            cardId: $cardId
-        ) {
-            id
-            type
-            date
-            amount
-            student {
-                id
-                name
-                payments {
-                    id
-                    card {
-                        id
-                    }
-                    date
-                }
-            }
-            card {
-                id
-                payment {
-                    id
-                    date
-                }
-            }
-        }
-    }
-`;
-
-export const DELETE_PAYMENT = gql`
-    mutation StudentDetailDeletePayment($id: ID!) {
-        deletePayment(id: $id) {
-            id
-        }
-    }
-`;
-
 export const CLEAR_REFERRAL_BONUS = gql`
     mutation StudentDetailClearReferralBonus($id: ID!) {
         clearReferralBonus(id: $id) {

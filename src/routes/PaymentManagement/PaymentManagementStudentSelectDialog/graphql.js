@@ -5,6 +5,7 @@ export const GET_STUDENTS = gql`
         students {
             id
             name
+            hasReferralBonus
             cards {
                 id
                 expirationDate

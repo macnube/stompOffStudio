@@ -1,3 +1,0 @@
-import PaymentManagementPaymentDialogContainer from './PaymentManagementPaymentDialogContainer';
-
-export default PaymentManagementPaymentDialogContainer;

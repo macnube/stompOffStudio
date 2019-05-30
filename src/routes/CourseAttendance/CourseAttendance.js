@@ -10,9 +10,9 @@ import Grid from '@material-ui/core/Grid';
 
 import NewCardDialog from './NewCardDialog';
 import CardWarningDialog from './CardWarningDialog';
-import { PARTICIPANT_STATUS } from 'src/constants/gql';
-import { isBeforeExpiration, expiresNextWeek } from 'src/utils/date';
-import { isCardActive } from 'src/utils/card';
+import { PARTICIPANT_STATUS } from 'constants/gql';
+import { isBeforeExpiration, expiresNextWeek } from 'utils/date';
+import { isCardActive } from 'utils/card';
 import { CARD_WARNING_MESSAGE } from './constants';
 
 class CourseAttendance extends Component {

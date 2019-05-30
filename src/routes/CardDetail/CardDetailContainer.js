@@ -5,7 +5,7 @@ import { Query, Mutation } from 'react-apollo';
 import { Adopt } from 'react-adopt';
 
 import { GET_CARD, UPDATE_CARD, REMOVE_CARD_PARTICIPATION } from './graphql';
-import { LOG_PARTICIPANT_STATUS } from 'src/routes/CourseInstance/graphql';
+import { LOG_PARTICIPANT_STATUS } from 'routes/CourseInstance/graphql';
 import CardDetail from './CardDetail';
 
 const getCard = ({ render, id }) => (

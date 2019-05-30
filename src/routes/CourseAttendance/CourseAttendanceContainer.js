@@ -9,8 +9,8 @@ import {
     GET_COURSE_INSTANCE,
     LOG_CARD_PARTICIPATION,
     LOG_PARTICIPANT_STATUS,
-} from 'src/routes/CourseInstance/graphql';
-import { CREATE_CARD } from 'src/routes/StudentDetail/graphql';
+} from 'routes/CourseInstance/graphql';
+import { CREATE_CARD } from 'routes/StudentDetail/graphql';
 import CourseAttendance from './CourseAttendance';
 
 const getCourseInstance = ({ render, id }) => (

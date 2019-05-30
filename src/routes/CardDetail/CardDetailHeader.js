@@ -6,7 +6,7 @@ import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
 import { DatePicker } from 'material-ui-pickers';
 
-import { DetailHeader } from 'src/components';
+import { DetailHeader } from 'components';
 import styles from './styles';
 
 class CardDetailHeader extends Component {

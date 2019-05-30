@@ -7,7 +7,7 @@ import { DatePicker } from 'material-ui-pickers';
 import { withStyles } from '@material-ui/core/styles';
 import { Player, ControlBar, PlaybackRateMenuButton } from 'video-react';
 
-import { DetailHeader } from 'src/components';
+import { DetailHeader } from 'components';
 import styles from './styles';
 
 class CourseInstanceHeader extends Component {

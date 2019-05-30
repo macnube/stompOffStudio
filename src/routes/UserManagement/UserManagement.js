@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import MUIDataTable from 'mui-datatables';
 
-import { SelectedDeleteToolbar } from 'src/components';
+import { SelectedDeleteToolbar } from 'components';
 import styles from './styles';
 import { parseUsersToTableData } from './parse';
 import AdminToggleButton from './AdminToggleButton';

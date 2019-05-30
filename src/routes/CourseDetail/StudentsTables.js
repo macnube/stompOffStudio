@@ -3,17 +3,13 @@ import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import forEach from 'lodash/forEach';
 
-import {
-    CustomAddToolbar,
-    SelectedAddToolbar,
-    FlatTable,
-} from 'src/components';
+import { CustomAddToolbar, SelectedAddToolbar, FlatTable } from 'components';
 import AddStudentsToCourseDialog from './AddStudentsToCourseDialog';
 import {
     parseActiveCourseStudentsToTableData,
     parseCourseStudentsByStatusToTableData,
 } from './parse';
-import { DANCE_ROLE, COURSE_STUDENT_STATUS } from 'src/constants/gql';
+import { DANCE_ROLE, COURSE_STUDENT_STATUS } from 'constants/gql';
 import SelectedCourseStudentToolbar from './SelectedCourseStudentToolbar';
 import SelectedAddStudentWithWaitlistStatusToolbar from './SelectedAddStudentWithWaitlistStatusToolbar';
 

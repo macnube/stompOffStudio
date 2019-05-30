@@ -11,7 +11,7 @@ import {
     UNPAY_CARD,
     PAY_CARD,
     CLEAR_REFERRAL_BONUS,
-} from 'src/routes/StudentDetail/graphql';
+} from 'routes/StudentDetail/graphql';
 import PaymentManagement from './PaymentManagement';
 
 const getPayments = ({ render }) => (

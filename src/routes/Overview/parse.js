@@ -1,8 +1,8 @@
 import reduce from 'lodash/reduce';
 import includes from 'lodash/includes';
 
-import { PARTICIPANT_STATUS, DANCE_ROLE } from 'src/constants/gql';
-import { getTableDate } from 'src/utils/date';
+import { PARTICIPANT_STATUS, DANCE_ROLE } from 'constants/gql';
+import { getTableDate } from 'utils/date';
 
 const getAbsentParticipantStudentIds = participants =>
     reduce(

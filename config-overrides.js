@@ -1,10 +1,15 @@
 const { addBabelPlugin, override } = require('customize-cra');
 
 const rootImportConfig = [
-    'root-import',
+    'module-resolver',
     {
-        rootPathPrefix: 'src',
-        rootPathSuffix: 'src',
+        root: ['./src'],
+        alias: {
+            routes: './src/routes',
+            components: './src/components',
+            constants: './src/constants',
+            utils: './src/utils',
+        },
     },
 ];
 

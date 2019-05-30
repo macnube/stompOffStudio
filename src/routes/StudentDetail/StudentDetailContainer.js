@@ -18,8 +18,8 @@ import {
     CREATE_USER,
     CLEAR_REFERRAL_BONUS,
 } from './graphql';
-import { DELETE_PAYMENT } from 'src/routes/PaymentManagement/graphql';
-import { createPayment } from 'src/routes/PaymentManagement/PaymentManagementContainer';
+import { DELETE_PAYMENT } from 'routes/PaymentManagement/graphql';
+import { createPayment } from 'routes/PaymentManagement/PaymentManagementContainer';
 import StudentDetail from './StudentDetail';
 
 const getStudent = ({ render, id }) => (

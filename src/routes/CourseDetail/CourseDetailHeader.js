@@ -8,8 +8,8 @@ import MenuItem from '@material-ui/core/MenuItem';
 import { TimePicker, DatePicker } from 'material-ui-pickers';
 import { withStyles } from '@material-ui/core/styles';
 
-import { COURSE_DAY, COURSE_DAYS } from 'src/constants/gql';
-import { DetailHeader } from 'src/components';
+import { COURSE_DAY, COURSE_DAYS } from 'constants/gql';
+import { DetailHeader } from 'components';
 import styles from './styles';
 
 class CourseDetailHeader extends Component {

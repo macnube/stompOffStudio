@@ -2,11 +2,7 @@ import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import forEach from 'lodash/forEach';
 
-import {
-    CustomAddToolbar,
-    SelectedDeleteToolbar,
-    FlatTable,
-} from 'src/components';
+import { CustomAddToolbar, SelectedDeleteToolbar, FlatTable } from 'components';
 import AddTeacherDialog from './AddTeacherDialog';
 
 const columns = [

@@ -14,9 +14,9 @@ import {
     ContentToolbar,
     SelectedDeleteToolbar,
     PaymentDialog,
-} from 'src/components';
+} from 'components';
 import PaymentManagementStudentSelectDialog from './PaymentManagementStudentSelectDialog';
-import { PAYMENT_TYPE } from 'src/constants/gql';
+import { PAYMENT_TYPE } from 'constants/gql';
 
 const columns = [
     {

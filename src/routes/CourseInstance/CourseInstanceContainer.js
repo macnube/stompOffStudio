@@ -15,7 +15,7 @@ import {
     DELETE_PARTICIPANT,
     GET_COURSE_INSTANCE_FRAGMENT,
 } from './graphql';
-import { CREATE_CARD } from 'src/routes/StudentDetail/graphql';
+import { CREATE_CARD } from 'routes/StudentDetail/graphql';
 import CourseInstance from './CourseInstance';
 
 const getCourseInstance = ({ render, id }) => (

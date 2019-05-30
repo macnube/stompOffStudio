@@ -18,6 +18,7 @@ import {
     UNPAY_CARD,
     GET_CARD_FRAGMENT,
     CREATE_USER,
+    CLEAR_REFERRAL_BONUS,
 } from './graphql';
 import { GET_PAYMENTS } from 'routes/PaymentManagement/graphql';
 import StudentDetail from './StudentDetail';
@@ -36,6 +37,34 @@ const updateStudent = ({ render }) => (
 
 const createUser = ({ render }) => (
     <Mutation mutation={CREATE_USER}>
+        {(mutation, result) => render({ mutation, result })}
+    </Mutation>
+);
+
+const clearReferralBonus = ({ render, id }) => (
+    <Mutation
+        mutation={CLEAR_REFERRAL_BONUS}
+        update={cache => {
+            const { student } = cache.readQuery({
+                query: GET_STUDENT,
+                variables: {
+                    id,
+                },
+            });
+            cache.writeQuery({
+                query: GET_STUDENT,
+                variables: {
+                    id,
+                },
+                data: {
+                    student: {
+                        ...student,
+                        hasReferralBonus: false,
+                    },
+                },
+            });
+        }}
+    >
         {(mutation, result) => render({ mutation, result })}
     </Mutation>
 );
@@ -253,6 +282,7 @@ const mapper = {
     payCard,
     unpayCard,
     createUser,
+    clearReferralBonus,
 };
 
 const StudioDetailContainer = ({ location }) => {
@@ -273,6 +303,9 @@ const StudioDetailContainer = ({ location }) => {
                     payCard: { mutation: payCardMutation },
                     unpayCard: { mutation: unpayCardMutation },
                     createUser: { mutation: createUserMutation },
+                    clearReferralBonus: {
+                        mutation: clearReferralBonusMutation,
+                    },
                 }) => {
                     if (loading) return null;
                     if (error) return `Error: ${error}`;
@@ -289,6 +322,7 @@ const StudioDetailContainer = ({ location }) => {
                             payCard={payCardMutation}
                             unpayCard={unpayCardMutation}
                             createUser={createUserMutation}
+                            clearReferralBonus={clearReferralBonusMutation}
                         />
                     );
                 }}

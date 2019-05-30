@@ -41,6 +41,7 @@ const PaymentsTable = ({
     createPayment,
     payCard,
     handleClose,
+    clearReferralBonus,
 }) => {
     const handleOnDeletePress = ids => {
         forEach(ids, id => {
@@ -75,6 +76,14 @@ const PaymentsTable = ({
         handleClose();
     };
 
+    const handleClearBonus = id => {
+        clearReferralBonus({
+            variables: {
+                id,
+            },
+        });
+    };
+
     const renderSelectedToolbar = (selectedRows, displayData) => (
         <SelectedDeleteToolbar
             selectedRows={selectedRows}
@@ -103,6 +112,7 @@ const PaymentsTable = ({
             <StudentDetailPaymentDialog
                 open={open}
                 handleCreate={handleCreatePayment}
+                handleClearBonus={handleClearBonus}
                 handleClose={handleClose}
                 student={student}
             />
@@ -114,6 +124,7 @@ PaymentsTable.propTypes = {
     student: PropTypes.object.isRequired,
     handleAdd: PropTypes.func.isRequired,
     handleClose: PropTypes.func.isRequired,
+    clearReferralBonus: PropTypes.func.isRequired,
     createPayment: PropTypes.func.isRequired,
     deletePayment: PropTypes.func.isRequired,
     payCard: PropTypes.func.isRequired,

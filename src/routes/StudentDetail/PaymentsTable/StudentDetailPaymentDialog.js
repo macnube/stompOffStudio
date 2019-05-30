@@ -17,6 +17,8 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import MenuItem from '@material-ui/core/MenuItem';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
 
 import { PAYMENT_TYPE, PAYMENT_TYPES } from 'constants/gql';
 import styles from 'routes/StudentDetail/styles';
@@ -27,6 +29,7 @@ class StudentDetailPaymentDialog extends React.Component {
         amount: 0,
         date: new Date(),
         cardId: '',
+        clearBonus: true,
     };
 
     handleChange = (name, isNumber = false) => event => {
@@ -37,6 +40,11 @@ class StudentDetailPaymentDialog extends React.Component {
         this.setState({ [name]: value });
     };
 
+    handleToggleClearBonus = event => {
+        let value = event.target.checked;
+        this.setState({ clearBonus: value });
+    };
+
     handleSetDate = date => {
         this.setState({
             date,
@@ -44,10 +52,11 @@ class StudentDetailPaymentDialog extends React.Component {
     };
 
     handleCreatePayment = () => {
-        const { handleCreate, student } = this.props;
+        const { handleCreate, handleClearBonus, student } = this.props;
+        const { clearBonus } = this.state;
         handleCreate({ ...this.state, studentId: student.id });
+
         this.clearForm();
-        // this.props.navigateToStudio(newStudio);
     };
 
     clearForm = () => {
@@ -65,8 +74,8 @@ class StudentDetailPaymentDialog extends React.Component {
     };
 
     renderForm = () => {
-        const { classes } = this.props;
-        const { type, amount, date, cardId } = this.state;
+        const { classes, student } = this.props;
+        const { type, amount, date, cardId, clearBonus } = this.state;
         return (
             <React.Fragment>
                 <TextField
@@ -120,6 +129,19 @@ class StudentDetailPaymentDialog extends React.Component {
                     className={classes.textField}
                     onChange={this.handleSetDate}
                 />
+                {student.hasReferralBonus ? (
+                    <FormControlLabel
+                        className={classes.checkbox}
+                        control={
+                            <Checkbox
+                                checked={clearBonus}
+                                onChange={this.handleToggleClearBonus}
+                                value="clearBonus"
+                            />
+                        }
+                        label="Clear Referral Bonus?"
+                    />
+                ) : null}
             </React.Fragment>
         );
     };
@@ -162,6 +184,7 @@ StudentDetailPaymentDialog.propTypes = {
     classes: PropTypes.object.isRequired,
     open: PropTypes.bool.isRequired,
     handleCreate: PropTypes.func.isRequired,
+    handleClearBonus: PropTypes.func.isRequired,
     handleClose: PropTypes.func.isRequired,
     student: PropTypes.object.isRequired,
 };

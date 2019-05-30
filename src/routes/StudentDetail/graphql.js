@@ -7,6 +7,7 @@ export const GET_STUDENT = gql`
             name
             email
             mobile
+            hasReferralBonus
             courses {
                 id
                 course {
@@ -56,12 +57,20 @@ export const UPDATE_STUDENT = gql`
         $name: String!
         $email: String!
         $mobile: String
+        $hasReferralBonus: Boolean!
     ) {
-        updateStudent(id: $id, name: $name, email: $email, mobile: $mobile) {
+        updateStudent(
+            id: $id
+            name: $name
+            email: $email
+            mobile: $mobile
+            hasReferralBonus: $hasReferralBonus
+        ) {
             id
             name
             email
             mobile
+            hasReferralBonus
         }
     }
 `;
@@ -231,6 +240,15 @@ export const DELETE_PAYMENT = gql`
     mutation StudentDetailDeletePayment($id: ID!) {
         deletePayment(id: $id) {
             id
+        }
+    }
+`;
+
+export const CLEAR_REFERRAL_BONUS = gql`
+    mutation StudentDetailClearReferralBonus($id: ID!) {
+        clearReferralBonus(id: $id) {
+            id
+            hasReferralBonus
         }
     }
 `;

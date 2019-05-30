@@ -3,6 +3,10 @@ import PropTypes from 'prop-types';
 import toNumber from 'lodash/toNumber';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormControl from '@material-ui/core/FormControl';
+import InputLabel from '@material-ui/core/InputLabel';
 import { withStyles } from '@material-ui/core/styles';
 
 import { DetailHeader } from 'components';
@@ -14,18 +18,20 @@ class StudentDetailHeader extends Component {
         name: '',
         email: '',
         mobile: '',
+        hasReferralBonus: false,
         canSave: false,
     };
 
     componentDidMount() {
         const { student } = this.props;
         if (student) {
-            const { id, name, email, mobile } = student;
+            const { id, name, email, mobile, hasReferralBonus } = student;
             this.setState({
                 id,
                 name,
                 email,
                 mobile,
+                hasReferralBonus,
             });
         }
     }
@@ -39,12 +45,13 @@ class StudentDetailHeader extends Component {
     };
 
     handleSave = () => {
-        const { id, name, email, mobile } = this.state;
+        const { id, name, email, mobile, hasReferralBonus } = this.state;
         this.props.handleOnSave({
             id,
             name,
             email,
             mobile,
+            hasReferralBonus,
         });
         this.setState({
             canSave: false,
@@ -53,7 +60,7 @@ class StudentDetailHeader extends Component {
 
     renderForm = () => {
         const { classes } = this.props;
-        const { name, email, mobile } = this.state;
+        const { name, email, mobile, hasReferralBonus } = this.state;
         return (
             <form>
                 <TextField
@@ -80,6 +87,17 @@ class StudentDetailHeader extends Component {
                     onChange={this.handleChange('mobile')}
                     margin="normal"
                 />
+                <FormControl className={classes.textField} margin="normal">
+                    <InputLabel>Has Referral Bonus?</InputLabel>
+                    <Select
+                        value={hasReferralBonus}
+                        onChange={this.handleChange('hasReferralBonus')}
+                        name="referralBonus"
+                    >
+                        <MenuItem value={true}>Yes</MenuItem>
+                        <MenuItem value={false}>No</MenuItem>
+                    </Select>
+                </FormControl>
             </form>
         );
     };

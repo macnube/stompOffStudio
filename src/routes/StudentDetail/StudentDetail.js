@@ -50,7 +50,7 @@ class StudentDetail extends Component {
 
     handleUpdateStudent = student => {
         const { updateStudent } = this.props;
-        const { id, name, email, mobile } = student;
+        const { id, name, email, mobile, hasReferralBonus } = student;
 
         updateStudent({
             variables: {
@@ -58,6 +58,7 @@ class StudentDetail extends Component {
                 name,
                 email,
                 mobile,
+                hasReferralBonus,
             },
         });
     };
@@ -77,6 +78,7 @@ class StudentDetail extends Component {
     render() {
         const {
             student,
+            clearReferralBonus,
             createCard,
             deleteCard,
             createPayment,
@@ -125,6 +127,7 @@ class StudentDetail extends Component {
                     <PaymentsTable
                         open={openPaymentDialog}
                         student={student}
+                        clearReferralBonus={clearReferralBonus}
                         createPayment={createPayment}
                         deletePayment={deletePayment}
                         payCard={payCard}
@@ -142,6 +145,7 @@ class StudentDetail extends Component {
 
 StudentDetail.propTypes = {
     student: PropTypes.object.isRequired,
+    clearReferralBonus: PropTypes.func.isRequired,
     updateStudent: PropTypes.func.isRequired,
     deleteCourseStudent: PropTypes.func.isRequired,
     createCard: PropTypes.func.isRequired,

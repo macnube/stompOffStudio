@@ -5,6 +5,7 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import { DatePicker } from 'material-ui-pickers';
 import { withStyles } from '@material-ui/core/styles';
+import { Player, ControlBar, PlaybackRateMenuButton } from 'video-react';
 
 import { DetailHeader } from 'components';
 import styles from './styles';
@@ -63,6 +64,7 @@ class CourseInstanceHeader extends Component {
 
     renderForm = () => {
         const { classes } = this.props;
+
         const { topic, notes, date, recapUrl } = this.state;
         return (
             <form>
@@ -90,6 +92,14 @@ class CourseInstanceHeader extends Component {
                     onChange={this.handleChange('recapUrl')}
                     margin="normal"
                 />
+                <Player
+                    fluid
+                    src="http://www.mediafire.com/file/qh8zbwp9jm848y6/2019-05-02-Thu-Balboa-II.mp4/file"
+                >
+                    <ControlBar>
+                        <PlaybackRateMenuButton rates={[5, 2, 1, 0.5, 0.1]} />
+                    </ControlBar>
+                </Player>
                 <TextField
                     id="standard-name"
                     label="Notes"
@@ -105,7 +115,6 @@ class CourseInstanceHeader extends Component {
 
     render() {
         const { handleOnCancel, handleNavigateToCourseAttendance } = this.props;
-
         return (
             <DetailHeader renderForm={this.renderForm}>
                 <Button

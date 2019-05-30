@@ -12,10 +12,10 @@ const DetailHeader = ({ classes, children, renderForm }) => (
         justify="space-between"
         className={classes.formContainer}
     >
-        <Grid item xs={10}>
+        <Grid item xs={8} md={9}>
             {renderForm()}
         </Grid>
-        <Grid item xs={2}>
+        <Grid item xs={4} md={3}>
             <Grid
                 container
                 spacing={16}

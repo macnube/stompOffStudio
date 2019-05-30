@@ -10,7 +10,7 @@ import MUIDataTable from 'mui-datatables';
 import CourseForm from './CourseForm';
 import AddIcon from '@material-ui/icons/Add';
 import Fab from '@material-ui/core/Fab';
-import { ContentToolbar, SelectedDeleteToolbar } from 'components';
+import { ContentToolbar, SelectedDeleteToolbar } from '~/components';
 
 import { parseCoursesToTableData } from './parse';
 

@@ -29,7 +29,7 @@ import {
     CourseInstance,
     CardDetail,
     UserManagement,
-} from 'routes';
+} from '~/routes';
 import ListItems from './ListItems';
 import styles from './styles';
 

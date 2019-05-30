@@ -1,6 +1,6 @@
 import reduce from 'lodash/reduce';
 
-import { getTableDate } from 'utils/date';
+import { getTableDate } from '~/utils/date';
 
 export const parseCardDataToArray = card =>
     reduce(

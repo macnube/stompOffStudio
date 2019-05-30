@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import styles from './styles';
 import MUIDataTable from 'mui-datatables';
-import { ContentToolbar, SelectedDeleteToolbar } from 'components';
+import { ContentToolbar, SelectedDeleteToolbar } from '~/components';
 import AddIcon from '@material-ui/icons/Add';
 import Fab from '@material-ui/core/Fab';
 import TeacherForm from './TeacherForm';

@@ -8,7 +8,7 @@ import MUIDataTable from 'mui-datatables';
 import Paper from '@material-ui/core/Paper';
 import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
 
-import { SelectedDeleteToolbar, CustomAddToolbar } from 'components';
+import { SelectedDeleteToolbar, CustomAddToolbar } from '~/components';
 import RoomForm from './RoomForm';
 import StudioDetailHeader from './StudioDetailHeader';
 

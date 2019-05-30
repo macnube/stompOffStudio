@@ -6,7 +6,7 @@ import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Add';
 import { withStyles } from '@material-ui/core/styles';
 
-import { COURSE_STUDENT_STATUS } from 'constants/gql';
+import { COURSE_STUDENT_STATUS } from '~/constants/gql';
 import styles from './styles';
 
 const SelectedCourseStudentToolbar = ({

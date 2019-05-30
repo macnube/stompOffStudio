@@ -12,10 +12,10 @@ import DateFnsUtils from '@date-io/date-fns';
 import SelectedParticipantToolbar from './SelectedParticipantToolbar';
 import CourseInstanceHeader from './CourseInstanceHeader';
 import AddCourseStudentsToCourseInstanceDialog from './AddCourseStudentsToCourseInstanceDialog';
-import { CardDialog, CustomAddToolbar } from 'components';
+import { CardDialog, CustomAddToolbar } from '~/components';
 import { parseInstanceToTableData } from './parse';
-import { PARTICIPANT_STATUS } from 'constants/gql';
-import { isPastExpiration } from 'utils/date';
+import { PARTICIPANT_STATUS } from '~/constants/gql';
+import { isPastExpiration } from '~/utils/date';
 
 const columns = [
     {

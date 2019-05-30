@@ -6,7 +6,7 @@ import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Add';
 import { withStyles } from '@material-ui/core/styles';
 
-import { DANCE_ROLE } from 'constants/gql';
+import { DANCE_ROLE } from '~/constants/gql';
 import styles from './styles';
 
 const SelectedAddStudentWithWaitlistStatusToolbar = ({

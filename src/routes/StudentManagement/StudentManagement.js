@@ -11,7 +11,7 @@ import MUIDataTable from 'mui-datatables';
 import AddIcon from '@material-ui/icons/Add';
 import Fab from '@material-ui/core/Fab';
 
-import { ContentToolbar, SelectedDeleteToolbar } from 'components';
+import { ContentToolbar, SelectedDeleteToolbar } from '~/components';
 import EmailButton from './EmailButton';
 import StudentForm from './StudentForm';
 import styles from './styles';

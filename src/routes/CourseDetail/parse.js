@@ -1,8 +1,8 @@
 import filter from 'lodash/filter';
 import reduce from 'lodash/reduce';
 
-import { PARTICIPANT_STATUS, COURSE_STUDENT_STATUS } from 'constants/gql';
-import { getTableDate } from 'utils/date';
+import { PARTICIPANT_STATUS, COURSE_STUDENT_STATUS } from '~/constants/gql';
+import { getTableDate } from '~/utils/date';
 
 export const parseActiveCourseStudentsToTableData = (courseStudents, role) =>
     reduce(

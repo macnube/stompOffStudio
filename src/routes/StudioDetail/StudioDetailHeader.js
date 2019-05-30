@@ -5,7 +5,7 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
 
-import { DetailHeader } from 'components';
+import { DetailHeader } from '~/components';
 import styles from './styles';
 
 class StudioDetailHeader extends Component {

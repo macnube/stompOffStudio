@@ -3,8 +3,12 @@ import PropTypes from 'prop-types';
 import forEach from 'lodash/forEach';
 import find from 'lodash/find';
 
-import { CustomAddToolbar, SelectedDeleteToolbar, FlatTable } from 'components';
-import { parseCourseStudentsToTableData } from 'routes/StudentDetail/parse';
+import {
+    CustomAddToolbar,
+    SelectedDeleteToolbar,
+    FlatTable,
+} from '~/components';
+import { parseCourseStudentsToTableData } from '~/routes/StudentDetail/parse';
 import AddCourseStudentDialog from './AddCourseStudentDialog';
 
 const columns = [

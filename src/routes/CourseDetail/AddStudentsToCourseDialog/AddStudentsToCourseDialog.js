@@ -4,7 +4,7 @@ import reduce from 'lodash/reduce';
 import some from 'lodash/some';
 import MUIDataTable from 'mui-datatables';
 
-import { FullScreenDialog } from 'components';
+import { FullScreenDialog } from '~/components';
 
 const columns = [
     {

@@ -20,7 +20,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 
-import { PAYMENT_TYPE, PAYMENT_TYPES } from 'constants/gql';
+import { PAYMENT_TYPE, PAYMENT_TYPES } from '~/constants/gql';
 import styles from './styles';
 
 class PaymentDialog extends React.Component {

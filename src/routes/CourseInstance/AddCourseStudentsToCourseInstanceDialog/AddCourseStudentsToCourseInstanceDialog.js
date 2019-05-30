@@ -6,7 +6,7 @@ import forEach from 'lodash/forEach';
 import map from 'lodash/map';
 import MUIDataTable from 'mui-datatables';
 
-import { FullScreenDialog, SelectedAddToolbar } from 'components';
+import { FullScreenDialog, SelectedAddToolbar } from '~/components';
 
 const columns = [
     {

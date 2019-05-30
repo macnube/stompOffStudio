@@ -4,10 +4,14 @@ import PropTypes from 'prop-types';
 import forEach from 'lodash/forEach';
 import reduce from 'lodash/reduce';
 
-import { CustomAddToolbar, SelectedDeleteToolbar, FlatTable } from 'components';
+import {
+    CustomAddToolbar,
+    SelectedDeleteToolbar,
+    FlatTable,
+} from '~/components';
 import AddInstanceDialog from './AddInstanceDialog';
 import { parseInstancesToTableData } from '../parse';
-import { COURSE_STUDENT_STATUS } from 'constants/gql';
+import { COURSE_STUDENT_STATUS } from '~/constants/gql';
 
 const columns = [
     {

@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Redirect } from 'react-router-dom';
 import { Mutation } from 'react-apollo';
 import { Adopt } from 'react-adopt';
 
 import { LOGIN } from './graphql';
 import Login from './Login';
+import UserAuthContext from 'src/UserAuthContext';
 
 const login = ({ render }) => (
     <Mutation mutation={LOGIN}>
@@ -16,23 +17,32 @@ const mapper = {
     login,
 };
 
-const LoginContainer = () => (
-    <Adopt mapper={mapper}>
-        {({ login: { mutation: loginMutation, result: loginResult } }) => {
-            if (loginResult.data) {
-                localStorage.setItem('jwtToken', loginResult.data.login.token);
-                return (
-                    <Redirect
-                        to={{
-                            pathname: '/dashboard/overview',
-                        }}
-                    />
-                );
-            }
+const LoginContainer = () => {
+    const { setUser } = useContext(UserAuthContext);
+    return (
+        <Adopt mapper={mapper}>
+            {({ login: { mutation: loginMutation, result: loginResult } }) => {
+                if (loginResult.data) {
+                    console.log('data : ', loginResult.data);
+                    const authUser = JSON.stringify(loginResult.data.login);
+                    localStorage.setItem('authUser', authUser);
+                    setUser({
+                        admin: loginResult.data.login.user.admin,
+                        isAuthenticated: true,
+                    });
+                    return (
+                        <Redirect
+                            to={{
+                                pathname: '/overview',
+                            }}
+                        />
+                    );
+                }
 
-            return <Login login={loginMutation} />;
-        }}
-    </Adopt>
-);
+                return <Login login={loginMutation} />;
+            }}
+        </Adopt>
+    );
+};
 
 export default LoginContainer;

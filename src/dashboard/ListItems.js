@@ -13,11 +13,7 @@ import UserIcon from '@material-ui/icons/Person';
 
 export const ListItems = () => (
     <div>
-        <NavLink
-            exact
-            to="/dashboard/overview"
-            style={{ textDecoration: 'none' }}
-        >
+        <NavLink exact to="/overview" style={{ textDecoration: 'none' }}>
             <ListItem button>
                 <ListItemIcon>
                     <DashboardIcon />
@@ -27,7 +23,7 @@ export const ListItems = () => (
         </NavLink>
         <NavLink
             exact
-            to="/dashboard/courseManagement"
+            to="/courseManagement"
             style={{ textDecoration: 'none' }}
         >
             <ListItem button>
@@ -39,7 +35,7 @@ export const ListItems = () => (
         </NavLink>
         <NavLink
             exact
-            to="/dashboard/studentManagement"
+            to="/studentManagement"
             style={{ textDecoration: 'none' }}
         >
             <ListItem button>
@@ -51,7 +47,7 @@ export const ListItems = () => (
         </NavLink>
         <NavLink
             exact
-            to="/dashboard/teacherManagement"
+            to="/teacherManagement"
             style={{ textDecoration: 'none' }}
         >
             <ListItem button>
@@ -63,7 +59,7 @@ export const ListItems = () => (
         </NavLink>
         <NavLink
             exact
-            to="/dashboard/paymentManagement"
+            to="/paymentManagement"
             style={{ textDecoration: 'none' }}
         >
             <ListItem button>
@@ -75,7 +71,7 @@ export const ListItems = () => (
         </NavLink>
         <NavLink
             exact
-            to="/dashboard/studioManagement"
+            to="/studioManagement"
             style={{ textDecoration: 'none' }}
         >
             <ListItem button>
@@ -85,11 +81,7 @@ export const ListItems = () => (
                 <ListItemText primary="Studio Management" />
             </ListItem>
         </NavLink>
-        <NavLink
-            exact
-            to="/dashboard/userManagement"
-            style={{ textDecoration: 'none' }}
-        >
+        <NavLink exact to="/userManagement" style={{ textDecoration: 'none' }}>
             <ListItem button>
                 <ListItemIcon>
                     <UserIcon />

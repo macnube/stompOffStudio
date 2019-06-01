@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment, useState, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { Route } from 'react-router-dom';
 import classNames from 'classnames';
@@ -29,150 +29,114 @@ import {
     CourseInstance,
     CardDetail,
     UserManagement,
+    Login,
 } from 'routes';
 import ListItems from './ListItems';
 import styles from './styles';
+import UserAuthContext from 'src/UserAuthContext';
 
-class Dashboard extends React.Component {
-    state = {
-        open: true,
-        mainContent: 'overview',
+const Dashboard = ({ classes }) => {
+    const [open, setOpen] = useState(true);
+    const [_, setMainContent] = useState('overview');
+    const { user } = useContext(UserAuthContext);
+
+    const handleDrawerOpen = () => {
+        setOpen(true);
     };
 
-    handleDrawerOpen = () => {
-        this.setState({ open: true });
+    const handleDrawerClose = () => {
+        setOpen(false);
     };
 
-    handleDrawerClose = () => {
-        this.setState({ open: false });
+    const handleContentChange = contentId => {
+        setMainContent(contentId);
     };
 
-    handleContentChange = contentId => {
-        this.setState({ mainContent: contentId });
-    };
+    const renderRoutes = () => (
+        <Fragment>
+            <Route path="/overview" component={Overview} />
+            <Route path="/studentManagement" component={StudentManagement} />
+            <Route path="/studentDetail" component={StudentDetail} />
+            <Route path="/courseManagement" component={CourseManagement} />
+            <Route path="/courseDetail" component={CourseDetail} />
+            <Route path="/teacherManagement" component={TeacherManagement} />
+            <Route path="/studioManagement" component={StudioManagement} />
+            <Route path="/studioDetail" component={StudioDetail} />
+            <Route path="/paymentManagement" component={PaymentManagement} />
+            <Route path="/courseInstance" component={CourseInstance} />
+            <Route path="/cardDetail" component={CardDetail} />
+            <Route path="/courseAttendance" component={CourseAttendance} />
+            <Route path="/userManagement" component={UserManagement} />
+        </Fragment>
+    );
 
-    render() {
-        const { classes } = this.props;
-
-        return (
-            <div className={classes.root}>
-                <CssBaseline />
-                <AppBar
-                    position="absolute"
-                    className={classNames(
-                        classes.appBar,
-                        this.state.open && classes.appBarShift
-                    )}
-                >
-                    <Toolbar
-                        disableGutters={!this.state.open}
-                        className={classes.toolbar}
+    return (
+        <div className={classes.root}>
+            <CssBaseline />
+            <AppBar
+                position="absolute"
+                className={classNames(
+                    classes.appBar,
+                    open && classes.appBarShift
+                )}
+            >
+                <Toolbar disableGutters={!open} className={classes.toolbar}>
+                    <IconButton
+                        color="inherit"
+                        aria-label="Open drawer"
+                        onClick={handleDrawerOpen}
+                        className={classNames(
+                            classes.menuButton,
+                            open && classes.menuButtonHidden
+                        )}
                     >
-                        <IconButton
-                            color="inherit"
-                            aria-label="Open drawer"
-                            onClick={this.handleDrawerOpen}
-                            className={classNames(
-                                classes.menuButton,
-                                this.state.open && classes.menuButtonHidden
-                            )}
-                        >
-                            <MenuIcon />
-                        </IconButton>
-                        <Typography
-                            component="h1"
-                            variant="h6"
-                            color="inherit"
-                            noWrap
-                            className={classes.title}
-                        >
-                            Dashboard
-                        </Typography>
-                        <IconButton color="inherit">
-                            <Badge badgeContent={4} color="secondary">
-                                <NotificationsIcon />
-                            </Badge>
-                        </IconButton>
-                    </Toolbar>
-                </AppBar>
-                <Drawer
-                    variant="permanent"
-                    classes={{
-                        paper: classNames(
-                            classes.drawerPaper,
-                            !this.state.open && classes.drawerPaperClose
-                        ),
-                    }}
-                    open={this.state.open}
-                >
-                    <div className={classes.toolbarIcon}>
-                        <IconButton onClick={this.handleDrawerClose}>
-                            <ChevronLeftIcon />
-                        </IconButton>
-                    </div>
-                    <Divider />
-                    <List>
-                        <ListItems
-                            handleContentChange={this.handleContentChange}
-                        />
-                    </List>
-                </Drawer>
-                <main className={classes.content}>
-                    <div className={classes.appBarSpacer} />
-                    <Route path="/dashboard/overview" component={Overview} />
-                    <Route
-                        path="/dashboard/studentManagement"
-                        component={StudentManagement}
-                    />
-                    <Route
-                        path="/dashboard/studentDetail"
-                        component={StudentDetail}
-                    />
-                    <Route
-                        path="/dashboard/courseManagement"
-                        component={CourseManagement}
-                    />
-                    <Route
-                        path="/dashboard/courseDetail"
-                        component={CourseDetail}
-                    />
-                    <Route
-                        path="/dashboard/teacherManagement"
-                        component={TeacherManagement}
-                    />
-                    <Route
-                        path="/dashboard/studioManagement"
-                        component={StudioManagement}
-                    />
-                    <Route
-                        path="/dashboard/studioDetail"
-                        component={StudioDetail}
-                    />
-                    <Route
-                        path="/dashboard/paymentManagement"
-                        component={PaymentManagement}
-                    />
-                    <Route
-                        path="/dashboard/courseInstance"
-                        component={CourseInstance}
-                    />
-                    <Route
-                        path="/dashboard/cardDetail"
-                        component={CardDetail}
-                    />
-                    <Route
-                        path="/dashboard/courseAttendance"
-                        component={CourseAttendance}
-                    />
-                    <Route
-                        path="/dashboard/userManagement"
-                        component={UserManagement}
-                    />
-                </main>
-            </div>
-        );
-    }
-}
+                        <MenuIcon />
+                    </IconButton>
+                    <Typography
+                        component="h1"
+                        variant="h6"
+                        color="inherit"
+                        noWrap
+                        className={classes.title}
+                    >
+                        Dashboard
+                    </Typography>
+                    <IconButton color="inherit">
+                        <Badge badgeContent={4} color="secondary">
+                            <NotificationsIcon />
+                        </Badge>
+                    </IconButton>
+                </Toolbar>
+            </AppBar>
+            <Drawer
+                variant="permanent"
+                classes={{
+                    paper: classNames(
+                        classes.drawerPaper,
+                        !open && classes.drawerPaperClose
+                    ),
+                }}
+                open={open}
+            >
+                <div className={classes.toolbarIcon}>
+                    <IconButton onClick={handleDrawerClose}>
+                        <ChevronLeftIcon />
+                    </IconButton>
+                </div>
+                <Divider />
+                <List>
+                    {user.isAuthenticated ? (
+                        <ListItems handleContentChange={handleContentChange} />
+                    ) : null}
+                </List>
+            </Drawer>
+            <main className={classes.content}>
+                <div className={classes.appBarSpacer} />
+                {user.isAuthenticated ? renderRoutes() : <Login />}
+            </main>
+        </div>
+    );
+};
 
 Dashboard.propTypes = {
     classes: PropTypes.object.isRequired,

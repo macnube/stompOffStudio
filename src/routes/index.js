@@ -1,4 +1,4 @@
-export { default as Overview } from './Overview';
+export { default as Overview } from './OverviewTab';
 export { default as StudentManagement } from './StudentManagement';
 export { default as StudentDetail } from './StudentDetail';
 export { default as CardDetail } from './CardDetail';

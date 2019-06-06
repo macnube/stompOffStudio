@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { HashRouter as Router, Route } from 'react-router-dom';
 import ApolloClient from 'apollo-boost';
 import { ApolloProvider } from 'react-apollo';
 import 'video-react/dist/video-react.css';
@@ -14,7 +14,7 @@ const setupClient = (user, setUser) =>
         uri:
             process.env.NODE_ENV === 'development'
                 ? 'http://localhost:4000'
-                : 'https://dance-cam-server.herokuapp.com',
+                : 'http://165.22.201.30:4000',
         request: async operation => {
             const authUser = localStorage.getItem('authUser');
             if (authUser) {
@@ -29,6 +29,7 @@ const setupClient = (user, setUser) =>
         onError: ({ graphQLErrors, networkError }) => {
             if (graphQLErrors) {
                 //localStorage.removeItem('authUser');
+                console.log('errors are: ', graphQLErrors);
                 setUser({ admin: false, isAuthenticated: false });
             }
             if (networkError) {

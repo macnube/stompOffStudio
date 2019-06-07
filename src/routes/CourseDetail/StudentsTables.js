@@ -55,7 +55,7 @@ const StudentsTables = ({
     const handleNavigateToStudentDetail = rowData => {
         history.push({
             pathname: './studentDetail',
-            search: `id=${rowData[0]}`,
+            search: `id=${rowData[1]}`,
         });
     };
 

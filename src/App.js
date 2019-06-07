@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { HashRouter as Router, Route } from 'react-router-dom';
 import ApolloClient from 'apollo-boost';
 import { ApolloProvider } from 'react-apollo';
+import get from 'lodash/get';
 import 'video-react/dist/video-react.css';
 
 import './App.css';
@@ -28,9 +29,11 @@ const setupClient = (user, setUser) =>
         },
         onError: ({ graphQLErrors, networkError }) => {
             if (graphQLErrors) {
-                //localStorage.removeItem('authUser');
                 console.log('errors are: ', graphQLErrors);
-                setUser({ admin: false, isAuthenticated: false });
+                const code = get(graphQLErrors[0], 'extensions.code');
+                if (code === 'AUTHORIZATION_ERROR') {
+                    setUser({ admin: false, isAuthenticated: false });
+                }
             }
             if (networkError) {
                 console.log('networkError: ', networkError);

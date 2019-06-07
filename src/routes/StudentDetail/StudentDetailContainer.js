@@ -44,12 +44,10 @@ const createUser = ({ render }) => (
                 const { users } = cache.readQuery({
                     query: GET_USERS,
                 });
-
-                console.log('users are: ', users);
                 cache.writeQuery({
                     query: GET_USERS,
                     data: {
-                        users: users.concat[createUser],
+                        users: users.concat([createUser]),
                     },
                 });
             } catch (error) {

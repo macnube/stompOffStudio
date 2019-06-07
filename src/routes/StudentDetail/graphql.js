@@ -106,8 +106,10 @@ export const CREATE_USER = gql`
         $studentId: ID!
     ) {
         createUser(email: $email, password: $password, studentId: $studentId) {
+            id
             email
             password
+            admin
             student {
                 id
                 name

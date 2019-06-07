@@ -110,6 +110,7 @@ export const CREATE_USER = gql`
             password
             student {
                 id
+                name
                 user {
                     id
                     email

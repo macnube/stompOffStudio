@@ -19,6 +19,7 @@ import {
     CLEAR_REFERRAL_BONUS,
 } from './graphql';
 import { DELETE_PAYMENT } from 'routes/PaymentManagement/graphql';
+import { GET_USERS } from 'routes/UserManagement/graphql';
 import { createPayment } from 'routes/PaymentManagement/PaymentManagementContainer';
 import StudentDetail from './StudentDetail';
 
@@ -35,7 +36,27 @@ const updateStudent = ({ render }) => (
 );
 
 const createUser = ({ render }) => (
-    <Mutation mutation={CREATE_USER}>
+    <Mutation
+        mutation={CREATE_USER}
+        update={(cache, { data: { createUser } }) => {
+            console.log('here in update');
+            try {
+                const { users } = cache.readQuery({
+                    query: GET_USERS,
+                });
+
+                console.log('users are: ', users);
+                cache.writeQuery({
+                    query: GET_USERS,
+                    data: {
+                        users: users.concat[createUser],
+                    },
+                });
+            } catch (error) {
+                console.log('error is', error);
+            }
+        }}
+    >
         {(mutation, result) => render({ mutation, result })}
     </Mutation>
 );

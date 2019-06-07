@@ -1,6 +1,7 @@
 import React from 'react';
 import { Query, Mutation } from 'react-apollo';
 import { Adopt } from 'react-adopt';
+import filter from 'lodash/filter';
 
 import { GET_USERS, TOGGLE_USER_ADMIN_STATUS, DELETE_USER } from './graphql';
 import UserManagement from './UserManagement';
@@ -14,7 +15,20 @@ const toggleUserAdminStatus = ({ render }) => (
 );
 
 const deleteUser = ({ render }) => (
-    <Mutation mutation={DELETE_USER}>
+    <Mutation
+        mutation={DELETE_USER}
+        update={(cache, { data: { deleteUser } }) => {
+            const { users } = cache.readQuery({
+                query: GET_USERS,
+            });
+            cache.writeQuery({
+                query: GET_USERS,
+                data: {
+                    users: filter(users, user => user.id !== deleteUser.id),
+                },
+            });
+        }}
+    >
         {(mutation, result) => render({ mutation, result })}
     </Mutation>
 );

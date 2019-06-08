@@ -15,11 +15,10 @@ import {
     PAY_CARD,
     UNPAY_CARD,
     GET_CARD_FRAGMENT,
-    CREATE_USER,
     CLEAR_REFERRAL_BONUS,
 } from './graphql';
 import { DELETE_PAYMENT } from 'routes/PaymentManagement/graphql';
-import { GET_USERS } from 'routes/UserManagement/graphql';
+import { GET_USERS, CREATE_USER } from 'routes/UserManagement/graphql';
 import { createPayment } from 'routes/PaymentManagement/PaymentManagementContainer';
 import StudentDetail from './StudentDetail';
 
@@ -39,7 +38,6 @@ const createUser = ({ render }) => (
     <Mutation
         mutation={CREATE_USER}
         update={(cache, { data: { createUser } }) => {
-            console.log('here in update');
             try {
                 const { users } = cache.readQuery({
                     query: GET_USERS,
@@ -51,7 +49,7 @@ const createUser = ({ render }) => (
                     },
                 });
             } catch (error) {
-                console.log('error is', error);
+                console.log('error is in StudentDetailContainer', error);
             }
         }}
     >

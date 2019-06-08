@@ -1,9 +1,11 @@
 import React from 'react';
 import filter from 'lodash/filter';
+import { Redirect } from 'react-router-dom';
 import { Query, Mutation } from 'react-apollo';
 import { Adopt } from 'react-adopt';
 
 import { GET_STUDENTS, DELETE_STUDENT, CREATE_STUDENT } from './graphql';
+import { GET_USERS, CREATE_USER } from 'routes/UserManagement/graphql';
 import StudentManagement from './StudentManagement';
 
 const getStudents = ({ render }) => (
@@ -56,28 +58,11 @@ const StudentManagementContainer = () => (
         {({
             getStudents: { data, loading, error },
             deleteStudent: { mutation: deleteStudentMutation },
-            createStudent: {
-                mutation: createStudentMutation,
-                result: createStudentResult,
-            },
+            createStudent: { mutation: createStudentMutation },
         }) => {
             if (loading) return null;
             if (error) return `Error: ${error}`;
             if (!data.students) return `404: Session not found`;
-            // if (createStudentResult.data) {
-            //     console.log('createStudentResult is: ', createStudentResult);
-            //     return (
-            //         <Redirect
-            //             to={{
-            //                 pathname: '/studentDetail',
-            //                 search: `id=${
-            //                     createStudentResult.data.createStudent.id
-            //                 }`,
-            //             }}
-            //         />
-            //     );
-            // }
-
             return (
                 <StudentManagement
                     students={data.students}

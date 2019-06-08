@@ -99,29 +99,6 @@ export const GET_CARD_FRAGMENT = gql`
     }
 `;
 
-export const CREATE_USER = gql`
-    mutation StudentDetailCreateUser(
-        $email: String!
-        $password: String!
-        $studentId: ID!
-    ) {
-        createUser(email: $email, password: $password, studentId: $studentId) {
-            id
-            email
-            password
-            admin
-            student {
-                id
-                name
-                user {
-                    id
-                    email
-                }
-            }
-        }
-    }
-`;
-
 export const CREATE_CARD = gql`
     mutation StudentDetailCreateCard(
         $studentId: ID!

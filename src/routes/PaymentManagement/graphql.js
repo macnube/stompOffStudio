@@ -24,7 +24,7 @@ export const CREATE_PAYMENT = gql`
         $date: DateTime!
         $amount: Int!
         $studentId: ID!
-        $cardId: ID!
+        $cardId: ID
     ) {
         createPayment(
             type: $type

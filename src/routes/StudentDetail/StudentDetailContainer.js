@@ -17,7 +17,7 @@ import {
     GET_CARD_FRAGMENT,
     CLEAR_REFERRAL_BONUS,
 } from './graphql';
-import { DELETE_PAYMENT } from 'routes/PaymentManagement/graphql';
+import { DELETE_PAYMENT, GET_PAYMENTS } from 'routes/PaymentManagement/graphql';
 import { GET_USERS, CREATE_USER } from 'routes/UserManagement/graphql';
 import { createPayment } from 'routes/PaymentManagement/PaymentManagementContainer';
 import StudentDetail from './StudentDetail';
@@ -191,6 +191,20 @@ const deletePayment = ({ render, id }) => (
                     payment => payment.id !== deletePayment.id
                 ),
             };
+            try {
+                const { payments } = cache.readQuery({ query: GET_PAYMENTS });
+                cache.writeQuery({
+                    query: GET_PAYMENTS,
+                    data: {
+                        payments: filter(
+                            payments,
+                            payment => payment.id !== deletePayment.id
+                        ),
+                    },
+                });
+            } catch (error) {
+                console.log('error on StudentDetailContainer: ', error);
+            }
             if (payment.card) {
                 const card = find(student.cards, { id: payment.card.id });
                 const cards = filter(

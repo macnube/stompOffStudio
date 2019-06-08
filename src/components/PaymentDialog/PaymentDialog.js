@@ -21,6 +21,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 
 import { PAYMENT_TYPE, PAYMENT_TYPES } from 'constants/gql';
+import { getTableDate } from 'utils/date';
 import styles from './styles';
 
 class PaymentDialog extends React.Component {
@@ -29,7 +30,7 @@ class PaymentDialog extends React.Component {
         amount: 0,
         date: new Date(),
         cardId: '',
-        clearBonus: true,
+        clearBonus: false,
     };
 
     handleChange = (name, isNumber = false) => event => {
@@ -107,24 +108,23 @@ class PaymentDialog extends React.Component {
                     }}
                     margin="normal"
                 />
-                <TextField
-                    id="standard-select-studio-native"
-                    select
-                    label="Select Card by Date"
-                    value={cardId}
-                    className={classes.textField}
-                    onChange={this.handleChange('cardId')}
-                    margin="normal"
-                >
-                    {map(this.getUnpaidCards(), card => (
-                        <MenuItem key={card.id} value={card.id}>
-                            {format(
-                                parseISO(card.expirationDate),
-                                'MMM do, yyyy'
-                            )}
-                        </MenuItem>
-                    ))}
-                </TextField>
+                {type === PAYMENT_TYPE.CARD ? (
+                    <TextField
+                        id="standard-select-studio-native"
+                        select
+                        label="Select Card by Date"
+                        value={cardId}
+                        className={classes.textField}
+                        onChange={this.handleChange('cardId')}
+                        margin="normal"
+                    >
+                        {map(this.getUnpaidCards(), card => (
+                            <MenuItem key={card.id} value={card.id}>
+                                {getTableDate(card.expirationDate)}
+                            </MenuItem>
+                        ))}
+                    </TextField>
+                ) : null}
                 <DatePicker
                     margin="normal"
                     label="Date"

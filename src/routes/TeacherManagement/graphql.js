@@ -1,18 +1,14 @@
 import gql from 'graphql-tag';
 
+import { MEDIUM_TEACHER_FRAGMENT } from 'graphql';
+
 export const GET_TEACHERS = gql`
     query TeacherManagementGetTeachers {
         teachers {
-            id
-            name
-            email
-            mobile
-            courses {
-                id
-                name
-            }
+            ...MediumTeacherFragment
         }
     }
+    ${MEDIUM_TEACHER_FRAGMENT}
 `;
 
 export const CREATE_TEACHER = gql`
@@ -22,15 +18,9 @@ export const CREATE_TEACHER = gql`
         $mobile: String
     ) {
         createTeacher(name: $name, email: $email, mobile: $mobile) {
-            id
-            name
-            email
-            mobile
-            courses {
-                id
-                name
-            }
+            ...MediumTeacherFragment
         }
+        ${MEDIUM_TEACHER_FRAGMENT}
     }
 `;
 
@@ -42,15 +32,9 @@ export const UPDATE_TEACHER = gql`
         $mobile: String
     ) {
         updateTeacher(id: $id, name: $name, email: $email, mobile: $mobile) {
-            id
-            name
-            email
-            mobile
-            courses {
-                id
-                name
-            }
+            ...MediumTeacherFragment
         }
+        ${MEDIUM_TEACHER_FRAGMENT}
     }
 `;
 

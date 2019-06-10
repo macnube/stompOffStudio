@@ -1,5 +1,5 @@
 import gql from 'graphql-tag';
-import { MEDIUM_STUDIO_FRAGMENT } from 'graphql';
+import { SMALL_STUDIO_FRAGMENT, MEDIUM_STUDIO_FRAGMENT } from 'graphql';
 
 export const GET_STUDIOS = gql`
     query StudioManagementGetStudios {
@@ -22,8 +22,8 @@ export const CREATE_STUDIO = gql`
 export const DELETE_STUDIO = gql`
     mutation StudioManagementDeleteStudio($id: ID!) {
         deleteStudio(id: $id) {
-            ...MediumStudioFragment
+            ...SmallStudioFragment
         }
     }
-    ${MEDIUM_STUDIO_FRAGMENT}
+    ${SMALL_STUDIO_FRAGMENT}
 `;

@@ -68,29 +68,12 @@ const TeacherManagementContainer = () => (
         {({
             getTeachers: { data, loading, error },
             deleteTeacher: { mutation: deleteTeacherMutation },
-            createTeacher: {
-                mutation: createTeacherMutation,
-                result: createTeacherResult,
-            },
+            createTeacher: { mutation: createTeacherMutation },
             updateTeacher: { mutation: updateTeacherMutation },
         }) => {
             if (loading) return null;
             if (error) return `Error: ${error}`;
             if (!data.teachers) return `404: Session not found`;
-            console.log('data is: ', data);
-            // if (createTeacherResult.data) {
-            //     return (
-            //         <Redirect
-            //             to={{
-            //                 pathname: '/studioDetail',
-            //                 search: `id=${
-            //                     createTeacherResult.data.createTeacher.id
-            //                 }`,
-            //             }}
-            //         />
-            //     );
-            // }
-
             return (
                 <TeacherManagement
                     teachers={data.teachers}

@@ -2,12 +2,8 @@ import 'date-fns';
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import toNumber from 'lodash/toNumber';
-import find from 'lodash/find';
-import forEach from 'lodash/forEach';
 import PropTypes from 'prop-types';
-import MUIDataTable from 'mui-datatables';
 import Paper from '@material-ui/core/Paper';
-import { MuiThemeProvider } from '@material-ui/core/styles';
 
 import PaymentsTable from './PaymentsTable';
 import CardsTable from './CardsTable';

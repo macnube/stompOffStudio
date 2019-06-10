@@ -1,9 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import format from 'date-fns/format';
-import parseISO from 'date-fns/parseISO';
-import reduce from 'lodash/reduce';
 import find from 'lodash/find';
 import forEach from 'lodash/forEach';
 import MUIDataTable from 'mui-datatables';
@@ -47,8 +44,8 @@ class PaymentManagement extends Component {
     state = {
         openStudentSelectDialog: false,
         openPaymentDialog: false,
-        selectedPaymentId: null,
         student: null,
+        payment: null,
     };
 
     handleClickOpen = () => {
@@ -63,6 +60,7 @@ class PaymentManagement extends Component {
             openStudentSelectDialog: false,
             openPaymentDialog: false,
             student: null,
+            payment: null,
         });
     };
 
@@ -74,16 +72,22 @@ class PaymentManagement extends Component {
         });
     };
 
-    handlePaymentClick = rowData => {
-        this.setState({
-            selectedPaymentId: rowData[0],
-            openPaymentDialog: true,
-        });
-    };
-
     handleCreate = payment => {
         const { createPayment, payCard } = this.props;
         createPayment({ variables: { ...payment } });
+        if (payment.type === PAYMENT_TYPE.CARD && payment.cardId) {
+            payCard({
+                variables: {
+                    id: payment.cardId,
+                },
+            });
+        }
+        this.handleClose();
+    };
+
+    handleUpdate = payment => {
+        const { updatePayment, payCard } = this.props;
+        updatePayment({ variables: { ...payment } });
         if (payment.type === PAYMENT_TYPE.CARD && payment.cardId) {
             payCard({
                 variables: {
@@ -117,6 +121,14 @@ class PaymentManagement extends Component {
         });
     };
 
+    handleOnPaymentClick = rowData => {
+        const payment = find(this.props.payments, { id: rowData[0] });
+        this.setState({
+            openPaymentDialog: true,
+            payment,
+        });
+    };
+
     renderSelectedToolbar = (selectedRows, displayData) => (
         <SelectedDeleteToolbar
             selectedRows={selectedRows}
@@ -131,11 +143,12 @@ class PaymentManagement extends Component {
             openStudentSelectDialog,
             openPaymentDialog,
             student,
+            payment,
         } = this.state;
         const options = {
             responsive: 'scroll',
-            onRowClick: this.handlePaymentClick,
             customToolbarSelect: this.renderSelectedToolbar,
+            onRowClick: this.handleOnPaymentClick,
         };
         return (
             <Fragment>
@@ -152,13 +165,15 @@ class PaymentManagement extends Component {
                     open={openStudentSelectDialog}
                     handleStudentSelect={this.handleStudentSelect}
                 />
-                {student ? (
+                {student || payment ? (
                     <PaymentDialog
                         open={openPaymentDialog}
                         handleCreate={this.handleCreate}
+                        handleUpdate={this.handleUpdate}
                         handleClearBonus={this.handleClearBonus}
                         handleClose={this.handleClose}
-                        student={student}
+                        student={student || payment.student}
+                        payment={payment}
                     />
                 ) : null}
                 <MUIDataTable
@@ -176,6 +191,7 @@ PaymentManagement.propTypes = {
     payments: PropTypes.array.isRequired,
     deletePayment: PropTypes.func.isRequired,
     createPayment: PropTypes.func.isRequired,
+    updatePayment: PropTypes.func.isRequired,
     unpayCard: PropTypes.func.isRequired,
     payCard: PropTypes.func.isRequired,
     clearReferralBonus: PropTypes.func.isRequired,

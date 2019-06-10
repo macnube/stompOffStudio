@@ -4,7 +4,12 @@ import find from 'lodash/find';
 import { Query, Mutation } from 'react-apollo';
 import { Adopt } from 'react-adopt';
 
-import { GET_PAYMENTS, DELETE_PAYMENT, CREATE_PAYMENT } from './graphql';
+import {
+    GET_PAYMENTS,
+    DELETE_PAYMENT,
+    CREATE_PAYMENT,
+    UPDATE_PAYMENT,
+} from './graphql';
 import {
     GET_STUDENT,
     GET_CARD_FRAGMENT,
@@ -99,6 +104,12 @@ export const createPayment = ({ render }) => (
     </Mutation>
 );
 
+export const updatePayment = ({ render }) => (
+    <Mutation mutation={UPDATE_PAYMENT}>
+        {(mutation, result) => render({ mutation, result })}
+    </Mutation>
+);
+
 const payCard = ({ render }) => (
     <Mutation
         mutation={PAY_CARD}
@@ -182,36 +193,36 @@ const mapper = {
     payCard,
     unpayCard,
     clearReferralBonus,
+    updatePayment,
 };
 
-const PaymentManagementContainer = () => {
-    console.log('mapper is: ', mapper);
-    return (
-        <Adopt mapper={mapper}>
-            {({
-                getPayments: { data, loading, error },
-                deletePayment: { mutation: deletePaymentMutation },
-                createPayment: { mutation: createPaymentMutation },
-                payCard: { mutation: payCardMutation },
-                unpayCard: { mutation: unpayCardMutation },
-                clearReferralBonus: { mutation: clearReferralBonusMutation },
-            }) => {
-                if (loading) return null;
-                if (error) return `Error: ${error}`;
-                if (!data.payments) return `404: Session not found`;
-                return (
-                    <PaymentManagement
-                        payments={data.payments}
-                        deletePayment={deletePaymentMutation}
-                        createPayment={createPaymentMutation}
-                        payCard={payCardMutation}
-                        unpayCard={unpayCardMutation}
-                        clearReferralBonus={clearReferralBonusMutation}
-                    />
-                );
-            }}
-        </Adopt>
-    );
-};
+const PaymentManagementContainer = () => (
+    <Adopt mapper={mapper}>
+        {({
+            getPayments: { data, loading, error },
+            deletePayment: { mutation: deletePaymentMutation },
+            createPayment: { mutation: createPaymentMutation },
+            payCard: { mutation: payCardMutation },
+            unpayCard: { mutation: unpayCardMutation },
+            clearReferralBonus: { mutation: clearReferralBonusMutation },
+            updatePayment: { mutation: updatePaymentMutation },
+        }) => {
+            if (loading) return null;
+            if (error) return `Error: ${error}`;
+            if (!data.payments) return `404: Session not found`;
+            return (
+                <PaymentManagement
+                    payments={data.payments}
+                    deletePayment={deletePaymentMutation}
+                    createPayment={createPaymentMutation}
+                    payCard={payCardMutation}
+                    unpayCard={unpayCardMutation}
+                    clearReferralBonus={clearReferralBonusMutation}
+                    updatePayment={updatePaymentMutation}
+                />
+            );
+        }}
+    </Adopt>
+);
 
 export default PaymentManagementContainer;

@@ -1,11 +1,9 @@
 import React from 'react';
 import filter from 'lodash/filter';
-import { Redirect } from 'react-router-dom';
 import { Query, Mutation } from 'react-apollo';
 import { Adopt } from 'react-adopt';
 
 import { GET_STUDENTS, DELETE_STUDENT, CREATE_STUDENT } from './graphql';
-import { GET_USERS, CREATE_USER } from 'routes/UserManagement/graphql';
 import StudentManagement from './StudentManagement';
 
 const getStudents = ({ render }) => (

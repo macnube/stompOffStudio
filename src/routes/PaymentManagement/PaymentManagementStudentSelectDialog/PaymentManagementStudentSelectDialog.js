@@ -3,8 +3,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import find from 'lodash/find';
 import reduce from 'lodash/reduce';
-import filter from 'lodash/filter';
-import isNil from 'lodash/isNil';
 import { withStyles } from '@material-ui/core/styles';
 import { MuiPickersUtilsProvider } from 'material-ui-pickers';
 import MUIDataTable from 'mui-datatables';

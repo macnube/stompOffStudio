@@ -24,12 +24,26 @@ import styles from './styles';
 
 class PaymentDialog extends React.Component {
     state = {
+        id: '',
         type: PAYMENT_TYPE.CARD,
         amount: 0,
         date: new Date(),
         cardId: '',
         clearBonus: false,
     };
+
+    componentDidMount() {
+        const { payment } = this.props;
+        if (payment && payment.id !== this.state.id) {
+            const { id, type, amount, date } = payment;
+            return this.setState({
+                id,
+                type,
+                amount,
+                date,
+            });
+        }
+    }
 
     handleChange = (name, isNumber = false) => event => {
         let value = event.target.value;
@@ -61,8 +75,20 @@ class PaymentDialog extends React.Component {
         this.clearForm();
     };
 
+    handleUpdatePayment = () => {
+        const { handleUpdate, handleClearBonus, student } = this.props;
+        const { clearBonus } = this.state;
+        handleUpdate({ ...this.state, studentId: student.id });
+        if (clearBonus) {
+            handleClearBonus(student.id);
+        }
+
+        this.clearForm();
+    };
+
     clearForm = () => {
         this.setState({
+            id: '',
             type: 'Card',
             amount: 0,
             date: new Date(),
@@ -70,13 +96,18 @@ class PaymentDialog extends React.Component {
         });
     };
 
-    getUnpaidCards = () => {
+    getUnpaidCardItems = () => {
         const { student } = this.props;
-        return filter(student.cards, card => isNil(card.payment));
+        const unpaidCards = filter(student.cards, card => isNil(card.payment));
+        return map(unpaidCards, card => (
+            <MenuItem key={card.id} value={card.id}>
+                {getTableDate(card.expirationDate)}
+            </MenuItem>
+        ));
     };
 
     renderForm = () => {
-        const { classes, student } = this.props;
+        const { classes, student, payment } = this.props;
         const { type, amount, date, cardId, clearBonus } = this.state;
         return (
             <React.Fragment>
@@ -116,11 +147,16 @@ class PaymentDialog extends React.Component {
                         onChange={this.handleChange('cardId')}
                         margin="normal"
                     >
-                        {map(this.getUnpaidCards(), card => (
-                            <MenuItem key={card.id} value={card.id}>
-                                {getTableDate(card.expirationDate)}
+                        {this.state.id ? (
+                            <MenuItem
+                                key={payment.card.id}
+                                value={payment.card.id}
+                            >
+                                {getTableDate(payment.card.expirationDate)}
                             </MenuItem>
-                        ))}
+                        ) : (
+                            this.getUnpaidCardItems()
+                        )}
                     </TextField>
                 ) : null}
                 <DatePicker
@@ -148,7 +184,7 @@ class PaymentDialog extends React.Component {
     };
 
     render() {
-        const { open, handleClose } = this.props;
+        const { open, handleClose, student } = this.props;
 
         return (
             <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -158,7 +194,9 @@ class PaymentDialog extends React.Component {
                     aria-labelledby="form-dialog-title"
                 >
                     <DialogTitle id="form-dialog-title">
-                        Create New Payment
+                        {this.state.id
+                            ? `Update payment for ${student.name}`
+                            : `Create new payment for ${student.name}`}
                     </DialogTitle>
                     <DialogContent>{this.renderForm()}</DialogContent>
                     <DialogActions>
@@ -169,10 +207,14 @@ class PaymentDialog extends React.Component {
                             Cancel
                         </Button>
                         <Button
-                            onClick={this.handleCreatePayment}
+                            onClick={
+                                this.state.id
+                                    ? this.handleUpdatePayment
+                                    : this.handleCreatePayment
+                            }
                             color="primary"
                         >
-                            Create
+                            {this.state.id ? 'Update' : 'Create'}
                         </Button>
                     </DialogActions>
                 </Dialog>
@@ -185,9 +227,11 @@ PaymentDialog.propTypes = {
     classes: PropTypes.object.isRequired,
     open: PropTypes.bool.isRequired,
     handleCreate: PropTypes.func.isRequired,
+    handleUpdate: PropTypes.func.isRequired,
     handleClearBonus: PropTypes.func.isRequired,
     handleClose: PropTypes.func.isRequired,
     student: PropTypes.object.isRequired,
+    payment: PropTypes.object,
 };
 
 export default withStyles(styles)(PaymentDialog);

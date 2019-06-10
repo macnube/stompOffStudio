@@ -1,6 +1,4 @@
 import reduce from 'lodash/reduce';
-import filter from 'lodash/filter';
-import includes from 'lodash/includes';
 import find from 'lodash/find';
 import map from 'lodash/map';
 

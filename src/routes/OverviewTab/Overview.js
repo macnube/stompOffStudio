@@ -138,7 +138,6 @@ class Overview extends React.Component {
             isAfter(parseISO(instance.date), now)
         );
 
-        console.log('unlinkedPayments are: ', unlinkedPayments);
         return (
             <Paper>
                 <MuiThemeProvider theme={this.getMuiTheme()}>

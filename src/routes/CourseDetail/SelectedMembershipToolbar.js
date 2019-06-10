@@ -6,7 +6,7 @@ import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Add';
 import { withStyles } from '@material-ui/core/styles';
 
-import { COURSE_STUDENT_STATUS } from 'constants/gql';
+import { MEMBERSHIP_STATUS } from 'constants/gql';
 import styles from './styles';
 
 const SelectedMembershipToolbar = ({
@@ -27,13 +27,13 @@ const SelectedMembershipToolbar = ({
         []
     );
     const handleUpdateAsActive = handleUpdateMembershipStatus(
-        COURSE_STUDENT_STATUS.ACTIVE
+        MEMBERSHIP_STATUS.ACTIVE
     );
     const handleUpdateAsInactive = handleUpdateMembershipStatus(
-        COURSE_STUDENT_STATUS.INACTIVE
+        MEMBERSHIP_STATUS.INACTIVE
     );
     const handleUpdateAsWaitlist = handleUpdateMembershipStatus(
-        COURSE_STUDENT_STATUS.WAITLIST
+        MEMBERSHIP_STATUS.WAITLIST
     );
     return (
         <div>

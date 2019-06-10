@@ -12,7 +12,7 @@ import {
     REMOVE_TEACHER_FROM_COURSE,
     DELETE_COURSE_STUDENT,
     CREATE_COURSE_STUDENT,
-    UPDATE_COURSE_STUDENT_STATUS,
+    UPDATE_MEMBERSHIP_STATUS,
     GET_STUDENT_FRAGMENT,
     CREATE_COURSE_INSTANCE,
     DELETE_COURSE_INSTANCE,
@@ -39,7 +39,7 @@ const removeTeacherFromCourse = ({ render }) => (
 );
 
 const updateMembershipStatus = ({ render }) => (
-    <Mutation mutation={UPDATE_COURSE_STUDENT_STATUS}>
+    <Mutation mutation={UPDATE_MEMBERSHIP_STATUS}>
         {(mutation, result) => render({ mutation, result })}
     </Mutation>
 );

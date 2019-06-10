@@ -1,7 +1,7 @@
 import filter from 'lodash/filter';
 import reduce from 'lodash/reduce';
 
-import { PARTICIPANT_STATUS, COURSE_STUDENT_STATUS } from 'constants/gql';
+import { PARTICIPANT_STATUS, MEMBERSHIP_STATUS } from 'constants/gql';
 import { getTableDate } from 'utils/date';
 
 export const parseActiveMembershipsToTableData = (memberships, role) =>
@@ -10,7 +10,7 @@ export const parseActiveMembershipsToTableData = (memberships, role) =>
             memberships,
             membership =>
                 membership.role === role &&
-                membership.status === COURSE_STUDENT_STATUS.ACTIVE
+                membership.status === MEMBERSHIP_STATUS.ACTIVE
         ),
         (acc, membership) => {
             const { name, email, id } = membership.student;

@@ -7,7 +7,7 @@ import reduce from 'lodash/reduce';
 import { CustomAddToolbar, SelectedDeleteToolbar, FlatTable } from 'components';
 import AddInstanceDialog from './AddInstanceDialog';
 import { parseInstancesToTableData } from '../parse';
-import { COURSE_STUDENT_STATUS } from 'constants/gql';
+import { MEMBERSHIP_STATUS } from 'constants/gql';
 
 const columns = [
     {
@@ -44,7 +44,7 @@ const InstancesTable = ({
         const studentIds = reduce(
             course.memberships,
             (result, membership) => {
-                if (membership.status === COURSE_STUDENT_STATUS.ACTIVE) {
+                if (membership.status === MEMBERSHIP_STATUS.ACTIVE) {
                     result.push(membership.student.id);
                     return result;
                 }

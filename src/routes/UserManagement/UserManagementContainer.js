@@ -3,8 +3,13 @@ import { Query, Mutation } from 'react-apollo';
 import { Adopt } from 'react-adopt';
 import filter from 'lodash/filter';
 
-import { GET_USERS, TOGGLE_USER_ADMIN_STATUS, DELETE_USER } from './graphql';
-import { MEDIUM_USER_FRAGMENT, SMALL_STUDENT_FRAGMENT } from 'graphql';
+import {
+    GET_USERS,
+    TOGGLE_USER_ADMIN_STATUS,
+    DELETE_USER,
+    USER_MANAGEMENT_STUDENT_FRAGMENT,
+} from './graphql';
+import { MEDIUM_USER_FRAGMENT } from 'graphql';
 import UserManagement from './UserManagement';
 
 const getUsers = ({ render }) => <Query query={GET_USERS}>{render}</Query>;
@@ -37,12 +42,14 @@ const deleteUser = ({ render }) => (
             if (user.student) {
                 const student = cache.readFragment({
                     id: `Student:${user.student.id}`,
-                    fragment: SMALL_STUDENT_FRAGMENT,
+                    fragment: USER_MANAGEMENT_STUDENT_FRAGMENT,
+                    fragmentName: 'UserManagementStudentFragment',
                 });
                 console.log('student is: ', student);
                 cache.writeFragment({
                     id: `Student:${student.id}`,
-                    fragment: SMALL_STUDENT_FRAGMENT,
+                    fragment: USER_MANAGEMENT_STUDENT_FRAGMENT,
+                    fragmentName: 'UserManagementStudentFragment',
                     data: {
                         ...student,
                         user: null,

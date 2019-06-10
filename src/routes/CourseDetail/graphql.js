@@ -160,7 +160,7 @@ export const DELETE_COURSE_STUDENT = gql`
     }
 `;
 
-export const UPDATE_COURSE_STUDENT_STATUS = gql`
+export const UPDATE_MEMBERSHIP_STATUS = gql`
     mutation StudentDetailUpdateMembershipStatus(
         $id: ID!
         $status: MembershipStatus!

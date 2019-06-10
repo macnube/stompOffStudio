@@ -9,7 +9,7 @@ import {
     parseActiveMembershipsToTableData,
     parseMembershipsByStatusToTableData,
 } from './parse';
-import { DANCE_ROLE, COURSE_STUDENT_STATUS } from 'constants/gql';
+import { DANCE_ROLE, MEMBERSHIP_STATUS } from 'constants/gql';
 import SelectedMembershipToolbar from './SelectedMembershipToolbar';
 import SelectedAddStudentWithWaitlistStatusToolbar from './SelectedAddStudentWithWaitlistStatusToolbar';
 
@@ -66,7 +66,7 @@ const StudentsTables = ({
                     courseId: course.id,
                     studentId,
                     role,
-                    status: COURSE_STUDENT_STATUS.ACTIVE,
+                    status: MEMBERSHIP_STATUS.ACTIVE,
                 },
             });
         });
@@ -80,7 +80,7 @@ const StudentsTables = ({
                     courseId: course.id,
                     studentId,
                     role,
-                    status: COURSE_STUDENT_STATUS.WAITLIST,
+                    status: MEMBERSHIP_STATUS.WAITLIST,
                 },
             });
         });
@@ -196,7 +196,7 @@ const StudentsTables = ({
                 title={'Waitlist'}
                 data={parseMembershipsByStatusToTableData(
                     course.memberships,
-                    COURSE_STUDENT_STATUS.WAITLIST
+                    MEMBERSHIP_STATUS.WAITLIST
                 )}
                 columns={waitlistColumns}
                 options={waitlistOptions}
@@ -205,7 +205,7 @@ const StudentsTables = ({
                 title={'Inactive'}
                 data={parseMembershipsByStatusToTableData(
                     course.memberships,
-                    COURSE_STUDENT_STATUS.INACTIVE
+                    MEMBERSHIP_STATUS.INACTIVE
                 )}
                 columns={columns}
                 options={studentOptions}

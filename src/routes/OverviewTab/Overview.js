@@ -3,8 +3,7 @@ import PropTypes from 'prop-types';
 import filter from 'lodash/filter';
 import { isAfter, parseISO } from 'date-fns';
 import { withRouter } from 'react-router-dom';
-import MUIDataTable from 'mui-datatables';
-import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
+import { createMuiTheme } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 
 import { FlatTable } from 'components';
@@ -78,17 +77,6 @@ const cardsColumns = [
 ];
 
 class Overview extends React.Component {
-    getMuiTheme = () =>
-        createMuiTheme({
-            overrides: {
-                MuiPaper: {
-                    elevation4: {
-                        boxShadow: '0 0 0 0',
-                    },
-                },
-            },
-        });
-
     navigateToInstance = instanceId => {
         this.props.history.push({
             pathname: './courseInstance',
@@ -140,36 +128,30 @@ class Overview extends React.Component {
 
         return (
             <Paper>
-                <MuiThemeProvider theme={this.getMuiTheme()}>
-                    <MUIDataTable
-                        title={'Unpaid Cards'}
-                        data={parseCardsToTableData(unpaidCards)}
-                        columns={cardsColumns}
-                        options={cardOptions}
-                    />
-                </MuiThemeProvider>
+                <FlatTable
+                    title={'Unpaid Cards'}
+                    data={parseCardsToTableData(unpaidCards)}
+                    columns={cardsColumns}
+                    options={cardOptions}
+                />
                 <FlatTable
                     title={'Unlinked Card Payments'}
                     data={parsePaymentsToTableData(unlinkedPayments)}
                     columns={paymentsColumns}
                     options={paymentOptions}
                 />
-                <MuiThemeProvider theme={this.getMuiTheme()}>
-                    <MUIDataTable
-                        title={'Recent Instances'}
-                        data={parseInstancesToTableData(recentInstances)}
-                        columns={instanceColumns}
-                        options={instanceOptions}
-                    />
-                </MuiThemeProvider>
-                <MuiThemeProvider theme={this.getMuiTheme()}>
-                    <MUIDataTable
-                        title={'Upcoming Instances'}
-                        data={parseInstancesToTableData(upcomingInstances)}
-                        columns={instanceColumns}
-                        options={instanceOptions}
-                    />
-                </MuiThemeProvider>
+                <FlatTable
+                    title={'Recent Instances'}
+                    data={parseInstancesToTableData(recentInstances)}
+                    columns={instanceColumns}
+                    options={instanceOptions}
+                />
+                <FlatTable
+                    title={'Upcoming Instances'}
+                    data={parseInstancesToTableData(upcomingInstances)}
+                    columns={instanceColumns}
+                    options={instanceOptions}
+                />
             </Paper>
         );
     }

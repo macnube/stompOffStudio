@@ -23,7 +23,6 @@ const LoginContainer = () => {
         <Adopt mapper={mapper}>
             {({ login: { mutation: loginMutation, result: loginResult } }) => {
                 if (loginResult.data) {
-                    console.log('data : ', loginResult.data);
                     const authUser = JSON.stringify(loginResult.data.login);
                     localStorage.setItem('authUser', authUser);
                     setUser({

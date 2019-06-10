@@ -1,6 +1,4 @@
 import 'date-fns';
-import parseISO from 'date-fns/parseISO';
-import format from 'date-fns/format';
 import React from 'react';
 import PropTypes from 'prop-types';
 import map from 'lodash/map';

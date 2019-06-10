@@ -7,7 +7,30 @@ import MUIDataTable from 'mui-datatables';
 import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 
-import { parseInstancesToTableData, parseCardsToTableData } from './parse';
+import { FlatTable } from 'components';
+import {
+    parseInstancesToTableData,
+    parseCardsToTableData,
+    parsePaymentsToTableData,
+} from './parse';
+
+const paymentsColumns = [
+    {
+        name: 'ID',
+        options: {
+            display: 'false',
+        },
+    },
+    {
+        name: 'Student Name',
+    },
+    {
+        name: 'Amount',
+    },
+    {
+        name: 'Date',
+    },
+];
 
 const instanceColumns = [
     {
@@ -101,7 +124,12 @@ class Overview extends React.Component {
             onRowClick: this.handleNavigateToStudent,
         };
 
-        const { instances, unpaidCards } = this.props;
+        const paymentOptions = {
+            responsive: 'scroll',
+            selectableRows: 'none',
+        };
+
+        const { instances, unpaidCards, unlinkedPayments } = this.props;
         const now = new Date();
         const recentInstances = filter(instances, instance => {
             return isAfter(now, parseISO(instance.date));
@@ -109,6 +137,8 @@ class Overview extends React.Component {
         const upcomingInstances = filter(instances, instance =>
             isAfter(parseISO(instance.date), now)
         );
+
+        console.log('unlinkedPayments are: ', unlinkedPayments);
         return (
             <Paper>
                 <MuiThemeProvider theme={this.getMuiTheme()}>
@@ -119,6 +149,12 @@ class Overview extends React.Component {
                         options={cardOptions}
                     />
                 </MuiThemeProvider>
+                <FlatTable
+                    title={'Unlinked Card Payments'}
+                    data={parsePaymentsToTableData(unlinkedPayments)}
+                    columns={paymentsColumns}
+                    options={paymentOptions}
+                />
                 <MuiThemeProvider theme={this.getMuiTheme()}>
                     <MUIDataTable
                         title={'Recent Instances'}
@@ -143,6 +179,7 @@ class Overview extends React.Component {
 Overview.propTypes = {
     instances: PropTypes.array.isRequired,
     unpaidCards: PropTypes.array.isRequired,
+    unlinkedPayments: PropTypes.array.isRequired,
 };
 
 export default withRouter(Overview);

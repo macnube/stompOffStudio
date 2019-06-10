@@ -17,6 +17,7 @@ import {
 } from 'components';
 import PaymentManagementStudentSelectDialog from './PaymentManagementStudentSelectDialog';
 import { PAYMENT_TYPE } from 'constants/gql';
+import { parsePaymentsToTableData } from './parse';
 
 const columns = [
     {
@@ -41,25 +42,6 @@ const columns = [
         name: 'Linked to Card',
     },
 ];
-
-const parsePaymentsToTableData = payments =>
-    reduce(
-        payments,
-        (acc, payment) => {
-            const linkedToCard = payment.card ? 'True' : 'False';
-            const result = [
-                payment.id,
-                payment.student.name,
-                payment.amount,
-                format(parseISO(payment.date), 'MMM do, yyyy'),
-                payment.type,
-                linkedToCard,
-            ];
-            acc.push(result);
-            return acc;
-        },
-        []
-    );
 
 class PaymentManagement extends Component {
     state = {

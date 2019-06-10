@@ -2,7 +2,11 @@ import React from 'react';
 import { Query } from 'react-apollo';
 import { Adopt } from 'react-adopt';
 
-import { GET_OVERVIEW_INSTANCES, GET_UNPAID_CARDS } from './graphql';
+import {
+    GET_OVERVIEW_INSTANCES,
+    GET_UNPAID_CARDS,
+    GET_UNLINKED_PAYMENTS,
+} from './graphql';
 import Overview from './Overview';
 
 const getOverviewInstances = ({ render }) => (
@@ -13,9 +17,14 @@ const getUnpaidCards = ({ render }) => (
     <Query query={GET_UNPAID_CARDS}>{render}</Query>
 );
 
+const getUnlinkedCardPayments = ({ render }) => (
+    <Query query={GET_UNLINKED_PAYMENTS}>{render}</Query>
+);
+
 const mapper = {
     getOverviewInstances,
     getUnpaidCards,
+    getUnlinkedCardPayments,
 };
 
 const OverviewContainer = () => (
@@ -31,6 +40,7 @@ const OverviewContainer = () => (
                 error: cardsError,
                 loading: cardsLoading,
             },
+            getUnlinkedCardPayments: { data: paymentsData },
         }) => {
             if (overviewLoading || cardsLoading) return null;
             if (overviewInstancesError)
@@ -41,6 +51,7 @@ const OverviewContainer = () => (
                     <Overview
                         instances={overviewInstancesData.overviewInstances}
                         unpaidCards={cardsData.unpaidCards}
+                        unlinkedPayments={paymentsData.unlinkedCardPayments}
                     />
                 );
             }

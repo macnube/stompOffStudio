@@ -52,3 +52,17 @@ export const GET_UNPAID_CARDS = gql`
         }
     }
 `;
+
+export const GET_UNLINKED_PAYMENTS = gql`
+    query OverviewGetUnpaidCards {
+        unlinkedCardPayments {
+            id
+            date
+            amount
+            student {
+                id
+                name
+            }
+        }
+    }
+`;

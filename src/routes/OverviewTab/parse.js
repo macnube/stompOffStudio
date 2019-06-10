@@ -73,3 +73,19 @@ export const parseCardsToTableData = cards =>
         },
         []
     );
+
+export const parsePaymentsToTableData = payments =>
+    reduce(
+        payments,
+        (acc, payment) => {
+            const result = [
+                payment.id,
+                payment.student.name,
+                payment.amount,
+                getTableDate(payment.date),
+            ];
+            acc.push(result);
+            return acc;
+        },
+        []
+    );

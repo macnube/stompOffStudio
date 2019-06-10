@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import styles from './styles';
 import MUIDataTable from 'mui-datatables';
-import CourseForm from './CourseForm';
+import CourseDialog from './CourseDialog';
 import AddIcon from '@material-ui/icons/Add';
 import Fab from '@material-ui/core/Fab';
 import { ContentToolbar, SelectedDeleteToolbar } from 'components';
@@ -109,7 +109,7 @@ class CourseManagement extends Component {
                         <AddIcon />
                     </Fab>
                 </ContentToolbar>
-                <CourseForm
+                <CourseDialog
                     open={this.state.open}
                     handleClose={this.handleClose}
                     navigateToCourseDetail={this.navigateToCourseDetail}

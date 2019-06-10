@@ -1,5 +1,4 @@
 import React from 'react';
-import { Redirect } from 'react-router-dom';
 import filter from 'lodash/filter';
 import { Query, Mutation } from 'react-apollo';
 import { Adopt } from 'react-adopt';
@@ -52,26 +51,11 @@ const CourseManagementContainer = () => (
         {({
             getCourses: { data, loading, error },
             deleteCourse: { mutation: deleteCourseMutation },
-            createCourse: {
-                mutation: createCourseMutation,
-                result: createCourseResult,
-            },
+            createCourse: { mutation: createCourseMutation },
         }) => {
             if (loading) return null;
             if (error) return `Error: ${error}`;
             if (!data.courses) return `404: Session not found`;
-            if (createCourseResult.data) {
-                return (
-                    <Redirect
-                        to={{
-                            pathname: '/courseDetail',
-                            search: `id=${
-                                createCourseResult.data.createCourse.id
-                            }`,
-                        }}
-                    />
-                );
-            }
             return (
                 <CourseManagement
                     courses={data.courses}

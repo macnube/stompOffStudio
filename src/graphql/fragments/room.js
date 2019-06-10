@@ -13,6 +13,7 @@ export const MEDIUM_ROOM_FRAGMENT = gql`
         ...SmallRoomFragment
         studio {
             id
+            name
         }
     }
     ${SMALL_ROOM_FRAGMENT}

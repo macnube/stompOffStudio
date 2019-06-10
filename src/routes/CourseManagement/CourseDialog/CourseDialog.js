@@ -22,7 +22,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import { COURSE_DAYS, COURSE_DAY } from 'constants/gql';
 import styles from 'routes/CourseManagement/styles';
 
-class CourseForm extends React.Component {
+class CourseDialog extends React.Component {
     state = {
         name: '',
         description: '',
@@ -118,41 +118,45 @@ class CourseForm extends React.Component {
                             onChange={this.handleChange('description')}
                             margin="normal"
                         />
-                        <TextField
-                            id="standard-select-studio-native"
-                            select
-                            label="Select Studio"
-                            value={studioId}
-                            className={classes.textField}
-                            onChange={this.handleChange('studioId')}
-                            margin="normal"
-                        >
-                            {map(studios, s => (
-                                <MenuItem key={s.id} value={s.id}>
-                                    {s.name}
-                                </MenuItem>
-                            ))}
-                        </TextField>
-                        <TextField
-                            id="standard-select-room-native"
-                            select
-                            label="Select Room"
-                            value={roomId}
-                            className={classes.textField}
-                            onChange={this.handleChange('roomId')}
-                            margin="normal"
-                            disabled={!studioId}
-                        >
-                            {studioId &&
-                                map(
-                                    find(studios, { id: studioId }).rooms,
-                                    r => (
-                                        <MenuItem key={r.id} value={r.id}>
-                                            {r.name}
-                                        </MenuItem>
-                                    )
-                                )}
-                        </TextField>
+                        {studios ? (
+                            <TextField
+                                id="standard-select-studio-native"
+                                select
+                                label="Select Studio"
+                                value={studioId}
+                                className={classes.textField}
+                                onChange={this.handleChange('studioId')}
+                                margin="normal"
+                            >
+                                {map(studios, s => (
+                                    <MenuItem key={s.id} value={s.id}>
+                                        {s.name}
+                                    </MenuItem>
+                                ))}
+                            </TextField>
+                        ) : null}
+                        {studios ? (
+                            <TextField
+                                id="standard-select-room-native"
+                                select
+                                label="Select Room"
+                                value={roomId}
+                                className={classes.textField}
+                                onChange={this.handleChange('roomId')}
+                                margin="normal"
+                                disabled={!studioId}
+                            >
+                                {studioId &&
+                                    map(
+                                        find(studios, { id: studioId }).rooms,
+                                        r => (
+                                            <MenuItem key={r.id} value={r.id}>
+                                                {r.name}
+                                            </MenuItem>
+                                        )
+                                    )}
+                            </TextField>
+                        ) : null}
                         <TextField
                             id="standard-select-room-native"
                             select
@@ -227,7 +231,7 @@ class CourseForm extends React.Component {
     }
 }
 
-CourseForm.propTypes = {
+CourseDialog.propTypes = {
     classes: PropTypes.object.isRequired,
     open: PropTypes.bool.isRequired,
     studios: PropTypes.array.isRequired,
@@ -235,4 +239,4 @@ CourseForm.propTypes = {
     handleClose: PropTypes.func.isRequired,
 };
 
-export default withStyles(styles)(CourseForm);
+export default withStyles(styles)(CourseDialog);

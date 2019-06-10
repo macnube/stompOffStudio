@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import filter from 'lodash/filter';
 import { isAfter, parseISO } from 'date-fns';
 import { withRouter } from 'react-router-dom';
-import { createMuiTheme } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 
 import { FlatTable } from 'components';

@@ -1,44 +1,33 @@
 import gql from 'graphql-tag';
 
+import {
+    MEDIUM_COURSE_FRAGMENT,
+    MEDIUM_ROOM_FRAGMENT,
+    SMALL_TEACHER_FRAGMENT,
+} from 'graphql';
+
+const COURSE_MANAGEMENT_COURSE_FRAGMENT = gql`
+    fragment CourseManagementCourseFragment on Course {
+        ...MediumCourseFragment
+        teachers {
+            ...SmallTeacherFragment
+        }
+        room {
+            ...MediumRoomFragment
+        }
+    }
+    ${MEDIUM_COURSE_FRAGMENT}
+    ${MEDIUM_ROOM_FRAGMENT}
+    ${SMALL_TEACHER_FRAGMENT}
+`;
+
 export const GET_COURSES = gql`
     query CourseManagementGetCourses {
         courses {
-            id
-            name
-            description
-            day
-            startTime
-            duration
-            teachers {
-                id
-                name
-            }
-            memberships {
-                id
-                student {
-                    id
-                    name
-                }
-                course {
-                    id
-                }
-                role
-            }
-            instances {
-                id
-            }
-            studentLimit
-            room {
-                id
-                name
-                capacity
-                studio {
-                    id
-                    name
-                }
-            }
+            ...CourseManagementCourseFragment
         }
     }
+    ${COURSE_MANAGEMENT_COURSE_FRAGMENT}
 `;
 
 export const CREATE_COURSE = gql`
@@ -62,35 +51,10 @@ export const CREATE_COURSE = gql`
             roomId: $roomId
             day: $day
         ) {
-            id
-            name
-            description
-            startDate
-            startTime
-            duration
-            day
-            teachers {
-                id
-                name
-            }
-            memberships {
-                id
-                student {
-                    id
-                    name
-                }
-                role
-            }
-            instances {
-                id
-            }
-            studentLimit
-            room {
-                id
-                name
-            }
+            ...CourseManagementCourseFragment
         }
     }
+    ${COURSE_MANAGEMENT_COURSE_FRAGMENT}
 `;
 
 export const DELETE_COURSE = gql`

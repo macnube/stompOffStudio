@@ -98,6 +98,24 @@ export const createPayment = ({ render }) => (
             } catch (error) {
                 console.log('error is :', error);
             }
+            const { student } = cache.readQuery({
+                query: GET_STUDENT,
+                variables: { id: createPayment.student.id },
+            });
+
+            if (student) {
+                let newStudent = {
+                    ...student,
+                    payments: student.payments.concat([createPayment]),
+                };
+                cache.writeQuery({
+                    query: GET_STUDENT,
+                    variables: { id: student.id },
+                    data: {
+                        student: newStudent,
+                    },
+                });
+            }
         }}
     >
         {(mutation, result) => render({ mutation, result })}

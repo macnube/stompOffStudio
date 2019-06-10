@@ -297,7 +297,6 @@ const mapper = {
 
 const StudentDetailContainer = ({ location }) => {
     const params = parse(location.search);
-    console.log('mapper is: ', mapper);
     if (params.id) {
         return (
             <Adopt mapper={mapper} id={params.id}>

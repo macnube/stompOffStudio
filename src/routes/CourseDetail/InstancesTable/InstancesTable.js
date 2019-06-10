@@ -42,10 +42,10 @@ const InstancesTable = ({
     const handleCreate = instance => {
         const { topic, notes, recapUrl, date } = instance;
         const studentIds = reduce(
-            course.courseStudents,
-            (result, courseStudent) => {
-                if (courseStudent.status === COURSE_STUDENT_STATUS.ACTIVE) {
-                    result.push(courseStudent.student.id);
+            course.memberships,
+            (result, membership) => {
+                if (membership.status === COURSE_STUDENT_STATUS.ACTIVE) {
+                    result.push(membership.student.id);
                     return result;
                 }
                 return result;

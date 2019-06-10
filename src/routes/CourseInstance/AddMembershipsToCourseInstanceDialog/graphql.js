@@ -6,7 +6,7 @@ export const GET_STUDENTS = gql`
             id
             email
             name
-            courses {
+            memberships {
                 id
                 course {
                     id
@@ -36,7 +36,7 @@ export const ADD_PARTICIPANT_TO_INSTANCE = gql`
                     id
                     name
                     email
-                    courses {
+                    memberships {
                         id
                     }
                     cards {
@@ -58,7 +58,7 @@ export const ADD_PARTICIPANT_TO_INSTANCE = gql`
             }
             course {
                 id
-                courseStudents {
+                memberships {
                     id
                     student {
                         id

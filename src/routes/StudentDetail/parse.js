@@ -2,14 +2,14 @@ import reduce from 'lodash/reduce';
 
 import { getTableDate } from 'utils/date';
 
-export const parseCourseStudentsToTableData = courseStudents =>
+export const parseMembershipsToTableData = memberships =>
     reduce(
-        courseStudents,
-        (acc, courseStudent) => {
+        memberships,
+        (acc, membership) => {
             const result = [
-                courseStudent.id,
-                courseStudent.course.name,
-                courseStudent.role,
+                membership.id,
+                membership.course.name,
+                membership.role,
             ];
             acc.push(result);
             return acc;

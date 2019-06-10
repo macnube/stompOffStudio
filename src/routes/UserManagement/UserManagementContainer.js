@@ -4,6 +4,7 @@ import { Adopt } from 'react-adopt';
 import filter from 'lodash/filter';
 
 import { GET_USERS, TOGGLE_USER_ADMIN_STATUS, DELETE_USER } from './graphql';
+import { MEDIUM_USER_FRAGMENT, SMALL_STUDENT_FRAGMENT } from 'graphql';
 import UserManagement from './UserManagement';
 
 const getUsers = ({ render }) => <Query query={GET_USERS}>{render}</Query>;
@@ -27,6 +28,27 @@ const deleteUser = ({ render }) => (
                     users: filter(users, user => user.id !== deleteUser.id),
                 },
             });
+            const user = cache.readFragment({
+                id: `User:${deleteUser.id}`,
+                fragment: MEDIUM_USER_FRAGMENT,
+                fragmentName: 'MediumUserFragment',
+            });
+            console.log('user is: ', user);
+            if (user.student) {
+                const student = cache.readFragment({
+                    id: `Student:${user.student.id}`,
+                    fragment: SMALL_STUDENT_FRAGMENT,
+                });
+                console.log('student is: ', student);
+                cache.writeFragment({
+                    id: `Student:${student.id}`,
+                    fragment: SMALL_STUDENT_FRAGMENT,
+                    data: {
+                        ...student,
+                        user: null,
+                    },
+                });
+            }
         }}
     >
         {(mutation, result) => render({ mutation, result })}

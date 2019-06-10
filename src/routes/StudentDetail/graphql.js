@@ -1,5 +1,7 @@
 import gql from 'graphql-tag';
 
+import { SMALL_USER_FRAGMENT, SMALL_STUDENT_FRAGMENT } from 'graphql';
+
 export const GET_STUDENT = gql`
     query StudentDetailGetStudent($id: ID!) {
         student(id: $id) {
@@ -8,7 +10,7 @@ export const GET_STUDENT = gql`
             email
             mobile
             hasReferralBonus
-            courses {
+            memberships {
                 id
                 course {
                     id
@@ -76,8 +78,8 @@ export const UPDATE_STUDENT = gql`
 `;
 
 export const DELETE_COURSE_STUDENT = gql`
-    mutation StudentDetailDeleteCourseStudent($id: ID!) {
-        deleteCourseStudent(id: $id) {
+    mutation StudentDetailDeleteMembership($id: ID!) {
+        deleteMembership(id: $id) {
             id
         }
     }
@@ -182,4 +184,24 @@ export const CLEAR_REFERRAL_BONUS = gql`
             hasReferralBonus
         }
     }
+`;
+
+export const CREATE_USER = gql`
+    mutation UserManagementCreateUser(
+        $email: String!
+        $password: String!
+        $studentId: ID!
+    ) {
+        createUser(email: $email, password: $password, studentId: $studentId) {
+            ...SmallUserFragment
+            student {
+                ...SmallStudentFragment
+                user {
+                    ...SmallUserFragment
+                }
+            }
+        }
+    }
+    ${SMALL_STUDENT_FRAGMENT}
+    ${SMALL_USER_FRAGMENT}
 `;

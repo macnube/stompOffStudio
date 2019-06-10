@@ -14,7 +14,7 @@ export const GET_COURSES = gql`
                 id
                 name
             }
-            courseStudents {
+            memberships {
                 id
                 course {
                     id
@@ -32,12 +32,12 @@ export const GET_COURSES = gql`
 // This mutation needs to update the necessary UI for Course Detail
 // And for student detail
 export const CREATE_COURSE_STUDENT = gql`
-    mutation StudentDetailCreateCourseStudent(
+    mutation StudentDetailCreateMembership(
         $courseId: ID!
         $studentId: ID!
         $role: DanceRole!
     ) {
-        createCourseStudent(
+        createMembership(
             courseId: $courseId
             studentId: $studentId
             role: $role
@@ -47,7 +47,7 @@ export const CREATE_COURSE_STUDENT = gql`
             course {
                 id
                 name
-                courseStudents {
+                memberships {
                     id
                 }
             }
@@ -55,7 +55,7 @@ export const CREATE_COURSE_STUDENT = gql`
                 id
                 name
                 email
-                courses {
+                memberships {
                     id
                 }
             }

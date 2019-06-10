@@ -56,8 +56,8 @@ class CourseDetail extends Component {
             createCourseInstance,
             deleteCourseInstance,
             removeTeacherFromCourse,
-            createCourseStudent,
-            updateCourseStudentStatus,
+            createMembership,
+            updateMembershipStatus,
             history,
         } = this.props;
         const {
@@ -90,8 +90,8 @@ class CourseDetail extends Component {
                         openFollowers={openCourseFollowersForm}
                         openWaitlist={openCourseWaitlistForm}
                         course={course}
-                        createCourseStudent={createCourseStudent}
-                        updateCourseStudentStatus={updateCourseStudentStatus}
+                        createMembership={createMembership}
+                        updateMembershipStatus={updateMembershipStatus}
                         handleOpenDialog={this.handleOpenDialog}
                         handleClose={this.handleClose}
                     />
@@ -119,11 +119,11 @@ CourseDetail.propTypes = {
     course: PropTypes.object.isRequired,
     updateCourse: PropTypes.func.isRequired,
     removeTeacherFromCourse: PropTypes.func.isRequired,
-    deleteCourseStudent: PropTypes.func.isRequired,
+    deleteMembership: PropTypes.func.isRequired,
     createCourseInstance: PropTypes.func.isRequired,
     deleteCourseInstance: PropTypes.func.isRequired,
-    updateCourseStudentStatus: PropTypes.func.isRequired,
-    createCourseStudent: PropTypes.func.isRequired,
+    updateMembershipStatus: PropTypes.func.isRequired,
+    createMembership: PropTypes.func.isRequired,
     history: PropTypes.object.isRequired,
 };
 

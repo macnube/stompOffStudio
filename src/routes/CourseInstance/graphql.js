@@ -23,7 +23,7 @@ export const GET_COURSE_INSTANCE = gql`
                     id
                     name
                     email
-                    courses {
+                    memberships {
                         id
                     }
                     cards {
@@ -45,7 +45,7 @@ export const GET_COURSE_INSTANCE = gql`
             }
             course {
                 id
-                courseStudents {
+                memberships {
                     id
                     student {
                         id

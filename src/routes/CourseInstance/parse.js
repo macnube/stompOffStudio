@@ -4,7 +4,7 @@ import map from 'lodash/map';
 
 export const parseInstanceToTableData = instance => {
     const participantsWithRole = map(instance.participants, participant => {
-        const role = find(instance.course.courseStudents, {
+        const role = find(instance.course.memberships, {
             student: { id: participant.student.id },
         }).role;
         return { ...participant, role };

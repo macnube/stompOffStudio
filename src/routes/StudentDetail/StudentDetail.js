@@ -12,7 +12,7 @@ import StudentDetailHeader from './StudentDetailHeader';
 
 class StudentDetail extends Component {
     state = {
-        openCourseStudentDialog: false,
+        openMembershipDialog: false,
         openCardDialog: false,
         openPaymentDialog: false,
         openUpdateCardDialog: false,
@@ -38,7 +38,7 @@ class StudentDetail extends Component {
 
     handleClose = () => {
         this.setState({
-            openCourseStudentDialog: false,
+            openMembershipDialog: false,
             openCardDialog: false,
             openPaymentDialog: false,
         });
@@ -79,16 +79,17 @@ class StudentDetail extends Component {
             deleteCard,
             createPayment,
             deletePayment,
-            deleteCourseStudent,
+            deleteMembership,
             payCard,
             unpayCard,
             history,
         } = this.props;
         const {
-            openCourseStudentDialog,
+            openMembershipDialog,
             openCardDialog,
             openPaymentDialog,
         } = this.state;
+        console.log('student is: ', student);
         return (
             <div>
                 <Paper>
@@ -100,11 +101,11 @@ class StudentDetail extends Component {
                         canCreateUser={!student.user}
                     />
                     <CoursesTable
-                        open={openCourseStudentDialog}
+                        open={openMembershipDialog}
                         student={student}
-                        deleteCourseStudent={deleteCourseStudent}
+                        deleteMembership={deleteMembership}
                         handleAdd={() =>
-                            this.handleOpenDialog('openCourseStudentDialog')
+                            this.handleOpenDialog('openMembershipDialog')
                         }
                         handleClose={this.handleClose}
                         history={history}
@@ -143,7 +144,7 @@ StudentDetail.propTypes = {
     student: PropTypes.object.isRequired,
     clearReferralBonus: PropTypes.func.isRequired,
     updateStudent: PropTypes.func.isRequired,
-    deleteCourseStudent: PropTypes.func.isRequired,
+    deleteMembership: PropTypes.func.isRequired,
     createCard: PropTypes.func.isRequired,
     deleteCard: PropTypes.func.isRequired,
     createPayment: PropTypes.func.isRequired,

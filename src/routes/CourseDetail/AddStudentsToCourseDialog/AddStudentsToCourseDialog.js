@@ -25,7 +25,7 @@ const parseStudentsToTableData = (students, courseId) =>
     reduce(
         students,
         (acc, student) => {
-            if (some(student.courses, { course: { id: courseId } })) {
+            if (some(student.memberships, { course: { id: courseId } })) {
                 return acc;
             }
             const { id, name, email } = student;

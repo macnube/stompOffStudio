@@ -18,7 +18,7 @@ export const GET_OVERVIEW_INSTANCES = gql`
             course {
                 id
                 name
-                courseStudents {
+                memberships {
                     id
                     student {
                         id

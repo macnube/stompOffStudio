@@ -43,7 +43,7 @@ const parseStudentsToTableData = (students, courseInstance) => {
     );
 };
 
-const AddCourseStudentsToCourseInstanceDialog = ({
+const AddMembershipsToCourseInstanceDialog = ({
     students,
     open,
     handleClose,
@@ -90,7 +90,7 @@ const AddCourseStudentsToCourseInstanceDialog = ({
     );
 };
 
-AddCourseStudentsToCourseInstanceDialog.propTypes = {
+AddMembershipsToCourseInstanceDialog.propTypes = {
     open: PropTypes.bool.isRequired,
     handleClose: PropTypes.func.isRequired,
     addParticipantToCourseInstance: PropTypes.func.isRequired,
@@ -98,4 +98,4 @@ AddCourseStudentsToCourseInstanceDialog.propTypes = {
     courseInstance: PropTypes.object.isRequired,
 };
 
-export default AddCourseStudentsToCourseInstanceDialog;
+export default AddMembershipsToCourseInstanceDialog;

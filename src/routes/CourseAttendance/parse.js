@@ -5,22 +5,21 @@ import includes from 'lodash/includes';
 
 import { PARTICIPANT_STATUS } from 'contants/gql';
 
-export const parseCourseStudentsToTableData = (
-    courseStudents,
-    participantCourseStudentIds
+export const parseMembershipsToTableData = (
+    memberships,
+    participantMembershipIds
 ) =>
     reduce(
         filter(
-            courseStudents,
-            courseStudent =>
-                !includes(participantCourseStudentIds, courseStudent.id)
+            memberships,
+            membership => !includes(participantMembershipIds, membership.id)
         ),
-        (acc, courseStudent) => {
+        (acc, membership) => {
             const result = [
-                courseStudent.id,
-                courseStudent.student.name,
-                courseStudent.student.email,
-                courseStudent.role,
+                membership.id,
+                membership.student.name,
+                membership.student.email,
+                membership.role,
             ];
             acc.push(result);
             return acc;
@@ -34,10 +33,10 @@ export const parseParticipantsToTableData = participants =>
         (acc, participant) => {
             const result = [
                 participant.id,
-                participant.courseStudent.student.id,
-                participant.courseStudent.student.name,
-                participant.courseStudent.student.email,
-                participant.courseStudent.role,
+                participant.membership.student.id,
+                participant.membership.student.name,
+                participant.membership.student.email,
+                participant.membership.role,
                 participant.status,
             ];
             acc.push(result);
@@ -47,18 +46,18 @@ export const parseParticipantsToTableData = participants =>
     );
 
 export const getCourseInstanceStudents = courseInstance => {
-    const absentCourseStudentIds = [];
-    const presentCourseStudentIds = [];
+    const absentMembershipIds = [];
+    const presentMembershipIds = [];
     forEach(courseInstance.participants, participant => {
         if (participant.status === PARTICIPANT_STATUS.ABSENT) {
-            absentCourseStudentIds.push(participant.courseStudent.id);
+            absentMembershipIds.push(participant.membership.id);
         } else if (participant.status === PARTICIPANT_STATUS.PRESENT) {
-            presentCourseStudentIds.push(participant.courseStudent.id);
+            presentMembershipIds.push(participant.membership.id);
         }
     });
     return reduce(
-        courseInstance.course.courseStudents,
-        (result, courseStudent) => {},
+        courseInstance.course.memberships,
+        (result, membership) => {},
         []
     );
 };

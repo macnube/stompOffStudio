@@ -13,7 +13,7 @@ export const GET_COURSES = gql`
                 id
                 name
             }
-            courseStudents {
+            memberships {
                 id
                 student {
                     id
@@ -73,7 +73,7 @@ export const CREATE_COURSE = gql`
                 id
                 name
             }
-            courseStudents {
+            memberships {
                 id
                 student {
                     id

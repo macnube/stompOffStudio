@@ -1,0 +1,3 @@
+import AddMembershipsToCourseInstanceDialogContainer from './AddMembershipsToCourseInstanceDialogContainer';
+
+export default AddMembershipsToCourseInstanceDialogContainer;

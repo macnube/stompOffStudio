@@ -10,11 +10,10 @@ export const SMALL_ROOM_FRAGMENT = gql`
 
 export const MEDIUM_ROOM_FRAGMENT = gql`
     fragment SmallRoomFragment on Room {
-        id
-        name
-        capacity
+        ...SmallRoomFragment
         studio {
             id
         }
     }
+    ${SMALL_ROOM_FRAGMENT}
 `;

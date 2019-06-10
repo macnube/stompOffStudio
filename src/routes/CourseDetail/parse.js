@@ -4,41 +4,35 @@ import reduce from 'lodash/reduce';
 import { PARTICIPANT_STATUS, COURSE_STUDENT_STATUS } from 'constants/gql';
 import { getTableDate } from 'utils/date';
 
-export const parseActiveCourseStudentsToTableData = (courseStudents, role) =>
+export const parseActiveMembershipsToTableData = (memberships, role) =>
     reduce(
         filter(
-            courseStudents,
-            courseStudent =>
-                courseStudent.role === role &&
-                courseStudent.status === COURSE_STUDENT_STATUS.ACTIVE
+            memberships,
+            membership =>
+                membership.role === role &&
+                membership.status === COURSE_STUDENT_STATUS.ACTIVE
         ),
-        (acc, courseStudent) => {
-            const { name, email, id } = courseStudent.student;
-            const result = [courseStudent.id, id, name, email];
+        (acc, membership) => {
+            const { name, email, id } = membership.student;
+            const result = [membership.id, id, name, email];
             acc.push(result);
             return acc;
         },
         []
     );
 
-export const parseCourseStudentsByStatusToTableData = (
-    courseStudents,
-    status
-) =>
+export const parseMembershipsByStatusToTableData = (memberships, status) =>
     reduce(
-        filter(
-            courseStudents,
-            courseStudent => courseStudent.status === status
-        ),
-        (acc, courseStudent) => {
-            const { name, email, id } = courseStudent.student;
+        filter(memberships, membership => membership.status === status),
+        (acc, membership) => {
+            const { name, email, id } = membership.student;
             const result = [
-                courseStudent.id,
+                membership.id,
                 id,
                 name,
                 email,
-                courseStudent.waitlistDate
-                    ? getTableDate(courseStudent.waitlistDate)
+                membership.waitlistDate
+                    ? getTableDate(membership.waitlistDate)
                     : '',
             ];
             acc.push(result);

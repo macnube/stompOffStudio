@@ -22,11 +22,11 @@ const getRoleCount = (instance, role) => {
         instance.participants
     );
     return reduce(
-        instance.course.courseStudents,
-        (result, courseStudent) => {
+        instance.course.memberships,
+        (result, membership) => {
             if (
-                courseStudent.role === role &&
-                !includes(absentStudentIds, courseStudent.student.id)
+                membership.role === role &&
+                !includes(absentStudentIds, membership.student.id)
             ) {
                 return ++result;
             }

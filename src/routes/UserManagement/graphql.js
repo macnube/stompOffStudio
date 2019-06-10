@@ -1,56 +1,30 @@
 import gql from 'graphql-tag';
 
+import { SMALL_USER_FRAGMENT, MEDIUM_USER_FRAGMENT } from 'graphql';
+
 export const GET_USERS = gql`
     query UserManagementGetUsers {
         users {
-            id
-            email
-            admin
-            student {
-                id
-                name
-            }
+            ...MediumUserFragment
         }
     }
+    ${MEDIUM_USER_FRAGMENT}
 `;
 
 export const TOGGLE_USER_ADMIN_STATUS = gql`
     mutation UserManagementToggleUserAdminStatus($id: ID!) {
         toggleUserAdminStatus(id: $id) {
-            id
-            email
-            admin
+            ...SmallUserFragment
         }
     }
+    ${SMALL_USER_FRAGMENT}
 `;
 
 export const DELETE_USER = gql`
     mutation UserManagementDeleteUser($id: ID!) {
         deleteUser(id: $id) {
-            id
+            ...SmallUserFragment
         }
     }
-`;
-
-export const CREATE_USER = gql`
-    mutation UserManagementCreateUser(
-        $email: String!
-        $password: String!
-        $studentId: ID!
-    ) {
-        createUser(email: $email, password: $password, studentId: $studentId) {
-            id
-            email
-            password
-            admin
-            student {
-                id
-                name
-                user {
-                    id
-                    email
-                }
-            }
-        }
-    }
+    ${SMALL_USER_FRAGMENT}
 `;

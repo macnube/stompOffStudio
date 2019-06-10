@@ -45,8 +45,8 @@ const parseStudentsToTableData = students =>
         students,
         (acc, student) => {
             const courseNames = map(
-                student.courses,
-                courseStudent => courseStudent.course.name
+                student.memberships,
+                membership => membership.course.name
             ).join(', ');
             const result = [
                 student.id,

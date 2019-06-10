@@ -16,9 +16,10 @@ import {
     UNPAY_CARD,
     GET_CARD_FRAGMENT,
     CLEAR_REFERRAL_BONUS,
+    CREATE_USER,
 } from './graphql';
 import { DELETE_PAYMENT, GET_PAYMENTS } from 'routes/PaymentManagement/graphql';
-import { GET_USERS, CREATE_USER } from 'routes/UserManagement/graphql';
+import { GET_USERS } from 'routes/UserManagement/graphql';
 import { createPayment } from 'routes/PaymentManagement/PaymentManagementContainer';
 import StudentDetail from './StudentDetail';
 
@@ -144,10 +145,10 @@ const deleteCard = ({ render, id }) => (
     </Mutation>
 );
 
-const deleteCourseStudent = ({ render, id }) => (
+const deleteMembership = ({ render, id }) => (
     <Mutation
         mutation={DELETE_COURSE_STUDENT}
-        update={(cache, { data: { deleteCourseStudent } }) => {
+        update={(cache, { data: { deleteMembership } }) => {
             const { student } = cache.readQuery({
                 query: GET_STUDENT,
                 variables: {
@@ -162,9 +163,9 @@ const deleteCourseStudent = ({ render, id }) => (
                 data: {
                     student: {
                         ...student,
-                        courses: filter(
-                            student.courses,
-                            course => course.id !== deleteCourseStudent.id
+                        memberships: filter(
+                            student.memberships,
+                            membership => membership.id !== deleteMembership.id
                         ),
                     },
                 },
@@ -278,7 +279,7 @@ export const unpayCard = ({ render }) => (
 
 const mapper = {
     getStudent,
-    deleteCourseStudent,
+    deleteMembership,
     updateStudent,
     createCard,
     deleteCard,
@@ -298,9 +299,7 @@ const StudentDetailContainer = ({ location }) => {
             <Adopt mapper={mapper} id={params.id}>
                 {({
                     getStudent: { data, loading, error },
-                    deleteCourseStudent: {
-                        mutation: deleteCourseStudentMutation,
-                    },
+                    deleteMembership: { mutation: deleteMembershipMutation },
                     updateStudent: { mutation: updateStudentMutation },
                     deleteCard: { mutation: deleteCardMutation },
                     createCard: { mutation: createCardMutation },
@@ -319,7 +318,7 @@ const StudentDetailContainer = ({ location }) => {
                     return (
                         <StudentDetail
                             student={data.student}
-                            deleteCourseStudent={deleteCourseStudentMutation}
+                            deleteMembership={deleteMembershipMutation}
                             updateStudent={updateStudentMutation}
                             deleteCard={deleteCardMutation}
                             createCard={createCardMutation}

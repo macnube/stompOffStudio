@@ -1,5 +1,14 @@
 import gql from 'graphql-tag';
 
+import { SMALL_STUDENT_FRAGMENT } from 'graphql';
+
+const STUDENT_MANAGEMENT_STUDENT_FRAGMENT = gql`
+    fragment StudentManagementStudentFragment on Student {
+        ...SmallStudentFragment
+    }
+    ${SMALL_STUDENT_FRAGMENT}
+`;
+
 export const GET_STUDENTS = gql`
     query StudentManagementGetStudents {
         students {
@@ -7,7 +16,7 @@ export const GET_STUDENTS = gql`
             name
             email
             mobile
-            courses {
+            memberships {
                 id
                 course {
                     id
@@ -37,7 +46,7 @@ export const CREATE_STUDENT = gql`
             name
             email
             mobile
-            courses {
+            memberships {
                 id
                 course {
                     id

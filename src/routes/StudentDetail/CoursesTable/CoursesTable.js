@@ -4,8 +4,8 @@ import forEach from 'lodash/forEach';
 import find from 'lodash/find';
 
 import { CustomAddToolbar, SelectedDeleteToolbar, FlatTable } from 'components';
-import { parseCourseStudentsToTableData } from 'routes/StudentDetail/parse';
-import AddCourseStudentDialog from './AddCourseStudentDialog';
+import { parseMembershipsToTableData } from 'routes/StudentDetail/parse';
+import AddMembershipDialog from './AddMembershipDialog';
 
 const columns = [
     {
@@ -26,13 +26,13 @@ const CardsTable = ({
     student,
     open,
     handleAdd,
-    deleteCourseStudent,
+    deleteMembership,
     handleClose,
     history,
 }) => {
     const handleOnDeletePress = ids => {
         forEach(ids, id => {
-            deleteCourseStudent({
+            deleteMembership({
                 variables: { id },
             });
         });
@@ -50,12 +50,12 @@ const CardsTable = ({
     );
 
     const handleOnCourseClick = rowData => {
-        const courseStudent = find(student.courses, {
+        const membership = find(student.memberships, {
             id: rowData[0],
         });
         history.push({
             pathname: './courseDetail',
-            search: `id=${courseStudent.course.id}`,
+            search: `id=${membership.course.id}`,
         });
     };
 
@@ -69,11 +69,11 @@ const CardsTable = ({
         <Fragment>
             <FlatTable
                 title={'Active Registered Courses'}
-                data={parseCourseStudentsToTableData(student.courses)}
+                data={parseMembershipsToTableData(student.memberships)}
                 columns={columns}
                 options={options}
             />
-            <AddCourseStudentDialog
+            <AddMembershipDialog
                 open={open}
                 handleClose={handleClose}
                 studentId={student.id}
@@ -86,7 +86,7 @@ CardsTable.propTypes = {
     student: PropTypes.object.isRequired,
     handleAdd: PropTypes.func.isRequired,
     handleClose: PropTypes.func.isRequired,
-    deleteCourseStudent: PropTypes.func.isRequired,
+    deleteMembership: PropTypes.func.isRequired,
     open: PropTypes.bool.isRequired,
     history: PropTypes.object.isRequired,
 };

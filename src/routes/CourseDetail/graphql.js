@@ -15,7 +15,7 @@ const DETAIL_COURSE_FRAGMENT = gql`
             name
             email
         }
-        courseStudents {
+        memberships {
             id
             student {
                 id
@@ -122,13 +122,13 @@ export const REMOVE_TEACHER_FROM_COURSE = gql`
 `;
 
 export const CREATE_COURSE_STUDENT = gql`
-    mutation StudentDetailCreateCourseStudent(
+    mutation StudentDetailCreateMembership(
         $courseId: ID!
         $studentId: ID!
         $role: DanceRole!
-        $status: CourseStudentStatus
+        $status: MembershipStatus
     ) {
-        createCourseStudent(
+        createMembership(
             courseId: $courseId
             studentId: $studentId
             role: $role
@@ -143,7 +143,7 @@ export const CREATE_COURSE_STUDENT = gql`
                 id
                 name
                 email
-                courses {
+                memberships {
                     id
                 }
             }
@@ -153,19 +153,19 @@ export const CREATE_COURSE_STUDENT = gql`
 `;
 
 export const DELETE_COURSE_STUDENT = gql`
-    mutation StudentDetailDeleteCourseStudent($id: ID!) {
-        deleteCourseStudent(id: $id) {
+    mutation StudentDetailDeleteMembership($id: ID!) {
+        deleteMembership(id: $id) {
             id
         }
     }
 `;
 
 export const UPDATE_COURSE_STUDENT_STATUS = gql`
-    mutation StudentDetailUpdateCourseStudentStatus(
+    mutation StudentDetailUpdateMembershipStatus(
         $id: ID!
-        $status: CourseStudentStatus!
+        $status: MembershipStatus!
     ) {
-        updateCourseStudentStatus(id: $id, status: $status) {
+        updateMembershipStatus(id: $id, status: $status) {
             id
             student {
                 id
@@ -185,7 +185,7 @@ export const UPDATE_COURSE_STUDENT_STATUS = gql`
 export const GET_STUDENT_FRAGMENT = gql`
     fragment CourseDetailStudent on Student {
         id
-        courses {
+        memberships {
             id
         }
     }

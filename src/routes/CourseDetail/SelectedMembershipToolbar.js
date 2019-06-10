@@ -6,11 +6,12 @@ import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Add';
 import { withStyles } from '@material-ui/core/styles';
 
+import { COURSE_STUDENT_STATUS } from 'constants/gql';
 import styles from './styles';
 
-const SelectedCourseStudentToolbar = ({
+const SelectedMembershipToolbar = ({
     classes,
-    handleAddAsRolePress,
+    handleUpdateMembershipStatus,
     selectedRows,
     displayData,
 }) => {
@@ -25,37 +26,56 @@ const SelectedCourseStudentToolbar = ({
         },
         []
     );
+    const handleUpdateAsActive = handleUpdateMembershipStatus(
+        COURSE_STUDENT_STATUS.ACTIVE
+    );
+    const handleUpdateAsInactive = handleUpdateMembershipStatus(
+        COURSE_STUDENT_STATUS.INACTIVE
+    );
+    const handleUpdateAsWaitlist = handleUpdateMembershipStatus(
+        COURSE_STUDENT_STATUS.WAITLIST
+    );
     return (
         <div>
             <Button
                 variant="contained"
                 size="small"
                 className={classes.button}
-                onClick={() => handleAddAsRolePress(selectedIds, 'Leader')}
+                onClick={() => handleUpdateAsActive(selectedIds)}
                 color="primary"
             >
                 <AddIcon className={classes.leftIcon} />
-                Leader
+                Active
             </Button>
             <Button
                 variant="contained"
                 size="small"
                 className={classes.button}
-                onClick={() => handleAddAsRolePress(selectedIds, 'Follower')}
+                onClick={() => handleUpdateAsInactive(selectedIds)}
                 color="primary"
             >
                 <AddIcon className={classes.leftIcon} />
-                Follower
+                Inactive
+            </Button>
+            <Button
+                variant="contained"
+                size="small"
+                className={classes.button}
+                onClick={() => handleUpdateAsWaitlist(selectedIds)}
+                color="primary"
+            >
+                <AddIcon className={classes.leftIcon} />
+                Waitlist
             </Button>
         </div>
     );
 };
 
-SelectedCourseStudentToolbar.propTypes = {
+SelectedMembershipToolbar.propTypes = {
     classes: PropTypes.object.isRequired,
-    handleAddAsRolePress: PropTypes.func.isRequired,
+    handleUpdateMembershipStatus: PropTypes.func.isRequired,
     selectedRows: PropTypes.object.isRequired,
     displayData: PropTypes.array.isRequired,
 };
 
-export default withStyles(styles)(SelectedCourseStudentToolbar);
+export default withStyles(styles)(SelectedMembershipToolbar);

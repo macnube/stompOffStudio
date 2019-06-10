@@ -75,9 +75,12 @@ class Login extends React.Component {
                         </FormControl>
                         <FormControlLabel
                             control={
-                                <Checkbox value="remember" color="primary" />
+                                <Checkbox
+                                    value="remembership"
+                                    color="primary"
+                                />
                             }
-                            label="Remember me"
+                            label="Remembership me"
                         />
                         <Button
                             fullWidth

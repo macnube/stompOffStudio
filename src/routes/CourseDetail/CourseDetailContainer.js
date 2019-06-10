@@ -38,27 +38,27 @@ const removeTeacherFromCourse = ({ render }) => (
     </Mutation>
 );
 
-const updateCourseStudentStatus = ({ render }) => (
+const updateMembershipStatus = ({ render }) => (
     <Mutation mutation={UPDATE_COURSE_STUDENT_STATUS}>
         {(mutation, result) => render({ mutation, result })}
     </Mutation>
 );
 
-const deleteCourseStudent = ({ render, id }) => (
+const deleteMembership = ({ render, id }) => (
     <Mutation
         mutation={DELETE_COURSE_STUDENT}
-        update={(cache, { data: { deleteCourseStudent } }) => {
+        update={(cache, { data: { deleteMembership } }) => {
             const { course } = cache.readQuery({
                 query: GET_COURSE,
                 variables: {
                     id,
                 },
             });
-            const courseStudent = find(course.courseStudents, {
-                id: deleteCourseStudent.id,
+            const membership = find(course.memberships, {
+                id: deleteMembership.id,
             });
             const student = cache.readFragment({
-                id: `Student:${courseStudent.student.id}`,
+                id: `Student:${membership.student.id}`,
                 fragment: GET_STUDENT_FRAGMENT,
             });
             cache.writeQuery({
@@ -69,10 +69,9 @@ const deleteCourseStudent = ({ render, id }) => (
                 data: {
                     course: {
                         ...course,
-                        courseStudents: filter(
-                            course.courseStudents,
-                            courseStudent =>
-                                courseStudent.id !== deleteCourseStudent.id
+                        memberships: filter(
+                            course.memberships,
+                            membership => membership.id !== deleteMembership.id
                         ),
                     },
                 },
@@ -83,9 +82,9 @@ const deleteCourseStudent = ({ render, id }) => (
                     fragment: GET_STUDENT_FRAGMENT,
                     data: {
                         ...student,
-                        courses: filter(
-                            student.courses,
-                            courses => courses.id !== deleteCourseStudent.id
+                        memberships: filter(
+                            student.memberships,
+                            membership => membership.id !== deleteMembership.id
                         ),
                     },
                 });
@@ -134,7 +133,7 @@ const createCourseInstance = ({ render }) => (
     </Mutation>
 );
 
-const createCourseStudent = ({ render }) => (
+const createMembership = ({ render }) => (
     <Mutation mutation={CREATE_COURSE_STUDENT}>
         {(mutation, result) => render({ mutation, result })}
     </Mutation>
@@ -144,11 +143,11 @@ const mapper = {
     getCourse,
     updateCourse,
     removeTeacherFromCourse,
-    deleteCourseStudent,
+    deleteMembership,
     createCourseInstance,
     deleteCourseInstance,
-    updateCourseStudentStatus,
-    createCourseStudent,
+    updateMembershipStatus,
+    createMembership,
 };
 
 const CourseDetailContainer = ({ location }) => {
@@ -162,21 +161,17 @@ const CourseDetailContainer = ({ location }) => {
                     removeTeacherFromCourse: {
                         mutation: removeTeacherFromCourseMutation,
                     },
-                    deleteCourseStudent: {
-                        mutation: deleteCourseStudentMutation,
-                    },
+                    deleteMembership: { mutation: deleteMembershipMutation },
                     createCourseInstance: {
                         mutation: createCourseInstanceMutation,
                     },
                     deleteCourseInstance: {
                         mutation: deleteCourseInstanceMutation,
                     },
-                    updateCourseStudentStatus: {
-                        mutation: updateCourseStudentStatusMutation,
+                    updateMembershipStatus: {
+                        mutation: updateMembershipStatusMutation,
                     },
-                    createCourseStudent: {
-                        mutation: createCourseStudentMutation,
-                    },
+                    createMembership: { mutation: createMembershipMutation },
                 }) => {
                     if (loading) return null;
                     if (error) return `Error: ${error}`;
@@ -185,9 +180,7 @@ const CourseDetailContainer = ({ location }) => {
                             <CourseDetail
                                 course={data.course}
                                 updateCourse={updateCourseMutation}
-                                deleteCourseStudent={
-                                    deleteCourseStudentMutation
-                                }
+                                deleteMembership={deleteMembershipMutation}
                                 removeTeacherFromCourse={
                                     removeTeacherFromCourseMutation
                                 }
@@ -197,12 +190,10 @@ const CourseDetailContainer = ({ location }) => {
                                 deleteCourseInstance={
                                     deleteCourseInstanceMutation
                                 }
-                                updateCourseStudentStatus={
-                                    updateCourseStudentStatusMutation
+                                updateMembershipStatus={
+                                    updateMembershipStatusMutation
                                 }
-                                createCourseStudent={
-                                    createCourseStudentMutation
-                                }
+                                createMembership={createMembershipMutation}
                             />
                         );
                     }

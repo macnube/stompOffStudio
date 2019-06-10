@@ -48,7 +48,7 @@ class CourseAttendance extends Component {
         this.setState({
             openCardDialog: true,
             studentId: student.id,
-            numberOfCourses: student.courses.length,
+            numberOfCourses: student.memberships.length,
             participantId: id,
         });
     };

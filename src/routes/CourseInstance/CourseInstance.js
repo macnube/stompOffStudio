@@ -11,7 +11,7 @@ import DateFnsUtils from '@date-io/date-fns';
 
 import SelectedParticipantToolbar from './SelectedParticipantToolbar';
 import CourseInstanceHeader from './CourseInstanceHeader';
-import AddCourseStudentsToCourseInstanceDialog from './AddCourseStudentsToCourseInstanceDialog';
+import AddMembershipsToCourseInstanceDialog from './AddMembershipsToCourseInstanceDialog';
 import { CardDialog, CustomAddToolbar } from 'components';
 import { parseInstanceToTableData } from './parse';
 import { PARTICIPANT_STATUS } from 'constants/gql';
@@ -90,7 +90,7 @@ class CourseInstance extends Component {
             openCardDialog: true,
             studentId: student.id,
             studentName: student.name,
-            numberOfCourses: student.courses.length,
+            numberOfCourses: student.memberships.length,
             participantId,
             title,
         });
@@ -287,7 +287,7 @@ class CourseInstance extends Component {
                         />
                     ) : null}
                     {courseInstance ? (
-                        <AddCourseStudentsToCourseInstanceDialog
+                        <AddMembershipsToCourseInstanceDialog
                             open={openAddParticipantDialog}
                             handleClose={this.handleClose}
                             courseInstance={courseInstance}

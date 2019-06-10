@@ -6,11 +6,11 @@ import forEach from 'lodash/forEach';
 import { CustomAddToolbar, SelectedAddToolbar, FlatTable } from 'components';
 import AddStudentsToCourseDialog from './AddStudentsToCourseDialog';
 import {
-    parseActiveCourseStudentsToTableData,
-    parseCourseStudentsByStatusToTableData,
+    parseActiveMembershipsToTableData,
+    parseMembershipsByStatusToTableData,
 } from './parse';
 import { DANCE_ROLE, COURSE_STUDENT_STATUS } from 'constants/gql';
-import SelectedCourseStudentToolbar from './SelectedCourseStudentToolbar';
+import SelectedMembershipToolbar from './SelectedMembershipToolbar';
 import SelectedAddStudentWithWaitlistStatusToolbar from './SelectedAddStudentWithWaitlistStatusToolbar';
 
 const columns = [
@@ -47,8 +47,8 @@ const StudentsTables = ({
     openFollowers,
     openWaitlist,
     handleOpenDialog,
-    createCourseStudent,
-    updateCourseStudentStatus,
+    createMembership,
+    updateMembershipStatus,
     handleClose,
     history,
 }) => {
@@ -61,7 +61,7 @@ const StudentsTables = ({
 
     const handleAddAsRolePress = role => ids => {
         forEach(ids, studentId => {
-            createCourseStudent({
+            createMembership({
                 variables: {
                     courseId: course.id,
                     studentId,
@@ -75,7 +75,7 @@ const StudentsTables = ({
 
     const handleAddWithWaitlistStatusPress = role => ids => {
         forEach(ids, studentId => {
-            createCourseStudent({
+            createMembership({
                 variables: {
                     courseId: course.id,
                     studentId,
@@ -87,9 +87,9 @@ const StudentsTables = ({
         handleClose();
     };
 
-    const handleUpdateCourseStudentStatus = status => ids => {
+    const handleUpdateMembershipStatus = status => ids => {
         forEach(ids, id => {
-            updateCourseStudentStatus({
+            updateMembershipStatus({
                 variables: {
                     id,
                     status,
@@ -99,10 +99,10 @@ const StudentsTables = ({
     };
 
     const renderStudentsSelectedToolbar = (selectedRows, displayData) => (
-        <SelectedCourseStudentToolbar
+        <SelectedMembershipToolbar
             selectedRows={selectedRows}
             displayData={displayData}
-            handleUpdateCourseStudentStatus={handleUpdateCourseStudentStatus}
+            handleUpdateMembershipStatus={handleUpdateMembershipStatus}
         />
     );
 
@@ -176,8 +176,8 @@ const StudentsTables = ({
         <Fragment>
             <FlatTable
                 title={'Leaders'}
-                data={parseActiveCourseStudentsToTableData(
-                    course.courseStudents,
+                data={parseActiveMembershipsToTableData(
+                    course.memberships,
                     DANCE_ROLE.LEADER
                 )}
                 columns={columns}
@@ -185,8 +185,8 @@ const StudentsTables = ({
             />
             <FlatTable
                 title={'Followers'}
-                data={parseActiveCourseStudentsToTableData(
-                    course.courseStudents,
+                data={parseActiveMembershipsToTableData(
+                    course.memberships,
                     DANCE_ROLE.FOLLOWER
                 )}
                 columns={columns}
@@ -194,8 +194,8 @@ const StudentsTables = ({
             />
             <FlatTable
                 title={'Waitlist'}
-                data={parseCourseStudentsByStatusToTableData(
-                    course.courseStudents,
+                data={parseMembershipsByStatusToTableData(
+                    course.memberships,
                     COURSE_STUDENT_STATUS.WAITLIST
                 )}
                 columns={waitlistColumns}
@@ -203,8 +203,8 @@ const StudentsTables = ({
             />
             <FlatTable
                 title={'Inactive'}
-                data={parseCourseStudentsByStatusToTableData(
-                    course.courseStudents,
+                data={parseMembershipsByStatusToTableData(
+                    course.memberships,
                     COURSE_STUDENT_STATUS.INACTIVE
                 )}
                 columns={columns}
@@ -245,8 +245,8 @@ StudentsTables.propTypes = {
     course: PropTypes.object.isRequired,
     handleOpenDialog: PropTypes.func.isRequired,
     handleClose: PropTypes.func.isRequired,
-    createCourseStudent: PropTypes.func.isRequired,
-    updateCourseStudentStatus: PropTypes.func.isRequired,
+    createMembership: PropTypes.func.isRequired,
+    updateMembershipStatus: PropTypes.func.isRequired,
     openLeaders: PropTypes.bool.isRequired,
     openFollowers: PropTypes.bool.isRequired,
     openWaitlist: PropTypes.bool.isRequired,

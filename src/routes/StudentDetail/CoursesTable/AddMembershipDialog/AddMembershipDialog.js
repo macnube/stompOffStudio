@@ -6,7 +6,7 @@ import some from 'lodash/some';
 import forEach from 'lodash/forEach';
 import MUIDataTable from 'mui-datatables';
 
-import SelectedAddCourseStudentToolbar from './SelectedAddCourseStudentToolbar';
+import SelectedAddMembershipToolbar from './SelectedAddMembershipToolbar';
 import { FullScreenDialog } from 'components';
 
 const columns = [
@@ -40,7 +40,7 @@ const parseCoursesToTableData = (courses, studentId) =>
     reduce(
         courses,
         (acc, course) => {
-            if (some(course.courseStudents, { student: { id: studentId } })) {
+            if (some(course.memberships, { student: { id: studentId } })) {
                 return acc;
             }
             const {
@@ -48,16 +48,16 @@ const parseCoursesToTableData = (courses, studentId) =>
                 name,
                 startTime,
                 duration,
-                courseStudents,
+                memberships,
                 studentLimit,
             } = course;
             const leaders = filter(
-                courseStudents,
-                courseStudent => courseStudent.role === 'Leader'
+                memberships,
+                membership => membership.role === 'Leader'
             );
             const followers = filter(
-                courseStudents,
-                courseStudent => courseStudent.role === 'Follower'
+                memberships,
+                membership => membership.role === 'Follower'
             );
             const result = [
                 id,
@@ -74,15 +74,15 @@ const parseCoursesToTableData = (courses, studentId) =>
         []
     );
 
-class AddCourseStudentDialog extends Component {
+class AddMembershipDialog extends Component {
     //Having to add each individually because prisma has a bug
     //where cascading adds don't work for deleteMany
     //https://github.com/prisma/prisma/issues/3587
     handleAddAsRolePress = (ids, role) => {
-        const { createCourseStudent, studentId, handleClose } = this.props;
+        const { createMembership, studentId, handleClose } = this.props;
 
         forEach(ids, courseId => {
-            createCourseStudent({ variables: { courseId, studentId, role } });
+            createMembership({ variables: { courseId, studentId, role } });
         });
 
         handleClose();
@@ -93,7 +93,7 @@ class AddCourseStudentDialog extends Component {
         const options = {
             responsive: 'scroll',
             customToolbarSelect: (selectedRows, displayData) => (
-                <SelectedAddCourseStudentToolbar
+                <SelectedAddMembershipToolbar
                     selectedRows={selectedRows}
                     displayData={displayData}
                     handleAddAsRolePress={this.handleAddAsRolePress}
@@ -117,12 +117,12 @@ class AddCourseStudentDialog extends Component {
     }
 }
 
-AddCourseStudentDialog.propTypes = {
+AddMembershipDialog.propTypes = {
     open: PropTypes.bool.isRequired,
     handleClose: PropTypes.func.isRequired,
     courses: PropTypes.array.isRequired,
-    createCourseStudent: PropTypes.func.isRequired,
+    createMembership: PropTypes.func.isRequired,
     studentId: PropTypes.string.isRequired,
 };
 
-export default AddCourseStudentDialog;
+export default AddMembershipDialog;

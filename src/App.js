@@ -30,8 +30,8 @@ const setupClient = (user, setUser) =>
         onError: ({ graphQLErrors, networkError }) => {
             if (graphQLErrors) {
                 console.log('errors are: ', graphQLErrors);
-                const code = get(graphQLErrors[0], 'extensions.code');
-                if (code === 'AUTHORIZATION_ERROR') {
+                const message = get(graphQLErrors[0], 'message');
+                if (message === 'Not Authorised!') {
                     setUser({ admin: false, isAuthenticated: false });
                 }
             }

@@ -150,6 +150,7 @@ class PaymentManagement extends Component {
             customToolbarSelect: this.renderSelectedToolbar,
             onRowClick: this.handleOnPaymentClick,
         };
+        console.log('student is: ', student);
         return (
             <Fragment>
                 <ContentToolbar>

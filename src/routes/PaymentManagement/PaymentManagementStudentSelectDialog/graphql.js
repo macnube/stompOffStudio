@@ -1,20 +1,24 @@
 import gql from 'graphql-tag';
 
+import {
+    MEDIUM_CARD_FRAGMENT,
+    MEDIUM_STUDENT_FRAGMENT,
+    SMALL_PAYMENT_FRAGMENT,
+} from 'graphql';
+
 export const GET_STUDENTS = gql`
     query PaymentManagementGetStudents {
         students {
-            id
-            name
-            hasReferralBonus
+            ...MediumStudentFragment
             cards {
-                id
-                expirationDate
-                value
+                ...MediumCardFragment
                 payment {
-                    id
+                    ...SmallPaymentFragment
                 }
-                active
             }
         }
     }
+    ${SMALL_PAYMENT_FRAGMENT}
+    ${MEDIUM_STUDENT_FRAGMENT}
+    ${MEDIUM_CARD_FRAGMENT}
 `;

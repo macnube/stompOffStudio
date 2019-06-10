@@ -97,7 +97,8 @@ class PaymentDialog extends React.Component {
     };
 
     getUnpaidCardItems = () => {
-        const { student } = this.props;
+        const { payment } = this.props;
+        const student = this.state.id ? payment.student : this.props.student;
         const unpaidCards = filter(student.cards, card => isNil(card.payment));
         return map(unpaidCards, card => (
             <MenuItem key={card.id} value={card.id}>
@@ -107,7 +108,7 @@ class PaymentDialog extends React.Component {
     };
 
     renderForm = () => {
-        const { classes, student, payment } = this.props;
+        const { classes, student } = this.props;
         const { type, amount, date, cardId, clearBonus } = this.state;
         return (
             <React.Fragment>
@@ -147,16 +148,7 @@ class PaymentDialog extends React.Component {
                         onChange={this.handleChange('cardId')}
                         margin="normal"
                     >
-                        {this.state.id ? (
-                            <MenuItem
-                                key={payment.card.id}
-                                value={payment.card.id}
-                            >
-                                {getTableDate(payment.card.expirationDate)}
-                            </MenuItem>
-                        ) : (
-                            this.getUnpaidCardItems()
-                        )}
+                        {this.getUnpaidCardItems()}
                     </TextField>
                 ) : null}
                 <DatePicker

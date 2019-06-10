@@ -1,36 +1,39 @@
 import gql from 'graphql-tag';
 
-export const GET_PAYMENTS = gql`
-    query PaymentManagementGetPayments {
-        payments {
-            id
-            type
-            date
-            amount
-            student {
-                id
-                name
-                cards {
-                    id
-                    expirationDate
-                    value
-                    payment {
-                        id
-                        date
-                    }
-                    active
-                }
-            }
-            card {
-                id
-                expirationDate
+import {
+    SMALL_PAYMENT_FRAGMENT,
+    SMALL_STUDENT_FRAGMENT,
+    MEDIUM_CARD_FRAGMENT,
+} from 'graphql';
+
+const PAYMENT_MANAGEMENT_PAYMENT_FRAGMENT = gql`
+    fragment PaymentManagementPaymentFragment on Payment {
+        ...SmallPaymentFragment
+        student {
+            ...SmallStudentFragment
+            cards {
+                ...MediumCardFragment
                 payment {
-                    id
-                    date
+                    ...SmallPaymentFragment
                 }
             }
         }
+        card {
+            ...MediumCardFragment
+        }
     }
+    ${SMALL_STUDENT_FRAGMENT}
+    ${MEDIUM_CARD_FRAGMENT}
+    ${SMALL_PAYMENT_FRAGMENT}
+`;
+
+export const GET_PAYMENTS = gql`
+    query PaymentManagementGetPayments {
+        payments {
+            ...PaymentManagementPaymentFragment
+        }
+    }
+    ${PAYMENT_MANAGEMENT_PAYMENT_FRAGMENT}
 `;
 
 export const CREATE_PAYMENT = gql`
@@ -48,30 +51,10 @@ export const CREATE_PAYMENT = gql`
             studentId: $studentId
             cardId: $cardId
         ) {
-            id
-            type
-            date
-            amount
-            student {
-                id
-                name
-                payments {
-                    id
-                    card {
-                        id
-                    }
-                    date
-                }
-            }
-            card {
-                id
-                payment {
-                    id
-                    date
-                }
-            }
+            ...PaymentManagementPaymentFragment
         }
     }
+    ${PAYMENT_MANAGEMENT_PAYMENT_FRAGMENT}
 `;
 
 export const UPDATE_PAYMENT = gql`
@@ -91,30 +74,10 @@ export const UPDATE_PAYMENT = gql`
             studentId: $studentId
             cardId: $cardId
         ) {
-            id
-            type
-            date
-            amount
-            student {
-                id
-                name
-                payments {
-                    id
-                    card {
-                        id
-                    }
-                    date
-                }
-            }
-            card {
-                id
-                payment {
-                    id
-                    date
-                }
-            }
+            ...PaymentManagementPaymentFragment
         }
     }
+    ${PAYMENT_MANAGEMENT_PAYMENT_FRAGMENT}
 `;
 
 export const DELETE_PAYMENT = gql`

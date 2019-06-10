@@ -1,3 +1,3 @@
-import CourseFormContainer from './CourseFormContainer';
+import CourseDialogContainer from './CourseDialogContainer';
 
-export default CourseFormContainer;
+export default CourseDialogContainer;

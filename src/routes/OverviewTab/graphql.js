@@ -1,13 +1,11 @@
 import gql from 'graphql-tag';
 
+import { SMALL_COURSE_INSTANCE_FRAGMENT } from 'graphql';
+
 export const GET_OVERVIEW_INSTANCES = gql`
     query OverviewGetOverviewInstances {
         overviewInstances {
-            id
-            date
-            topic
-            notes
-            recapUrl
+            ...SmallCourseInstanceFragment
             participants {
                 id
                 status
@@ -29,6 +27,7 @@ export const GET_OVERVIEW_INSTANCES = gql`
             }
         }
     }
+    ${SMALL_COURSE_INSTANCE_FRAGMENT}
 `;
 
 export const GET_UNPAID_CARDS = gql`

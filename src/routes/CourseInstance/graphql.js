@@ -1,5 +1,15 @@
 import gql from 'graphql-tag';
 
+import {
+    MEDIUM_COURSE_INSTANCE_FRAGMENT,
+    SMALL_PARTICIPANT_FRAGMENT,
+    SMALL_STUDENT_FRAGMENT,
+    SMALL_COURSE_FRAGMENT,
+    SMALL_MEMBERSHIP_FRAGMENT,
+    MEDIUM_CARD_FRAGMENT,
+    LARGE_CARD_FRAGMENT,
+} from 'graphql';
+
 export const GET_COURSE_INSTANCE_FRAGMENT = gql`
     fragment CourseInstanceFragment on CourseInstance {
         id
@@ -9,54 +19,51 @@ export const GET_COURSE_INSTANCE_FRAGMENT = gql`
     }
 `;
 
-export const GET_COURSE_INSTANCE = gql`
-    query CourseInstanceGetCourseInstance($id: ID!) {
-        courseInstance(id: $id) {
-            id
-            topic
-            notes
-            date
-            recapUrl
-            participants {
-                id
-                student {
-                    id
-                    name
-                    email
-                    memberships {
-                        id
-                    }
-                    cards {
-                        id
-                        expirationDate
-                        active
-                        value
-                        participationHistory {
-                            id
-                        }
-                        payment {
-                            id
-                            date
-                        }
-                        paid
-                    }
+const COURSE_INSTANCE_PARTICIPANT_FRAGMENT = gql`
+    fragment CourseInstanceParticipantFragment on Participant {
+        ...SmallParticipantFragment
+        student {
+            ...SmallStudentFragment
+            memberships {
+                ...SmallMembershipFragment
+                course {
+                    ...SmallCourseFragment
                 }
-                status
             }
-            course {
-                id
-                memberships {
-                    id
-                    student {
-                        id
-                        name
-                        email
-                    }
-                    role
-                }
+            cards {
+                ...MediumCardFragment
             }
         }
     }
+    ${MEDIUM_CARD_FRAGMENT}
+    ${SMALL_COURSE_FRAGMENT}
+    ${SMALL_MEMBERSHIP_FRAGMENT}
+    ${SMALL_STUDENT_FRAGMENT}
+    ${SMALL_PARTICIPANT_FRAGMENT}
+`;
+
+export const COURSE_INSTANCE_FRAGMENT = gql`
+    fragment CourseInstanceFragment on CourseInstance {
+        ...MediumCourseInstanceFragment
+        participants {
+            ...CourseInstanceParticipantFragment
+        }
+        course {
+            ...SmallCourseFragment
+        }
+    }
+    ${SMALL_COURSE_FRAGMENT}
+    ${COURSE_INSTANCE_PARTICIPANT_FRAGMENT}
+    ${MEDIUM_COURSE_INSTANCE_FRAGMENT}
+`;
+
+export const GET_COURSE_INSTANCE = gql`
+    query CourseInstanceGetCourseInstance($id: ID!) {
+        courseInstance(id: $id) {
+            ...CourseInstanceFragment
+        }
+    }
+    ${COURSE_INSTANCE_FRAGMENT}
 `;
 
 export const UPDATE_COURSE_INSTANCE = gql`
@@ -74,13 +81,10 @@ export const UPDATE_COURSE_INSTANCE = gql`
             date: $date
             recapUrl: $recapUrl
         ) {
-            id
-            topic
-            notes
-            date
-            recapUrl
+            ...MediumCourseInstanceFragment
         }
     }
+    ${MEDIUM_COURSE_INSTANCE_FRAGMENT}
 `;
 
 export const LOG_PARTICIPANT_STATUS = gql`
@@ -89,22 +93,10 @@ export const LOG_PARTICIPANT_STATUS = gql`
         $status: ParticipantStatus!
     ) {
         logParticipantStatus(id: $id, status: $status) {
-            id
-            status
-            courseInstance {
-                id
-                participants {
-                    id
-                    student {
-                        id
-                        name
-                        email
-                    }
-                    status
-                }
-            }
+            ...CourseInstanceParticipantFragment
         }
     }
+    ${COURSE_INSTANCE_PARTICIPANT_FRAGMENT}
 `;
 
 export const DELETE_PARTICIPANT = gql`
@@ -126,20 +118,10 @@ export const LOG_CARD_PARTICIPATION = gql`
             participantId: $participantId
             value: $value
         ) {
-            id
-            expirationDate
-            active
-            value
-            participationHistory {
-                id
-            }
-            payment {
-                id
-                date
-            }
-            paid
+            ...LargeCardFragment
         }
     }
+    ${LARGE_CARD_FRAGMENT}
 `;
 
 export const DEACTIVATE_CARD = gql`

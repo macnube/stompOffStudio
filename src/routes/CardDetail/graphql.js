@@ -1,5 +1,7 @@
 import gql from 'graphql-tag';
 
+import { LARGE_CARD_FRAGMENT } from 'graphql';
+
 export const GET_CARD = gql`
     query CardDetailGetCard($id: ID!) {
         card(id: $id) {
@@ -70,18 +72,8 @@ export const REMOVE_CARD_PARTICIPATION = gql`
             participantId: $participantId
             value: $value
         ) {
-            id
-            expirationDate
-            active
-            value
-            participationHistory {
-                id
-            }
-            payment {
-                id
-                date
-            }
-            paid
+            ...LargeCardFragment
         }
     }
+    ${LARGE_CARD_FRAGMENT}
 `;

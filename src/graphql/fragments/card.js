@@ -18,3 +18,16 @@ export const MEDIUM_CARD_FRAGMENT = gql`
     ${SMALL_CARD_FRAGMENT}
 `;
 
+export const LARGE_CARD_FRAGMENT = gql`
+    fragment LargeCardFragment on Card {
+        ...MediumCardFragment
+        participationHistory {
+            id
+        }
+        payment {
+            id
+            date
+        }
+    }
+    ${MEDIUM_CARD_FRAGMENT}
+`;

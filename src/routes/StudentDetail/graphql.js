@@ -1,56 +1,64 @@
 import gql from 'graphql-tag';
 
-import { SMALL_USER_FRAGMENT, SMALL_STUDENT_FRAGMENT } from 'graphql';
+import {
+    SMALL_USER_FRAGMENT,
+    SMALL_STUDENT_FRAGMENT,
+    MEDIUM_CARD_FRAGMENT,
+    SMALL_COURSE_FRAGMENT,
+    MEDIUM_STUDENT_FRAGMENT,
+    SMALL_MEMBERSHIP_FRAGMENT,
+    SMALL_PAYMENT_FRAGMENT,
+    SMALL_CARD_FRAGMENT,
+} from 'graphql';
+
+export const STUDENT_DETAIL_CARD_FRAGMENT = gql`
+    fragment StudentDetailCardFragment on Card {
+        ...MediumCardFragment
+        payment {
+            ...SmallPaymentFragment
+        }
+    }
+    ${MEDIUM_CARD_FRAGMENT}
+    ${SMALL_PAYMENT_FRAGMENT}
+`;
+
+const STUDENT_DETAIL_STUDENT_FRAGMENT = gql`
+    fragment StudentDetailStudentFragment on Student {
+        ...MediumStudentFragment
+        memberships {
+            ...SmallMembershipFragment
+            course {
+                ...SmallCourseFragment
+            }
+        }
+        cards {
+            ...StudentDetailCardFragment
+        }
+        payments {
+            ...SmallPaymentFragment
+            card {
+                ...SmallCardFragment
+            }
+        }
+        user {
+            ...SmallUserFragment
+        }
+    }
+    ${SMALL_USER_FRAGMENT}
+    ${SMALL_CARD_FRAGMENT}
+    ${STUDENT_DETAIL_CARD_FRAGMENT}
+    ${SMALL_COURSE_FRAGMENT}
+    ${SMALL_MEMBERSHIP_FRAGMENT}
+    ${MEDIUM_STUDENT_FRAGMENT}
+`;
 
 export const GET_STUDENT = gql`
     query StudentDetailGetStudent($id: ID!) {
         student(id: $id) {
-            id
-            name
-            email
-            mobile
-            hasReferralBonus
-            memberships {
-                id
-                course {
-                    id
-                    name
-                }
-                student {
-                    id
-                    name
-                }
-                role
-            }
-            cards {
-                id
-                expirationDate
-                active
-                value
-                originalValue
-                participationHistory {
-                    id
-                }
-                payment {
-                    id
-                    date
-                }
-                paid
-            }
-            payments {
-                id
-                amount
-                date
-                type
-                card {
-                    id
-                }
-            }
-            user {
-                id
-            }
+            ...StudentDetailStudentFragment
         }
     }
+    ${STUDENT_DETAIL_STUDENT_FRAGMENT}
 `;
 
 export const UPDATE_STUDENT = gql`
@@ -68,13 +76,10 @@ export const UPDATE_STUDENT = gql`
             mobile: $mobile
             hasReferralBonus: $hasReferralBonus
         ) {
-            id
-            name
-            email
-            mobile
-            hasReferralBonus
+            ...MediumStudentFragment
         }
     }
+    ${MEDIUM_STUDENT_FRAGMENT}
 `;
 
 export const DELETE_COURSE_STUDENT = gql`
@@ -82,22 +87,6 @@ export const DELETE_COURSE_STUDENT = gql`
         deleteMembership(id: $id) {
             id
         }
-    }
-`;
-
-export const GET_CARD_FRAGMENT = gql`
-    fragment StudentDetailCard on Card {
-        id
-        value
-        expirationDate
-        active
-        payment {
-            id
-        }
-        participationHistory {
-            id
-        }
-        paid
     }
 `;
 
@@ -112,20 +101,10 @@ export const CREATE_CARD = gql`
             expirationDate: $expirationDate
             value: $value
         ) {
-            id
-            value
-            expirationDate
-            active
-            payment {
-                id
-            }
-            participationHistory {
-                id
-            }
-            paid
-            originalValue
+            ...StudentDetailCardFragment
         }
     }
+    ${STUDENT_DETAIL_CARD_FRAGMENT}
 `;
 
 export const UPDATE_CARD = gql`
@@ -135,20 +114,10 @@ export const UPDATE_CARD = gql`
         $value: Int!
     ) {
         updateCard(id: $id, expirationDate: $expirationDate, value: $value) {
-            id
-            value
-            originalValue
-            expirationDate
-            active
-            payment {
-                id
-                date
-            }
-            participationHistory {
-                id
-            }
+            ...StudentDetailCardFragment
         }
     }
+    ${STUDENT_DETAIL_CARD_FRAGMENT}
 `;
 
 export const DELETE_CARD = gql`
@@ -162,28 +131,28 @@ export const DELETE_CARD = gql`
 export const PAY_CARD = gql`
     mutation StudentDetailPayCard($id: ID!) {
         payCard(id: $id) {
-            id
-            paid
+            ...SmallCardFragment
         }
     }
+    ${SMALL_CARD_FRAGMENT}
 `;
 
 export const UNPAY_CARD = gql`
     mutation StudentDetailUnpayCard($id: ID!) {
         unpayCard(id: $id) {
-            id
-            paid
+            ...SmallCardFragment
         }
     }
+    ${SMALL_CARD_FRAGMENT}
 `;
 
 export const CLEAR_REFERRAL_BONUS = gql`
     mutation StudentDetailClearReferralBonus($id: ID!) {
         clearReferralBonus(id: $id) {
-            id
-            hasReferralBonus
+            ...MediumStudentFragment
         }
     }
+    ${MEDIUM_STUDENT_FRAGMENT}
 `;
 
 export const CREATE_USER = gql`

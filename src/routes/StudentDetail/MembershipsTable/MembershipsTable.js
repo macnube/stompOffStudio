@@ -22,7 +22,7 @@ const columns = [
     },
 ];
 
-const CardsTable = ({
+const MembershipsTable = ({
     student,
     open,
     handleAdd,
@@ -46,7 +46,7 @@ const CardsTable = ({
     );
 
     const renderToolbar = () => (
-        <CustomAddToolbar title={'Add to Course'} handleAddPress={handleAdd} />
+        <CustomAddToolbar title={'Add Membership'} handleAddPress={handleAdd} />
     );
 
     const handleOnCourseClick = rowData => {
@@ -68,7 +68,7 @@ const CardsTable = ({
     return (
         <Fragment>
             <FlatTable
-                title={'Active Registered Courses'}
+                title={'Active Memberships'}
                 data={parseMembershipsToTableData(student.memberships)}
                 columns={columns}
                 options={options}
@@ -82,7 +82,7 @@ const CardsTable = ({
     );
 };
 
-CardsTable.propTypes = {
+MembershipsTable.propTypes = {
     student: PropTypes.object.isRequired,
     handleAdd: PropTypes.func.isRequired,
     handleClose: PropTypes.func.isRequired,
@@ -91,4 +91,4 @@ CardsTable.propTypes = {
     history: PropTypes.object.isRequired,
 };
 
-export default React.memo(CardsTable);
+export default React.memo(MembershipsTable);

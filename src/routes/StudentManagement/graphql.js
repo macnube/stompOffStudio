@@ -1,38 +1,38 @@
 import gql from 'graphql-tag';
 
-import { SMALL_STUDENT_FRAGMENT } from 'graphql';
+import {
+    SMALL_STUDENT_FRAGMENT,
+    SMALL_COURSE_FRAGMENT,
+    SMALL_MEMBERSHIP_FRAGMENT,
+    SMALL_CARD_FRAGMENT,
+} from 'graphql';
 
 const STUDENT_MANAGEMENT_STUDENT_FRAGMENT = gql`
     fragment StudentManagementStudentFragment on Student {
         ...SmallStudentFragment
+        memberships {
+            ...SmallMembershipFragment
+            course {
+                ...SmallCourseFragment
+            }
+        }
+        cards {
+            ...SmallCardFragment
+        }
     }
+    ${SMALL_CARD_FRAGMENT}
+    ${SMALL_COURSE_FRAGMENT}
+    ${SMALL_MEMBERSHIP_FRAGMENT}
     ${SMALL_STUDENT_FRAGMENT}
 `;
 
 export const GET_STUDENTS = gql`
     query StudentManagementGetStudents {
         students {
-            id
-            name
-            email
-            mobile
-            memberships {
-                id
-                course {
-                    id
-                    name
-                }
-                student {
-                    id
-                    name
-                }
-                role
-            }
-            cards {
-                id
-            }
+            ...StudentManagementStudentFragment
         }
     }
+    ${STUDENT_MANAGEMENT_STUDENT_FRAGMENT}
 `;
 
 export const CREATE_STUDENT = gql`
@@ -42,23 +42,10 @@ export const CREATE_STUDENT = gql`
         $mobile: String
     ) {
         createStudent(name: $name, email: $email, mobile: $mobile) {
-            id
-            name
-            email
-            mobile
-            memberships {
-                id
-                course {
-                    id
-                    name
-                }
-                role
-            }
-            cards {
-                id
-            }
+            ...StudentManagementStudentFragment
         }
     }
+    ${STUDENT_MANAGEMENT_STUDENT_FRAGMENT}
 `;
 
 export const DELETE_STUDENT = gql`

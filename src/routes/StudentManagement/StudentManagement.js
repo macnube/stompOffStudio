@@ -1,8 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import compose from 'recompose/compose';
 import { withRouter } from 'react-router-dom';
-import map from 'lodash/map';
-import reduce from 'lodash/reduce';
 import find from 'lodash/find';
 import forEach from 'lodash/forEach';
 import PropTypes from 'prop-types';
@@ -15,6 +13,7 @@ import { ContentToolbar, SelectedDeleteToolbar } from 'components';
 import EmailButton from './EmailButton';
 import StudentForm from './StudentForm';
 import styles from './styles';
+import { parseStudentsToTableData } from './parse';
 
 const columns = [
     {
@@ -39,28 +38,6 @@ const columns = [
         name: 'Courses',
     },
 ];
-
-const parseStudentsToTableData = students =>
-    reduce(
-        students,
-        (acc, student) => {
-            const courseNames = map(
-                student.memberships,
-                membership => membership.course.name
-            ).join(', ');
-            const result = [
-                student.id,
-                student.name,
-                student.email,
-                student.mobile,
-                'True',
-                courseNames,
-            ];
-            acc.push(result);
-            return acc;
-        },
-        []
-    );
 
 class StudentManagement extends Component {
     state = {

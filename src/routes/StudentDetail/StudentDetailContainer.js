@@ -14,7 +14,7 @@ import {
     DELETE_CARD,
     PAY_CARD,
     UNPAY_CARD,
-    GET_CARD_FRAGMENT,
+    STUDENT_DETAIL_CARD_FRAGMENT,
     CLEAR_REFERRAL_BONUS,
     CREATE_USER,
 } from './graphql';
@@ -235,12 +235,14 @@ export const payCard = ({ render }) => (
         update={(cache, { data: { payCard } }) => {
             const card = cache.readFragment({
                 id: `Card:${payCard.id}`,
-                fragment: GET_CARD_FRAGMENT,
+                fragment: STUDENT_DETAIL_CARD_FRAGMENT,
+                fragmentName: 'StudentDetailCardFragment',
             });
             if (card) {
                 cache.writeFragment({
                     id: `Card:${card.id}`,
-                    fragment: GET_CARD_FRAGMENT,
+                    fragment: STUDENT_DETAIL_CARD_FRAGMENT,
+                    fragmentName: 'StudentDetailCardFragment',
                     data: {
                         ...card,
                         paid: true,
@@ -259,12 +261,14 @@ export const unpayCard = ({ render }) => (
         update={(cache, { data: { unpayCard } }) => {
             const card = cache.readFragment({
                 id: `Card:${unpayCard.id}`,
-                fragment: GET_CARD_FRAGMENT,
+                fragment: STUDENT_DETAIL_CARD_FRAGMENT,
+                fragmentName: 'StudentDetailCardFragment',
             });
             if (card) {
                 cache.writeFragment({
                     id: `Card:${card.id}`,
-                    fragment: GET_CARD_FRAGMENT,
+                    fragment: STUDENT_DETAIL_CARD_FRAGMENT,
+                    fragmentName: 'StudentDetailCardFragment',
                     data: {
                         ...card,
                         paid: false,

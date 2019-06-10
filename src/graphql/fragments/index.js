@@ -1,4 +1,7 @@
+export * from './card';
 export * from './course';
+export * from './membership';
+export * from './payment';
 export * from './room';
 export * from './student';
 export * from './studio';

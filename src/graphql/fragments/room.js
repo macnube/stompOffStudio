@@ -9,7 +9,7 @@ export const SMALL_ROOM_FRAGMENT = gql`
 `;
 
 export const MEDIUM_ROOM_FRAGMENT = gql`
-    fragment SmallRoomFragment on Room {
+    fragment MediumRoomFragment on Room {
         ...SmallRoomFragment
         studio {
             id

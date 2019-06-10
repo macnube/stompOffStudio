@@ -7,7 +7,7 @@ import Paper from '@material-ui/core/Paper';
 
 import PaymentsTable from './PaymentsTable';
 import CardsTable from './CardsTable';
-import CoursesTable from './CoursesTable';
+import MembershipsTable from './MembershipsTable';
 import StudentDetailHeader from './StudentDetailHeader';
 
 class StudentDetail extends Component {
@@ -89,7 +89,6 @@ class StudentDetail extends Component {
             openCardDialog,
             openPaymentDialog,
         } = this.state;
-        console.log('student is: ', student);
         return (
             <div>
                 <Paper>
@@ -100,7 +99,7 @@ class StudentDetail extends Component {
                         handleOnCreateUser={this.handleOnCreateUser}
                         canCreateUser={!student.user}
                     />
-                    <CoursesTable
+                    <MembershipsTable
                         open={openMembershipDialog}
                         student={student}
                         deleteMembership={deleteMembership}

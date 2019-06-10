@@ -12,7 +12,7 @@ import {
 } from './graphql';
 import {
     GET_STUDENT,
-    GET_CARD_FRAGMENT,
+    STUDENT_DETAIL_CARD_FRAGMENT,
     UNPAY_CARD,
     PAY_CARD,
     CLEAR_REFERRAL_BONUS,
@@ -116,12 +116,12 @@ const payCard = ({ render }) => (
         update={(cache, { data: { payCard } }) => {
             const card = cache.readFragment({
                 id: `Card:${payCard.id}`,
-                fragment: GET_CARD_FRAGMENT,
+                fragment: STUDENT_DETAIL_CARD_FRAGMENT,
             });
             if (card) {
                 cache.writeFragment({
                     id: `Card:${card.id}`,
-                    fragment: GET_CARD_FRAGMENT,
+                    fragment: STUDENT_DETAIL_CARD_FRAGMENT,
                     data: {
                         ...card,
                         paid: true,
@@ -140,12 +140,12 @@ const unpayCard = ({ render }) => (
         update={(cache, { data: { unpayCard } }) => {
             const card = cache.readFragment({
                 id: `Card:${unpayCard.id}`,
-                fragment: GET_CARD_FRAGMENT,
+                fragment: STUDENT_DETAIL_CARD_FRAGMENT,
             });
             if (card) {
                 cache.writeFragment({
                     id: `Card:${card.id}`,
-                    fragment: GET_CARD_FRAGMENT,
+                    fragment: STUDENT_DETAIL_CARD_FRAGMENT,
                     data: {
                         ...card,
                         paid: false,

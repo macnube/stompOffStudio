@@ -8,3 +8,4 @@ export { default as FullScreenDialog } from './FullScreenDialog';
 export { default as PaymentDialog } from './PaymentDialog';
 export { default as SelectedDeleteToolbar } from './SelectedDeleteToolbar';
 export { default as SelectedAddToolbar } from './SelectedAddToolbar';
+export { default as UserSettingsDialog } from './UserSettingsDialog';

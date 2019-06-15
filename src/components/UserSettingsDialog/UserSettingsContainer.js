@@ -1,12 +1,13 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Query, Mutation } from 'react-apollo';
 import { Adopt } from 'react-adopt';
 
-import { CURRENT_USER, UPDATE_USER_EMAIL_PASSWORD } from './graphql';
+import { GET_CURRENT_USER, UPDATE_USER_EMAIL_PASSWORD } from './graphql';
 import UserSettings from './UserSettings';
 
 const currentUser = ({ render }) => (
-    <Query query={CURRENT_USER}>{render}</Query>
+    <Query query={GET_CURRENT_USER}>{render}</Query>
 );
 
 const updateUserEmailPassword = ({ render }) => (
@@ -20,7 +21,7 @@ const mapper = {
     updateUserEmailPassword,
 };
 
-const UserSettingsContainer = () => (
+const UserSettingsContainer = ({ open, handleClose, handleLogout }) => (
     <Adopt mapper={mapper}>
         {({
             currentUser: { data, loading, error },
@@ -30,15 +31,23 @@ const UserSettingsContainer = () => (
         }) => {
             if (loading) return null;
             if (error) return `Error: ${error}`;
-            if (!data.users) return `404: Session not found`;
             return (
                 <UserSettings
-                    user={data.user}
+                    user={data.currentUser}
                     updateUserEmailPassword={updateUserEmailPasswordMutation}
+                    open={open}
+                    handleClose={handleClose}
+                    handleLogout={handleLogout}
                 />
             );
         }}
     </Adopt>
 );
+
+UserSettingsContainer.propTypes = {
+    open: PropTypes.bool.isRequired,
+    handleClose: PropTypes.func.isRequired,
+    handleLogout: PropTypes.func.isRequired,
+};
 
 export default UserSettingsContainer;

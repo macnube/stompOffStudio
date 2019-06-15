@@ -11,10 +11,11 @@ import List from '@material-ui/core/List';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
-import Badge from '@material-ui/core/Badge';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import NotificationsIcon from '@material-ui/icons/Notifications';
+import SettingsIcon from '@material-ui/icons/Settings';
+
+import { UserSettingsDialog } from 'components';
 import {
     Overview,
     StudentDetail,
@@ -32,13 +33,14 @@ import {
     Login,
 } from 'routes';
 import ListItems from './ListItems';
+import StudentListItems from './StudentListItems';
 import styles from './styles';
 import UserAuthContext from 'src/UserAuthContext';
 
 const Dashboard = ({ classes }) => {
     const [open, setOpen] = useState(true);
-    const [_, setMainContent] = useState('overview');
-    const { user } = useContext(UserAuthContext);
+    const [openUserSettings, setOpenUserSettings] = useState(false);
+    const { user, setUser } = useContext(UserAuthContext);
 
     const handleDrawerOpen = () => {
         setOpen(true);
@@ -48,8 +50,18 @@ const Dashboard = ({ classes }) => {
         setOpen(false);
     };
 
-    const handleContentChange = contentId => {
-        setMainContent(contentId);
+    const handleCloseUserSettings = onClose => {
+        onClose();
+        setOpenUserSettings(false);
+    };
+
+    const handleOpenUserSettings = () => {
+        setOpenUserSettings(true);
+    };
+
+    const handleLogout = () => {
+        localStorage.removeItem('authUser');
+        setUser({ admin: false, isAuthenticated: false });
     };
 
     const renderRoutes = () => (
@@ -69,7 +81,6 @@ const Dashboard = ({ classes }) => {
             <Route path="/userManagement" component={UserManagement} />
         </Fragment>
     );
-
     return (
         <div className={classes.root}>
             <CssBaseline />
@@ -101,10 +112,11 @@ const Dashboard = ({ classes }) => {
                     >
                         Dashboard
                     </Typography>
-                    <IconButton color="inherit">
-                        <Badge badgeContent={4} color="secondary">
-                            <NotificationsIcon />
-                        </Badge>
+                    <IconButton
+                        onClick={handleOpenUserSettings}
+                        color="inherit"
+                    >
+                        <SettingsIcon />
                     </IconButton>
                 </Toolbar>
             </AppBar>
@@ -124,15 +136,20 @@ const Dashboard = ({ classes }) => {
                     </IconButton>
                 </div>
                 <Divider />
-                <List>
-                    {user.isAuthenticated ? (
-                        <ListItems handleContentChange={handleContentChange} />
-                    ) : null}
-                </List>
+                {user.isAuthenticated ? (
+                    <List>
+                        {user.admin ? <ListItems /> : <StudentListItems />}
+                    </List>
+                ) : null}
             </Drawer>
             <main className={classes.content}>
                 <div className={classes.appBarSpacer} />
                 {user.isAuthenticated ? renderRoutes() : <Login />}
+                <UserSettingsDialog
+                    open={openUserSettings}
+                    handleClose={handleCloseUserSettings}
+                    handleLogout={handleLogout}
+                />
             </main>
         </div>
     );

@@ -1,25 +1,25 @@
 import gql from 'graphql-tag';
 
-export const GET_USERS = gql`
+import { SMALL_USER_FRAGMENT } from 'graphql';
+
+export const GET_CURRENT_USER = gql`
     query UserSettingsCurrentUser {
-        users {
-            id
-            email
-            admin
-            student {
-                id
-                name
-            }
+        currentUser {
+            ...SmallUserFragment
         }
     }
+    ${SMALL_USER_FRAGMENT}
 `;
 
 export const UPDATE_USER_EMAIL_PASSWORD = gql`
-    mutation UserSettingsUpdateUserEmailPassword($id: ID!) {
-        updateUserEmailPassword(id: $id) {
-            id
-            email
-            admin
+    mutation UserSettingsUpdateUserEmailPassword(
+        $id: ID!
+        $email: String
+        $password: String
+    ) {
+        updateUserEmailPassword(id: $id, email: $email, password: $password) {
+            ...SmallUserFragment
         }
     }
+    ${SMALL_USER_FRAGMENT}
 `;

@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import compose from 'recompose/compose';
 import { withRouter } from 'react-router-dom';
-import forEach from 'lodash/forEach';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 
@@ -11,6 +10,8 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
 
 class UserSettings extends Component {
     state = {
@@ -24,10 +25,23 @@ class UserSettings extends Component {
         const { user } = this.props;
         if (user.email) {
             this.setState({
-                email: email,
+                email: user.email,
             });
         }
     }
+
+    clearForm = () => {
+        this.setState({
+            password: '',
+            confirmPassword: '',
+            canUpdate: false,
+        });
+    };
+
+    canUserUpdate = () => {
+        const { canUpdate, password, confirmPassword } = this.state;
+        return canUpdate && password.length > 8 && password === confirmPassword;
+    };
 
     handleChange = name => event => {
         let value = event.target.value;
@@ -35,11 +49,12 @@ class UserSettings extends Component {
     };
 
     handleUpdateUser = () => {
-        const { updateUserEmailPassword, user } = this.props;
+        const { updateUserEmailPassword, user, handleClose } = this.props;
         const { email, password } = this.state;
         updateUserEmailPassword({
             variables: { id: user.id, email, password },
         });
+        handleClose(this.clearForm);
     };
 
     renderSelectedToolbar = (selectedRows, displayData) => (
@@ -51,9 +66,15 @@ class UserSettings extends Component {
         />
     );
 
+    handleUserLogout = () => {
+        const { handleLogout, handleClose } = this.props;
+        handleLogout();
+        handleClose(this.clearForm);
+    };
+
     render() {
-        const { user, classes } = this.props;
-        const { canUpdate } = this.state;
+        const { classes, handleClose, open } = this.props;
+        const { email, password, confirmPassword } = this.state;
         return (
             <Dialog
                 open={open}
@@ -61,7 +82,7 @@ class UserSettings extends Component {
                 aria-labelledby="form-dialog-title"
             >
                 <DialogTitle id="form-dialog-title">
-                    Create New Payment
+                    Update user settings
                 </DialogTitle>
                 <DialogContent>
                     <TextField
@@ -70,6 +91,26 @@ class UserSettings extends Component {
                         value={email}
                         className={classes.textField}
                         onChange={this.handleChange('email')}
+                        margin="normal"
+                    />
+                    <TextField
+                        id="standard-name"
+                        label="New Password"
+                        type="password"
+                        helperText="At least 8 characters"
+                        value={password}
+                        className={classes.textField}
+                        onChange={this.handleChange('password')}
+                        margin="normal"
+                    />
+                    <TextField
+                        id="standard-name"
+                        label="Confirm Password"
+                        type="password"
+                        helperText="At least 8 characters"
+                        value={confirmPassword}
+                        className={classes.textField}
+                        onChange={this.handleChange('confirmPassword')}
                         margin="normal"
                     />
                 </DialogContent>
@@ -83,11 +124,11 @@ class UserSettings extends Component {
                     <Button
                         onClick={this.handleUpdateUser}
                         color="primary"
-                        disabled={!this.state.canUpdate}
+                        disabled={!this.canUserUpdate()}
                     >
                         Update
                     </Button>
-                    <Button onClick={this.handleLogout} color="primary">
+                    <Button onClick={this.handleUserLogout} color="primary">
                         Logout
                     </Button>
                 </DialogActions>
@@ -98,9 +139,11 @@ class UserSettings extends Component {
 
 UserSettings.propTypes = {
     classes: PropTypes.object.isRequired,
-    users: PropTypes.array.isRequired,
-    deleteUser: PropTypes.func.isRequired,
-    toggleUserAdminStatus: PropTypes.func.isRequired,
+    user: PropTypes.object.isRequired,
+    open: PropTypes.bool.isRequired,
+    updateUserEmailPassword: PropTypes.func.isRequired,
+    handleClose: PropTypes.func.isRequired,
+    handleLogout: PropTypes.func.isRequired,
 };
 
 export default compose(

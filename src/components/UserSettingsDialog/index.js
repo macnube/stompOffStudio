@@ -1,3 +1,3 @@
-import UserManagementContainer from './UserManagementContainer';
+import UserSettingsContainer from './UserSettingsContainer';
 
-export default UserManagementContainer;
+export default UserSettingsContainer;

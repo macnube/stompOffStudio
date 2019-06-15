@@ -10,11 +10,7 @@ export const SMALL_COURSE_FRAGMENT = gql`
 export const MEDIUM_COURSE_FRAGMENT = gql`
     fragment MediumCourseFragment on Course {
         ...SmallCourseFragment
-        description
         day
-        startTime
-        duration
-        studentLimit
     }
     ${SMALL_COURSE_FRAGMENT}
 `;
@@ -23,8 +19,8 @@ export const LARGE_COURSE_FRAGMENT = gql`
     fragment LargeCourseFragment on Course {
         ...MediumCourseFragment
         description
-        day
         startTime
+        startDate
         duration
         studentLimit
     }

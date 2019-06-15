@@ -1,10 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import reduce from 'lodash/reduce';
-import some from 'lodash/some';
 import MUIDataTable from 'mui-datatables';
 
 import { FullScreenDialog } from 'components';
+import { parseStudentsToTableData } from './parse';
 
 const columns = [
     {
@@ -20,21 +19,6 @@ const columns = [
         name: 'Email',
     },
 ];
-
-const parseStudentsToTableData = (students, courseId) =>
-    reduce(
-        students,
-        (acc, student) => {
-            if (some(student.memberships, { course: { id: courseId } })) {
-                return acc;
-            }
-            const { id, name, email } = student;
-            const result = [id, name, email];
-            acc.push(result);
-            return acc;
-        },
-        []
-    );
 
 const AddStudentsToCourseDialog = ({
     students,

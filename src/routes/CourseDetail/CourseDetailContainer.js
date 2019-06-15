@@ -11,7 +11,7 @@ import {
     UPDATE_COURSE,
     REMOVE_TEACHER_FROM_COURSE,
     DELETE_COURSE_STUDENT,
-    CREATE_COURSE_STUDENT,
+    CREATE_MEMBERSHIP,
     UPDATE_MEMBERSHIP_STATUS,
     GET_STUDENT_FRAGMENT,
     CREATE_COURSE_INSTANCE,
@@ -134,7 +134,7 @@ const createCourseInstance = ({ render }) => (
 );
 
 const createMembership = ({ render }) => (
-    <Mutation mutation={CREATE_COURSE_STUDENT}>
+    <Mutation mutation={CREATE_MEMBERSHIP}>
         {(mutation, result) => render({ mutation, result })}
     </Mutation>
 );

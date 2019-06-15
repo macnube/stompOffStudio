@@ -1,67 +1,56 @@
 import gql from 'graphql-tag';
 
+import {
+    LARGE_COURSE_FRAGMENT,
+    SMALL_COURSE_FRAGMENT,
+    SMALL_TEACHER_FRAGMENT,
+    MEDIUM_MEMBERSHIP_FRAGMENT,
+    SMALL_STUDENT_FRAGMENT,
+    SMALL_COURSE_INSTANCE_FRAGMENT,
+    SMALL_PARTICIPANT_FRAGMENT,
+    MEDIUM_ROOM_FRAGMENT,
+    MEDIUM_COURSE_INSTANCE_FRAGMENT,
+} from 'graphql';
+
 const DETAIL_COURSE_FRAGMENT = gql`
     fragment DetailCourseFragment on Course {
-        id
-        name
-        description
-        startDate
-        startTime
-        day
-        duration
-        studentLimit
+        ...LargeCourseFragment
         teachers {
-            id
-            name
-            email
+            ...SmallTeacherFragment
         }
         memberships {
-            id
+            ...MediumMembershipFragment
             student {
-                id
-                email
-                name
+                ...SmallStudentFragment
             }
-            course {
-                id
-            }
-            role
-            status
-            waitlistDate
         }
         instances {
-            id
-            date
-            topic
-            notes
-            recapUrl
+            ...SmallCourseInstanceFragment
             participants {
-                id
-                status
+                ...SmallParticipantFragment
             }
         }
         room {
-            id
-            name
-            capacity
-            studio {
-                id
-                name
-            }
+            ...MediumRoomFragment
         }
     }
+    ${MEDIUM_ROOM_FRAGMENT}
+    ${SMALL_PARTICIPANT_FRAGMENT}
+    ${SMALL_COURSE_INSTANCE_FRAGMENT}
+    ${SMALL_STUDENT_FRAGMENT}
+    ${MEDIUM_MEMBERSHIP_FRAGMENT}
+    ${LARGE_COURSE_FRAGMENT}
+    ${SMALL_TEACHER_FRAGMENT}
 `;
 
 const DETAIL_COURSE_INSTANCE_FRAGMENT = gql`
     fragment CreateCourseInstanceFragment on CourseInstance {
-        topic
-        notes
-        date
-        recapUrl
+        ...MediumCourseInstanceFragment
         course {
             ...DetailCourseFragment
         }
     }
+    ${MEDIUM_COURSE_INSTANCE_FRAGMENT}
     ${DETAIL_COURSE_FRAGMENT}
 `;
 
@@ -95,33 +84,26 @@ export const UPDATE_COURSE = gql`
             studentLimit: $studentLimit
             day: $day
         ) {
-            id
-            name
-            description
-            startDate
-            startTime
-            duration
-            studentLimit
-            day
+            ...LargeCourseFragment
         }
     }
+    ${LARGE_COURSE_FRAGMENT}
 `;
 
 export const REMOVE_TEACHER_FROM_COURSE = gql`
     mutation CourseDetailAddTeacherToCourse($id: ID!, $teacherId: ID!) {
         removeTeacherFromCourse(id: $id, teacherId: $teacherId) {
-            id
-            name
+            ...SmallCourseFragment
             teachers {
-                id
-                name
-                email
+                ...SmallTeacherFragment
             }
         }
     }
+    ${SMALL_COURSE_FRAGMENT}
+    ${SMALL_STUDENT_FRAGMENT}
 `;
 
-export const CREATE_COURSE_STUDENT = gql`
+export const CREATE_MEMBERSHIP = gql`
     mutation StudentDetailCreateMembership(
         $courseId: ID!
         $studentId: ID!
@@ -134,30 +116,23 @@ export const CREATE_COURSE_STUDENT = gql`
             role: $role
             status: $status
         ) {
-            id
-            role
+            ...MediumMembershipFragment
             course {
                 ...DetailCourseFragment
             }
-            student {
-                id
-                name
-                email
-                memberships {
-                    id
-                }
-            }
         }
     }
+    ${MEDIUM_MEMBERSHIP_FRAGMENT}
     ${DETAIL_COURSE_FRAGMENT}
 `;
 
 export const DELETE_COURSE_STUDENT = gql`
     mutation StudentDetailDeleteMembership($id: ID!) {
         deleteMembership(id: $id) {
-            id
+            ...MediumMembershipFragment
         }
     }
+    ${MEDIUM_MEMBERSHIP_FRAGMENT}
 `;
 
 export const UPDATE_MEMBERSHIP_STATUS = gql`
@@ -166,20 +141,10 @@ export const UPDATE_MEMBERSHIP_STATUS = gql`
         $status: MembershipStatus!
     ) {
         updateMembershipStatus(id: $id, status: $status) {
-            id
-            student {
-                id
-                email
-                name
-            }
-            course {
-                id
-            }
-            role
-            status
-            waitlistDate
+            ...MediumMembershipFragment
         }
     }
+    ${MEDIUM_MEMBERSHIP_FRAGMENT}
 `;
 
 export const GET_STUDENT_FRAGMENT = gql`

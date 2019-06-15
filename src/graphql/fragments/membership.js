@@ -6,3 +6,12 @@ export const SMALL_MEMBERSHIP_FRAGMENT = gql`
         role
     }
 `;
+
+export const MEDIUM_MEMBERSHIP_FRAGMENT = gql`
+    fragment MediumMembershipFragment on Membership {
+        ...SmallMembershipFragment
+        status
+        waitlistDate
+    }
+    ${SMALL_MEMBERSHIP_FRAGMENT}
+`;

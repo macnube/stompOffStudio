@@ -1,52 +1,24 @@
 import gql from 'graphql-tag';
 
+import {
+    SMALL_STUDENT_FRAGMENT,
+    SMALL_MEMBERSHIP_FRAGMENT,
+    SMALL_COURSE_FRAGMENT,
+} from 'graphql';
+
 export const GET_STUDENTS = gql`
     query CourseDetailGetStudents {
         students {
-            id
-            email
-            name
+            ...SmallStudentFragment
             memberships {
-                id
+                ...SmallMembershipFragment
                 course {
-                    id
+                    ...SmallCourseFragment
                 }
             }
         }
     }
-`;
-
-// Probably need to start using fragments
-// This mutation needs to update the necessary UI for Course Detail
-// And for student detail
-export const CREATE_COURSE_STUDENT = gql`
-    mutation StudentDetailCreateMembership(
-        $courseId: ID!
-        $studentId: ID!
-        $role: DanceRole!
-    ) {
-        createMembership(
-            courseId: $courseId
-            studentId: $studentId
-            role: $role
-        ) {
-            id
-            role
-            course {
-                id
-                name
-                memberships {
-                    id
-                }
-            }
-            student {
-                id
-                name
-                email
-                memberships {
-                    id
-                }
-            }
-        }
-    }
+    ${SMALL_MEMBERSHIP_FRAGMENT}
+    ${SMALL_COURSE_FRAGMENT}
+    ${SMALL_STUDENT_FRAGMENT}
 `;

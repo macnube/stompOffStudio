@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import reduce from 'lodash/reduce';
-import includes from 'lodash/includes';
+
 import forEach from 'lodash/forEach';
-import map from 'lodash/map';
+
 import MUIDataTable from 'mui-datatables';
 
 import { FullScreenDialog, SelectedAddToolbar } from 'components';
+import { parseMembershipsToTableData } from './parse';
 
 const columns = [
     {
@@ -23,28 +23,8 @@ const columns = [
     },
 ];
 
-const parseStudentsToTableData = (students, courseInstance) => {
-    const currentParticipantStudentIds = map(
-        courseInstance.participants,
-        participant => participant.student.id
-    );
-    return reduce(
-        students,
-        (acc, student) => {
-            if (includes(currentParticipantStudentIds, student.id)) {
-                return acc;
-            }
-            const { id, name, email } = student;
-            const result = [id, name, email];
-            acc.push(result);
-            return acc;
-        },
-        []
-    );
-};
-
 const AddMembershipsToCourseInstanceDialog = ({
-    students,
+    memberships,
     open,
     handleClose,
     courseInstance,
@@ -82,7 +62,7 @@ const AddMembershipsToCourseInstanceDialog = ({
         >
             <MUIDataTable
                 title={'Students'}
-                data={parseStudentsToTableData(students, courseInstance)}
+                data={parseMembershipsToTableData(memberships, courseInstance)}
                 columns={columns}
                 options={options}
             />
@@ -94,7 +74,7 @@ AddMembershipsToCourseInstanceDialog.propTypes = {
     open: PropTypes.bool.isRequired,
     handleClose: PropTypes.func.isRequired,
     addParticipantToCourseInstance: PropTypes.func.isRequired,
-    students: PropTypes.array.isRequired,
+    memberships: PropTypes.array.isRequired,
     courseInstance: PropTypes.object.isRequired,
 };
 

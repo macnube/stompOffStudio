@@ -18,3 +18,15 @@ export const MEDIUM_COURSE_FRAGMENT = gql`
     }
     ${SMALL_COURSE_FRAGMENT}
 `;
+
+export const LARGE_COURSE_FRAGMENT = gql`
+    fragment LargeCourseFragment on Course {
+        ...MediumCourseFragment
+        description
+        day
+        startTime
+        duration
+        studentLimit
+    }
+    ${MEDIUM_COURSE_FRAGMENT}
+`;

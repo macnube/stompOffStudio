@@ -1,19 +1,19 @@
 import gql from 'graphql-tag';
 
-export const GET_STUDENTS = gql`
-    query CourseDetailGetStudents {
-        students {
-            id
-            email
-            name
-            memberships {
-                id
-                course {
-                    id
-                }
+import { SMALL_STUDENT_FRAGMENT, SMALL_MEMBERSHIP_FRAGMENT } from 'graphql';
+import { COURSE_INSTANCE_FRAGMENT } from 'routes/CourseInstance/graphql';
+
+export const GET_MEMBERSHIPS_BY_COURSE_INSTANCE = gql`
+    query CourseDetailGetMemberships($courseInstanceId: ID!) {
+        membershipsByCourseInstance(courseInstanceId: $courseInstanceId) {
+            ...SmallMembershipFragment
+            student {
+                ...SmallStudentFragment
             }
         }
     }
+    ${SMALL_MEMBERSHIP_FRAGMENT}
+    ${SMALL_STUDENT_FRAGMENT}
 `;
 
 // Probably need to start using fragments
@@ -25,49 +25,8 @@ export const ADD_PARTICIPANT_TO_INSTANCE = gql`
         $studentId: ID!
     ) {
         addParticipantToCourseInstance(id: $id, studentId: $studentId) {
-            id
-            topic
-            notes
-            date
-            recapUrl
-            participants {
-                id
-                student {
-                    id
-                    name
-                    email
-                    memberships {
-                        id
-                    }
-                    cards {
-                        id
-                        expirationDate
-                        active
-                        value
-                        participationHistory {
-                            id
-                        }
-                        payment {
-                            id
-                            date
-                        }
-                        paid
-                    }
-                }
-                status
-            }
-            course {
-                id
-                memberships {
-                    id
-                    student {
-                        id
-                        name
-                        email
-                    }
-                    role
-                }
-            }
+            ...CourseInstanceFragment
         }
     }
+    ${COURSE_INSTANCE_FRAGMENT}
 `;

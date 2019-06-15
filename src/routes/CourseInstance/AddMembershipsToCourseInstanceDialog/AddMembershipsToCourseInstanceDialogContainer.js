@@ -3,11 +3,19 @@ import PropTypes from 'prop-types';
 import { Query, Mutation } from 'react-apollo';
 import { Adopt } from 'react-adopt';
 
-import { GET_STUDENTS, ADD_PARTICIPANT_TO_INSTANCE } from './graphql';
+import {
+    GET_MEMBERSHIPS_BY_COURSE_INSTANCE,
+    ADD_PARTICIPANT_TO_INSTANCE,
+} from './graphql';
 import AddMembershipsToCourseInstanceDialog from './AddMembershipsToCourseInstanceDialog';
 
-const getStudents = ({ render }) => (
-    <Query query={GET_STUDENTS}>{render}</Query>
+const getMemberships = ({ render, id }) => (
+    <Query
+        query={GET_MEMBERSHIPS_BY_COURSE_INSTANCE}
+        variables={{ courseInstanceId: id }}
+    >
+        {render}
+    </Query>
 );
 
 const addParticipantToCourseInstance = ({ render }) => (
@@ -17,7 +25,7 @@ const addParticipantToCourseInstance = ({ render }) => (
 );
 
 const mapper = {
-    getStudents,
+    getMemberships,
     addParticipantToCourseInstance,
 };
 
@@ -26,9 +34,9 @@ const AddMembershipsToCourseInstanceDialogContainer = ({
     handleClose,
     courseInstance,
 }) => (
-    <Adopt mapper={mapper}>
+    <Adopt mapper={mapper} id={courseInstance.id}>
         {({
-            getStudents: { data, loading, error },
+            getMemberships: { data, loading, error },
             addParticipantToCourseInstance: {
                 mutation: addParticipantToCourseInstanceMutation,
             },
@@ -40,7 +48,7 @@ const AddMembershipsToCourseInstanceDialogContainer = ({
                     open={open}
                     handleClose={handleClose}
                     courseInstance={courseInstance}
-                    students={data.students}
+                    memberships={data.membershipsByCourseInstance}
                     addParticipantToCourseInstance={
                         addParticipantToCourseInstanceMutation
                     }

@@ -3,16 +3,14 @@ import { withRouter } from 'react-router-dom';
 import isNil from 'lodash/isNil';
 import find from 'lodash/find';
 import PropTypes from 'prop-types';
-import MUIDataTable from 'mui-datatables';
 import Paper from '@material-ui/core/Paper';
-import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
 import { MuiPickersUtilsProvider } from 'material-ui-pickers';
 import DateFnsUtils from '@date-io/date-fns';
 
 import SelectedParticipantToolbar from './SelectedParticipantToolbar';
 import CourseInstanceHeader from './CourseInstanceHeader';
 import AddMembershipsToCourseInstanceDialog from './AddMembershipsToCourseInstanceDialog';
-import { CardDialog, CustomAddToolbar } from 'components';
+import { CardDialog, CustomAddToolbar, FlatTable } from 'components';
 import { parseInstanceToTableData } from './parse';
 import { PARTICIPANT_STATUS } from 'constants/gql';
 import { isPastExpiration } from 'utils/date';
@@ -73,17 +71,6 @@ class CourseInstance extends Component {
             });
         }
     }
-
-    getMuiTheme = () =>
-        createMuiTheme({
-            overrides: {
-                MuiPaper: {
-                    elevation4: {
-                        boxShadow: '0 0 0 0',
-                    },
-                },
-            },
-        });
 
     handleAddCardOpen = (student, title, participantId) => {
         this.setState({
@@ -268,14 +255,12 @@ class CourseInstance extends Component {
                             this.handleNavigateToCourseAttendance
                         }
                     />
-                    <MuiThemeProvider theme={this.getMuiTheme()}>
-                        <MUIDataTable
-                            title={'Participants'}
-                            data={parseInstanceToTableData(courseInstance)}
-                            columns={columns}
-                            options={options}
-                        />
-                    </MuiThemeProvider>
+                    <FlatTable
+                        title={'Participants'}
+                        data={parseInstanceToTableData(courseInstance)}
+                        columns={columns}
+                        options={options}
+                    />
                     {studentName ? (
                         <CardDialog
                             title={title}

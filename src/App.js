@@ -31,7 +31,7 @@ const setupClient = (user, setUser) =>
             if (graphQLErrors) {
                 console.log('errors are: ', graphQLErrors);
                 const message = get(graphQLErrors[0], 'message');
-                if (message === 'Not Authorised!') {
+                if (message === 'Not Authorised!' && user.isAuthenticated) {
                     setUser({ admin: false, isAuthenticated: false });
                 }
             }
@@ -59,7 +59,6 @@ const App = () => {
 
         getAuthUser();
     }, []);
-
     return (
         <UserAuthContext.Provider
             value={{

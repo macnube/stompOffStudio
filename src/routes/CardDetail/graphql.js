@@ -1,42 +1,42 @@
 import gql from 'graphql-tag';
 
-import { LARGE_CARD_FRAGMENT } from 'graphql';
+import {
+    MEDIUM_CARD_FRAGMENT,
+    SMALL_PARTICIPANT_FRAGMENT,
+    SMALL_COURSE_INSTANCE_FRAGMENT,
+} from 'graphql';
+
+const CARD_DETAIL_CARD_FRAGMENT = gql`
+    fragment CardDetailCardFragment on Card {
+        ...MediumCardFragment
+        participationHistory {
+            ...SmallParticipantFragment
+            courseInstance {
+                ...SmallCourseInstanceFragment
+            }
+        }
+    }
+    ${MEDIUM_CARD_FRAGMENT}
+    ${SMALL_PARTICIPANT_FRAGMENT}
+    ${SMALL_COURSE_INSTANCE_FRAGMENT}
+`;
 
 export const GET_CARD = gql`
     query CardDetailGetCard($id: ID!) {
         card(id: $id) {
-            id
-            expirationDate
-            active
-            value
-            participationHistory {
-                id
-                courseInstance {
-                    id
-                    date
-                    topic
-                }
-            }
-            student {
-                id
-                name
-            }
-            payment {
-                id
-                date
-                amount
-            }
+            ...CardDetailCardFragment
         }
     }
+    ${CARD_DETAIL_CARD_FRAGMENT}
 `;
 
 export const GET_PARTICIPANT_BY_STUDENT = gql`
     query CardDetailGetParticipantByStudent($id: ID!) {
         getParticipantByStudent(id: $id) {
-            id
-            status
+            ...SmallParticipantFragment
         }
     }
+    ${SMALL_PARTICIPANT_FRAGMENT}
 `;
 
 export const UPDATE_CARD = gql`
@@ -46,19 +46,10 @@ export const UPDATE_CARD = gql`
         $value: Int!
     ) {
         updateCard(id: $id, expirationDate: $expirationDate, value: $value) {
-            id
-            value
-            expirationDate
-            active
-            payment {
-                id
-                date
-            }
-            participationHistory {
-                id
-            }
+            ...MediumCardFragment
         }
     }
+    ${MEDIUM_CARD_FRAGMENT}
 `;
 
 export const REMOVE_CARD_PARTICIPATION = gql`
@@ -72,8 +63,8 @@ export const REMOVE_CARD_PARTICIPATION = gql`
             participantId: $participantId
             value: $value
         ) {
-            ...LargeCardFragment
+            ...CardDetailCardFragment
         }
     }
-    ${LARGE_CARD_FRAGMENT}
+    ${CARD_DETAIL_CARD_FRAGMENT}
 `;

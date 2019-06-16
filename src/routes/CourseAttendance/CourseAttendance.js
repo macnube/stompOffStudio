@@ -101,7 +101,7 @@ class CourseAttendance extends Component {
             });
             this.handleResetParticipationStatus(participant.id);
         }
-        const recentCard = find(participant.student.cards, card =>
+        const recentCard = find(participant.membership.student.cards, card =>
             isBeforeExpiration(card.expirationDate)
         );
         if (recentCard) {
@@ -119,7 +119,7 @@ class CourseAttendance extends Component {
     handleParticipantClick = id => {
         const { logCardParticipation, courseInstance } = this.props;
         const participant = find(courseInstance.participants, { id });
-        const activeCard = find(participant.student.cards, card =>
+        const activeCard = find(participant.membership.student.cards, card =>
             isCardActive(card)
         );
 
@@ -185,7 +185,7 @@ class CourseAttendance extends Component {
                                     this.handleParticipantClick(participant.id)
                                 }
                             >
-                                {participant.student.name}
+                                {participant.membership.student.name}
                             </Button>
                         </Grid>
                     ))}

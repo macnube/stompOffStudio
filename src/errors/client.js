@@ -34,7 +34,6 @@ export const notify = defineMethod((client, rawErr, opts) => {
 });
 
 export const setUser = defineMethod((client, user) => {
-    console.log('user is:', user);
     client.user = {
         id: user.id,
         email: user.email,

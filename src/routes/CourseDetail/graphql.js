@@ -4,6 +4,7 @@ import {
     LARGE_COURSE_FRAGMENT,
     SMALL_COURSE_FRAGMENT,
     SMALL_TEACHER_FRAGMENT,
+    SMALL_MEMBERSHIP_FRAGMENT,
     MEDIUM_MEMBERSHIP_FRAGMENT,
     SMALL_STUDENT_FRAGMENT,
     SMALL_COURSE_INSTANCE_FRAGMENT,
@@ -28,12 +29,16 @@ const DETAIL_COURSE_FRAGMENT = gql`
             ...SmallCourseInstanceFragment
             participants {
                 ...SmallParticipantFragment
+                membership {
+                    ...SmallMembershipFragment
+                }
             }
         }
         room {
             ...MediumRoomFragment
         }
     }
+    ${SMALL_MEMBERSHIP_FRAGMENT}
     ${MEDIUM_ROOM_FRAGMENT}
     ${SMALL_PARTICIPANT_FRAGMENT}
     ${SMALL_COURSE_INSTANCE_FRAGMENT}
@@ -163,7 +168,7 @@ export const CREATE_COURSE_INSTANCE = gql`
         $date: DateTime!
         $recapUrl: String
         $courseId: ID!
-        $studentIds: [ID!]!
+        $membershipIds: [ID!]!
     ) {
         createCourseInstance(
             topic: $topic
@@ -171,7 +176,7 @@ export const CREATE_COURSE_INSTANCE = gql`
             date: $date
             recapUrl: $recapUrl
             courseId: $courseId
-            studentIds: $studentIds
+            membershipIds: $membershipIds
         ) {
             ...CreateCourseInstanceFragment
         }

@@ -1,7 +1,12 @@
 import filter from 'lodash/filter';
 import reduce from 'lodash/reduce';
+import includes from 'lodash/includes';
 
-import { PARTICIPANT_STATUS, MEMBERSHIP_STATUS } from 'constants/gql';
+import {
+    PARTICIPANT_STATUS,
+    MEMBERSHIP_STATUS,
+    DANCE_ROLE,
+} from 'constants/gql';
 import { getTableDate } from 'utils/date';
 
 export const parseActiveMembershipsToTableData = (memberships, role) =>
@@ -52,11 +57,17 @@ export const parseTeachersToTableData = teachers =>
         []
     );
 
-const getNumberOfParticipants = (participants, status) =>
+export const getNumberByRole = (participants, role) =>
     reduce(
         participants,
         (result, participant) => {
-            if (participant.status === status) {
+            if (
+                includes(
+                    [PARTICIPANT_STATUS.PRESENT, PARTICIPANT_STATUS.NOT_LOGGED],
+                    participant.status
+                ) &&
+                participant.membership.role === role
+            ) {
                 return ++result;
             }
             return result;
@@ -72,14 +83,8 @@ export const parseInstancesToTableData = instances =>
                 instance.id,
                 getTableDate(instance.date),
                 instance.topic,
-                getNumberOfParticipants(
-                    instance.participants,
-                    PARTICIPANT_STATUS.PRESENT
-                ),
-                getNumberOfParticipants(
-                    instance.participants,
-                    PARTICIPANT_STATUS.ABSENT
-                ),
+                getNumberByRole(instance.participants, DANCE_ROLE.LEADER),
+                getNumberByRole(instance.participants, DANCE_ROLE.FOLLOWER),
             ];
             acc.push(result);
             return acc;

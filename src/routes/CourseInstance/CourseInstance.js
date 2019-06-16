@@ -11,7 +11,7 @@ import SelectedParticipantToolbar from './SelectedParticipantToolbar';
 import CourseInstanceHeader from './CourseInstanceHeader';
 import AddMembershipsToCourseInstanceDialog from './AddMembershipsToCourseInstanceDialog';
 import { CardDialog, CustomAddToolbar, FlatTable } from 'components';
-import { parseInstanceToTableData } from './parse';
+import { parseParticipantsToTableData } from './parse';
 import { PARTICIPANT_STATUS } from 'constants/gql';
 import { isPastExpiration } from 'utils/date';
 
@@ -145,24 +145,25 @@ class CourseInstance extends Component {
             courseInstance,
             deactivateCard,
         } = this.props;
-        const participant = find(courseInstance.participants, { id });
-        const activeCard = find(participant.student.cards, {
+        const student = find(courseInstance.participants, { id }).membership
+            .student;
+        const activeCard = find(student.cards, {
             active: true,
         });
 
         if (isNil(activeCard)) {
             const title = `No active card found - Please add a new card for ${
-                participant.student.name
+                student.name
             }`;
-            return this.handleAddCardOpen(participant.student, title, id);
+            return this.handleAddCardOpen(student, title, id);
         } else if (isPastExpiration(activeCard.expirationDate)) {
             deactivateCard({
                 variables: { id: activeCard.id },
             });
             const title = `Card has expired - Please add a new card for ${
-                participant.student.name
+                student.name
             }`;
-            return this.handleAddCardOpen(participant.student, title, id);
+            return this.handleAddCardOpen(student, title, id);
         }
         logCardParticipation({
             variables: {
@@ -257,7 +258,9 @@ class CourseInstance extends Component {
                     />
                     <FlatTable
                         title={'Participants'}
-                        data={parseInstanceToTableData(courseInstance)}
+                        data={parseParticipantsToTableData(
+                            courseInstance.participants
+                        )}
                         columns={columns}
                         options={options}
                     />

@@ -3,14 +3,14 @@ import includes from 'lodash/includes';
 import map from 'lodash/map';
 
 export const parseMembershipsToTableData = (memberships, courseInstance) => {
-    const currentParticipantStudentIds = map(
+    const currentParticipantMembershipIds = map(
         courseInstance.participants,
-        participant => participant.student.id
+        participant => participant.membership.id
     );
     return reduce(
         memberships,
         (acc, membership) => {
-            if (includes(currentParticipantStudentIds, membership.student.id)) {
+            if (includes(currentParticipantMembershipIds, membership.id)) {
                 return acc;
             }
             const { id, name, email } = membership.student;

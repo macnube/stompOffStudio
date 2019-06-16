@@ -1,40 +1,8 @@
 import reduce from 'lodash/reduce';
-import includes from 'lodash/includes';
 
-import { PARTICIPANT_STATUS, DANCE_ROLE } from 'constants/gql';
+import { DANCE_ROLE } from 'constants/gql';
 import { getTableDate } from 'utils/date';
-
-const getAbsentParticipantStudentIds = participants =>
-    reduce(
-        participants,
-        (result, participant) => {
-            if (participant.status === PARTICIPANT_STATUS.ABSENT) {
-                result.push(participant.student.id);
-                return result;
-            }
-            return result;
-        },
-        []
-    );
-
-const getRoleCount = (instance, role) => {
-    const absentStudentIds = getAbsentParticipantStudentIds(
-        instance.participants
-    );
-    return reduce(
-        instance.course.memberships,
-        (result, membership) => {
-            if (
-                membership.role === role &&
-                !includes(absentStudentIds, membership.student.id)
-            ) {
-                return ++result;
-            }
-            return result;
-        },
-        0
-    );
-};
+import { getNumberByRole } from 'routes/CourseDetail/parse';
 
 export const parseInstancesToTableData = instances =>
     reduce(
@@ -45,8 +13,8 @@ export const parseInstancesToTableData = instances =>
                 getTableDate(instance.date),
                 instance.course.name,
                 instance.topic,
-                getRoleCount(instance, DANCE_ROLE.LEADER),
-                getRoleCount(instance, DANCE_ROLE.FOLLOWER),
+                getNumberByRole(instance.participants, DANCE_ROLE.LEADER),
+                getNumberByRole(instance.participants, DANCE_ROLE.FOLLOWER),
             ];
             acc.push(result);
             return acc;

@@ -31,9 +31,9 @@ const AddMembershipsToCourseInstanceDialog = ({
     addParticipantToCourseInstance,
 }) => {
     const handleAddPress = ids => {
-        forEach(ids, studentId => {
+        forEach(ids, membershipId => {
             addParticipantToCourseInstance({
-                variables: { id: courseInstance.id, studentId },
+                variables: { id: courseInstance.id, membershipId },
             });
         });
 

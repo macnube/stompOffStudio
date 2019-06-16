@@ -10,12 +10,11 @@ import { notify, setUser as setErrorUser, serializeValue } from 'errors';
 import UserAuthContext from './UserAuthContext';
 import Dashboard from './dashboard';
 
+const isDev = () => process.env.NODE_ENV === 'development';
+
 const setupClient = (user, setUser) =>
     new ApolloClient({
-        uri:
-            process.env.NODE_ENV === 'development'
-                ? 'http://localhost:4000'
-                : 'http://165.22.201.30:4000',
+        uri: isDev() ? 'http://localhost:4000' : 'http://165.22.201.30:4000',
         request: async operation => {
             const authUser = localStorage.getItem('authUser');
             if (authUser) {
@@ -30,6 +29,9 @@ const setupClient = (user, setUser) =>
         onError: ({ graphQLErrors, networkError }) => {
             if (graphQLErrors) {
                 const message = get(graphQLErrors[0], 'message');
+                if (isDev()) {
+                    console.log('graphQLErrors are: ', graphQLErrors);
+                }
                 if (message === 'Not Authorised!' && user.isAuthenticated) {
                     setUser({ admin: false, isAuthenticated: false });
                 } else {

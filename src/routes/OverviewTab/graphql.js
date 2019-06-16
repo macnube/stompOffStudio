@@ -1,32 +1,35 @@
 import gql from 'graphql-tag';
 
-import { SMALL_COURSE_INSTANCE_FRAGMENT } from 'graphql';
+import {
+    SMALL_COURSE_INSTANCE_FRAGMENT,
+    SMALL_MEMBERSHIP_FRAGMENT,
+    SMALL_STUDENT_FRAGMENT,
+    SMALL_PARTICIPANT_FRAGMENT,
+    SMALL_COURSE_FRAGMENT,
+} from 'graphql';
 
 export const GET_OVERVIEW_INSTANCES = gql`
     query OverviewGetOverviewInstances {
         overviewInstances {
             ...SmallCourseInstanceFragment
             participants {
-                id
-                status
-                student {
-                    id
+                ...SmallParticipantFragment
+                membership {
+                    ...SmallMembershipFragment
+                    student {
+                        ...SmallStudentFragment
+                    }
                 }
             }
             course {
-                id
-                name
-                memberships {
-                    id
-                    student {
-                        id
-                        name
-                    }
-                    role
-                }
+                ...SmallCourseFragment
             }
         }
     }
+    ${SMALL_PARTICIPANT_FRAGMENT}
+    ${SMALL_COURSE_FRAGMENT}
+    ${SMALL_STUDENT_FRAGMENT}
+    ${SMALL_MEMBERSHIP_FRAGMENT}
     ${SMALL_COURSE_INSTANCE_FRAGMENT}
 `;
 

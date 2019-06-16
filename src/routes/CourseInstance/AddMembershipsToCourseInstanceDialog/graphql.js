@@ -22,9 +22,9 @@ export const GET_MEMBERSHIPS_BY_COURSE_INSTANCE = gql`
 export const ADD_PARTICIPANT_TO_INSTANCE = gql`
     mutation CourseInstanceAddParticipantToCourseInstance(
         $id: ID!
-        $studentId: ID!
+        $membershipId: ID!
     ) {
-        addParticipantToCourseInstance(id: $id, studentId: $studentId) {
+        addParticipantToCourseInstance(id: $id, membershipId: $membershipId) {
             ...CourseInstanceFragment
         }
     }

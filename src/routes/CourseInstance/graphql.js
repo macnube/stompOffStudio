@@ -22,16 +22,17 @@ export const GET_COURSE_INSTANCE_FRAGMENT = gql`
 const COURSE_INSTANCE_PARTICIPANT_FRAGMENT = gql`
     fragment CourseInstanceParticipantFragment on Participant {
         ...SmallParticipantFragment
-        student {
-            ...SmallStudentFragment
-            memberships {
-                ...SmallMembershipFragment
-                course {
-                    ...SmallCourseFragment
-                }
+        membership {
+            ...SmallMembershipFragment
+            course {
+                ...SmallCourseFragment
             }
-            cards {
-                ...MediumCardFragment
+            student {
+                ...SmallStudentFragment
+
+                cards {
+                    ...MediumCardFragment
+                }
             }
         }
     }

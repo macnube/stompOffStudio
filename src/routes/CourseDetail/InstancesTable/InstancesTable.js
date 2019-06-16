@@ -23,10 +23,10 @@ const columns = [
         name: 'Topic',
     },
     {
-        name: '# of Attendees',
+        name: '# of Leaders',
     },
     {
-        name: '# of Absentees',
+        name: '# of Followers',
     },
 ];
 
@@ -41,11 +41,11 @@ const InstancesTable = ({
 }) => {
     const handleCreate = instance => {
         const { topic, notes, recapUrl, date } = instance;
-        const studentIds = reduce(
+        const membershipIds = reduce(
             course.memberships,
             (result, membership) => {
                 if (membership.status === MEMBERSHIP_STATUS.ACTIVE) {
-                    result.push(membership.student.id);
+                    result.push(membership.id);
                     return result;
                 }
                 return result;
@@ -59,7 +59,7 @@ const InstancesTable = ({
                 recapUrl,
                 date,
                 courseId: course.id,
-                studentIds,
+                membershipIds,
             },
         });
         handleClose();

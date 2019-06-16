@@ -38,14 +38,12 @@ const deleteUser = ({ render }) => (
                 fragment: MEDIUM_USER_FRAGMENT,
                 fragmentName: 'MediumUserFragment',
             });
-            console.log('user is: ', user);
             if (user.student) {
                 const student = cache.readFragment({
                     id: `Student:${user.student.id}`,
                     fragment: USER_MANAGEMENT_STUDENT_FRAGMENT,
                     fragmentName: 'UserManagementStudentFragment',
                 });
-                console.log('student is: ', student);
                 cache.writeFragment({
                     id: `Student:${student.id}`,
                     fragment: USER_MANAGEMENT_STUDENT_FRAGMENT,

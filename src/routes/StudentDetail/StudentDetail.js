@@ -14,7 +14,6 @@ class StudentDetail extends Component {
     state = {
         openMembershipDialog: false,
         openCardDialog: false,
-        openPaymentDialog: false,
         openUpdateCardDialog: false,
     };
 
@@ -40,7 +39,6 @@ class StudentDetail extends Component {
         this.setState({
             openMembershipDialog: false,
             openCardDialog: false,
-            openPaymentDialog: false,
         });
     };
 
@@ -79,16 +77,13 @@ class StudentDetail extends Component {
             deleteCard,
             createPayment,
             deletePayment,
+            updatePayment,
             deleteMembership,
             payCard,
             unpayCard,
             history,
         } = this.props;
-        const {
-            openMembershipDialog,
-            openCardDialog,
-            openPaymentDialog,
-        } = this.state;
+        const { openMembershipDialog, openCardDialog } = this.state;
         return (
             <div>
                 <Paper>
@@ -121,16 +116,13 @@ class StudentDetail extends Component {
                         history={history}
                     />
                     <PaymentsTable
-                        open={openPaymentDialog}
                         student={student}
                         clearReferralBonus={clearReferralBonus}
                         createPayment={createPayment}
                         deletePayment={deletePayment}
+                        updatePayment={updatePayment}
                         payCard={payCard}
                         unpayCard={unpayCard}
-                        handleAdd={() =>
-                            this.handleOpenDialog('openPaymentDialog')
-                        }
                         handleClose={this.handleClose}
                     />
                 </Paper>
@@ -148,6 +140,7 @@ StudentDetail.propTypes = {
     deleteCard: PropTypes.func.isRequired,
     createPayment: PropTypes.func.isRequired,
     deletePayment: PropTypes.func.isRequired,
+    updatePayment: PropTypes.func.isRequired,
     payCard: PropTypes.func.isRequired,
     unpayCard: PropTypes.func.isRequired,
     createUser: PropTypes.func.isRequired,

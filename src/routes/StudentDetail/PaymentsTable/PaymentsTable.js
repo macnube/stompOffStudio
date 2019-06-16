@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useState } from 'react';
 import PropTypes from 'prop-types';
 import forEach from 'lodash/forEach';
 import find from 'lodash/find';
@@ -38,15 +38,15 @@ const columns = [
 
 const PaymentsTable = ({
     student,
-    open,
-    handleAdd,
     deletePayment,
     unpayCard,
     createPayment,
+    updatePayment,
     payCard,
-    handleClose,
     clearReferralBonus,
 }) => {
+    const [open, setOpen] = useState(false);
+    const [payment, setPayment] = useState(null);
     const handleOnDeletePress = ids => {
         forEach(ids, id => {
             deletePayment({
@@ -80,6 +80,24 @@ const PaymentsTable = ({
         handleClose();
     };
 
+    const handleUpdatePayment = payment => {
+        updatePayment({
+            variables: {
+                ...payment,
+            },
+        });
+
+        if (payment.type === PAYMENT_TYPE.CARD && payment.cardId) {
+            payCard({
+                variables: {
+                    id: payment.cardId,
+                },
+            });
+        }
+
+        handleClose();
+    };
+
     const handleClearBonus = id => {
         clearReferralBonus({
             variables: {
@@ -87,6 +105,22 @@ const PaymentsTable = ({
             },
         });
     };
+
+    const handleClose = onClose => {
+        if (onClose) {
+            onClose();
+        }
+        setOpen(false);
+        setPayment(null);
+    };
+
+    const handleOnPaymentClick = rowData => {
+        const payment = find(student.payments, { id: rowData[0] });
+        setPayment(payment);
+        setOpen(true);
+    };
+
+    const handleOnAddClick = () => setOpen(true);
 
     const renderSelectedToolbar = (selectedRows, displayData) => (
         <SelectedDeleteToolbar
@@ -97,13 +131,17 @@ const PaymentsTable = ({
     );
 
     const renderToolbar = () => (
-        <CustomAddToolbar title={'Add Payment'} handleAddPress={handleAdd} />
+        <CustomAddToolbar
+            title={'Add Payment'}
+            handleAddPress={handleOnAddClick}
+        />
     );
 
     const options = {
         responsive: 'scroll',
         customToolbar: renderToolbar,
         customToolbarSelect: renderSelectedToolbar,
+        onRowClick: handleOnPaymentClick,
     };
     return (
         <Fragment>
@@ -116,9 +154,11 @@ const PaymentsTable = ({
             <PaymentDialog
                 open={open}
                 handleCreate={handleCreatePayment}
+                handleUpdate={handleUpdatePayment}
                 handleClearBonus={handleClearBonus}
                 handleClose={handleClose}
                 student={student}
+                payment={payment}
             />
         </Fragment>
     );
@@ -126,14 +166,12 @@ const PaymentsTable = ({
 
 PaymentsTable.propTypes = {
     student: PropTypes.object.isRequired,
-    handleAdd: PropTypes.func.isRequired,
-    handleClose: PropTypes.func.isRequired,
     clearReferralBonus: PropTypes.func.isRequired,
     createPayment: PropTypes.func.isRequired,
     deletePayment: PropTypes.func.isRequired,
+    updatePayment: PropTypes.func.isRequired,
     payCard: PropTypes.func.isRequired,
     unpayCard: PropTypes.func.isRequired,
-    open: PropTypes.bool.isRequired,
 };
 
 export default React.memo(PaymentsTable);

@@ -45,6 +45,19 @@ class PaymentDialog extends React.Component {
         }
     }
 
+    componentDidUpdate(prevProps) {
+        const { payment } = this.props;
+        if (payment && isNil(prevProps.payment)) {
+            const { id, type, amount, date } = payment;
+            return this.setState({
+                id,
+                type,
+                amount,
+                date,
+            });
+        }
+    }
+
     handleChange = (name, isNumber = false) => event => {
         let value = event.target.value;
         if (isNumber) {

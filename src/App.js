@@ -7,7 +7,7 @@ import 'video-react/dist/video-react.css';
 
 import './App.css';
 import { notify, setUser as setErrorUser, serializeValue } from 'errors';
-import UserAuthContext from './UserAuthContext';
+import { UserAuthContext } from 'core/user';
 import Dashboard from './dashboard';
 
 const isDev = () => process.env.NODE_ENV === 'development';
@@ -33,7 +33,11 @@ const setupClient = (user, setUser) =>
                     console.log('graphQLErrors are: ', graphQLErrors);
                 }
                 if (message === 'Not Authorised!' && user.isAuthenticated) {
-                    setUser({ admin: false, isAuthenticated: false });
+                    setUser({
+                        admin: false,
+                        isAuthenticated: false,
+                        student: null,
+                    });
                 } else {
                     notify('GraphQL Error', {
                         metaData: {
@@ -55,6 +59,7 @@ const App = () => {
         token: '',
         isAuthenticated: false,
         isAdmin: false,
+        student: null,
     });
 
     useEffect(() => {
@@ -63,7 +68,12 @@ const App = () => {
             if (authUser) {
                 const { token, user } = JSON.parse(authUser);
                 setErrorUser(user);
-                setUser({ token, admin: user.admin, isAuthenticated: true });
+                setUser({
+                    token,
+                    admin: user.admin,
+                    isAuthenticated: true,
+                    student: user.student,
+                });
             }
         };
 

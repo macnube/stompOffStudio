@@ -1,11 +1,12 @@
-import React, { useContext } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import { Redirect } from 'react-router-dom';
 import { Mutation } from 'react-apollo';
 import { Adopt } from 'react-adopt';
 
 import { LOGIN } from './graphql';
 import Login from './Login';
-import UserAuthContext from 'src/UserAuthContext';
+import { withUser } from 'core/user';
 
 const login = ({ render }) => (
     <Mutation mutation={LOGIN}>
@@ -17,22 +18,26 @@ const mapper = {
     login,
 };
 
-const LoginContainer = () => {
-    const { setUser } = useContext(UserAuthContext);
+const LoginContainer = ({ setUser }) => {
     return (
         <Adopt mapper={mapper}>
             {({ login: { mutation: loginMutation, result: loginResult } }) => {
                 if (loginResult.data) {
                     const authUser = JSON.stringify(loginResult.data.login);
                     localStorage.setItem('authUser', authUser);
+                    const { admin, student } = loginResult.data.login.user;
                     setUser({
-                        admin: loginResult.data.login.user.admin,
+                        admin,
                         isAuthenticated: true,
+                        student,
                     });
+                    const redirectPath = admin
+                        ? '/overview'
+                        : 'studentOverview';
                     return (
                         <Redirect
                             to={{
-                                pathname: '/overview',
+                                pathname: redirectPath,
                             }}
                         />
                     );
@@ -44,4 +49,8 @@ const LoginContainer = () => {
     );
 };
 
-export default LoginContainer;
+LoginContainer.propTypes = {
+    setUser: PropTypes.func.isRequired,
+};
+
+export default withUser(LoginContainer);

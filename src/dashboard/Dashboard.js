@@ -1,5 +1,6 @@
 import React, { Fragment, useState, useContext } from 'react';
 import PropTypes from 'prop-types';
+import compose from 'recompose/compose';
 import { Route } from 'react-router-dom';
 import classNames from 'classnames';
 import { withStyles } from '@material-ui/core/styles';
@@ -31,16 +32,16 @@ import {
     CardDetail,
     UserManagement,
     Login,
+    StudentOverview,
 } from 'routes';
 import ListItems from './ListItems';
 import StudentListItems from './StudentListItems';
 import styles from './styles';
-import UserAuthContext from 'src/UserAuthContext';
+import { withUser } from 'core/user';
 
-const Dashboard = ({ classes }) => {
+const Dashboard = ({ classes, user, setUser }) => {
     const [open, setOpen] = useState(true);
     const [openUserSettings, setOpenUserSettings] = useState(false);
-    const { user, setUser } = useContext(UserAuthContext);
 
     const handleDrawerOpen = () => {
         setOpen(true);
@@ -61,7 +62,7 @@ const Dashboard = ({ classes }) => {
 
     const handleLogout = () => {
         localStorage.removeItem('authUser');
-        setUser({ admin: false, isAuthenticated: false });
+        setUser({ admin: false, isAuthenticated: false, student: null });
     };
 
     const renderRoutes = () => (
@@ -79,6 +80,7 @@ const Dashboard = ({ classes }) => {
             <Route path="/cardDetail" component={CardDetail} />
             <Route path="/courseAttendance" component={CourseAttendance} />
             <Route path="/userManagement" component={UserManagement} />
+            <Route path="/studentOverview" component={StudentOverview} />
         </Fragment>
     );
     return (
@@ -157,6 +159,11 @@ const Dashboard = ({ classes }) => {
 
 Dashboard.propTypes = {
     classes: PropTypes.object.isRequired,
+    user: PropTypes.object.isRequired,
+    setUser: PropTypes.func.isRequired,
 };
 
-export default withStyles(styles)(Dashboard);
+export default compose(
+    withStyles(styles),
+    withUser
+)(Dashboard);

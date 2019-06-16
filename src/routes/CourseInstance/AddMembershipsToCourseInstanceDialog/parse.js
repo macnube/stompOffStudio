@@ -13,8 +13,8 @@ export const parseMembershipsToTableData = (memberships, courseInstance) => {
             if (includes(currentParticipantMembershipIds, membership.id)) {
                 return acc;
             }
-            const { id, name, email } = membership.student;
-            const result = [id, name, email];
+            const { name, email } = membership.student;
+            const result = [membership.id, name, email];
             acc.push(result);
             return acc;
         },

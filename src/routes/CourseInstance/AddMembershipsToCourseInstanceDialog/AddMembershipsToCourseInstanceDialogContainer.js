@@ -13,6 +13,7 @@ const getMemberships = ({ render, id }) => (
     <Query
         query={GET_MEMBERSHIPS_BY_COURSE_INSTANCE}
         variables={{ courseInstanceId: id }}
+        fetchPolicy="network-only"
     >
         {render}
     </Query>

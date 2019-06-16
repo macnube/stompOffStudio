@@ -6,7 +6,7 @@ import get from 'lodash/get';
 import 'video-react/dist/video-react.css';
 
 import './App.css';
-
+import { notify } from 'errors';
 import UserAuthContext from './UserAuthContext';
 import Dashboard from './dashboard';
 
@@ -29,7 +29,6 @@ const setupClient = (user, setUser) =>
         },
         onError: ({ graphQLErrors, networkError }) => {
             if (graphQLErrors) {
-                console.log('errors are: ', graphQLErrors);
                 const message = get(graphQLErrors[0], 'message');
                 if (message === 'Not Authorised!' && user.isAuthenticated) {
                     setUser({ admin: false, isAuthenticated: false });

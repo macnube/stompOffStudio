@@ -11,6 +11,8 @@ import InstancesTable from './InstancesTable';
 import TeachersTable from './TeachersTable';
 import StudentsTables from './StudentsTables';
 import { parseTeachersToTableData } from './parse';
+import { notify } from 'errors';
+
 class CourseDetail extends Component {
     state = {
         openTeacherDialog: false,
@@ -19,6 +21,10 @@ class CourseDetail extends Component {
         openInstanceDialog: false,
         openCourseWaitlistForm: false,
     };
+
+    componentDidMount() {
+        notify('test error in CourseDetail');
+    }
 
     navigateToCourseManagement = () => {
         this.props.history.push({

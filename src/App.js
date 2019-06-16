@@ -6,7 +6,7 @@ import get from 'lodash/get';
 import 'video-react/dist/video-react.css';
 
 import './App.css';
-import { notify } from 'errors';
+import { notify, setUser as setErrorUser, serializeValue } from 'errors';
 import UserAuthContext from './UserAuthContext';
 import Dashboard from './dashboard';
 
@@ -32,6 +32,14 @@ const setupClient = (user, setUser) =>
                 const message = get(graphQLErrors[0], 'message');
                 if (message === 'Not Authorised!' && user.isAuthenticated) {
                     setUser({ admin: false, isAuthenticated: false });
+                } else {
+                    notify('GraphQL Error', {
+                        metaData: {
+                            GraphqlErrors: {
+                                errors: serializeValue(graphQLErrors),
+                            },
+                        },
+                    });
                 }
             }
             if (networkError) {
@@ -52,6 +60,7 @@ const App = () => {
             const authUser = await localStorage.getItem('authUser');
             if (authUser) {
                 const { token, user } = JSON.parse(authUser);
+                setErrorUser(user);
                 setUser({ token, admin: user.admin, isAuthenticated: true });
             }
         };

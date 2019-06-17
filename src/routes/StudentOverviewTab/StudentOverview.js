@@ -53,7 +53,7 @@ const cardsColumns = [
 class StudentOverview extends React.Component {
     navigateToInstance = instanceId => {
         this.props.history.push({
-            pathname: './courseInstance',
+            pathname: './studentCourseInstance',
             search: `id=${instanceId}`,
         });
     };
@@ -94,12 +94,6 @@ class StudentOverview extends React.Component {
         return (
             <Paper>
                 <FlatTable
-                    title={'Unpaid Cards'}
-                    data={parseCardsToTableData(unpaidCards)}
-                    columns={cardsColumns}
-                    options={cardOptions}
-                />
-                <FlatTable
                     title={'Recent Classes'}
                     data={parseInstancesToTableData(recentInstances)}
                     columns={instanceColumns}
@@ -111,6 +105,12 @@ class StudentOverview extends React.Component {
                     columns={instanceColumns}
                     options={instanceOptions}
                 />
+                <FlatTable
+                    title={'Unpaid Cards'}
+                    data={parseCardsToTableData(unpaidCards)}
+                    columns={cardsColumns}
+                    options={cardOptions}
+                />
             </Paper>
         );
     }
@@ -119,7 +119,6 @@ class StudentOverview extends React.Component {
 StudentOverview.propTypes = {
     instances: PropTypes.array.isRequired,
     unpaidCards: PropTypes.array.isRequired,
-    unlinkedPayments: PropTypes.array.isRequired,
     history: PropTypes.object.isRequired,
 };
 

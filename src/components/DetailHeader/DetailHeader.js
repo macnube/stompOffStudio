@@ -15,25 +15,27 @@ const DetailHeader = ({ classes, children, renderForm }) => (
         <Grid item xs={8} md={9}>
             {renderForm()}
         </Grid>
-        <Grid item xs={4} md={3}>
-            <Grid
-                container
-                spacing={16}
-                justify="flex-end"
-                className={classes.buttonContainer}
-            >
-                {React.Children.map(children, child => (
-                    <Grid item>{child}</Grid>
-                ))}
+        {children ? (
+            <Grid item xs={4} md={3}>
+                <Grid
+                    container
+                    spacing={16}
+                    justify="flex-end"
+                    className={classes.buttonContainer}
+                >
+                    {React.Children.map(children, child => (
+                        <Grid item>{child}</Grid>
+                    ))}
+                </Grid>
             </Grid>
-        </Grid>
+        ) : null}
     </Grid>
 );
 
 DetailHeader.propTypes = {
     classes: PropTypes.object.isRequired,
     renderForm: PropTypes.func.isRequired,
-    children: PropTypes.node.isRequired,
+    children: PropTypes.node,
 };
 
 export default withStyles(styles)(DetailHeader);

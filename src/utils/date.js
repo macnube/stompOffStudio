@@ -5,6 +5,7 @@ import endOfDay from 'date-fns/endOfDay';
 import addWeeks from 'date-fns/addWeeks';
 
 export const getTableDate = date => format(parseISO(date), 'MMM do, yyyy');
+export const getTableTime = date => format(parseISO(date), 'HH:mm');
 
 export const isPastExpiration = date =>
     isBefore(parseISO(date), endOfDay(new Date()));

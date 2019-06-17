@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
+import compose from 'recompose/compose';
 import find from 'lodash/find';
 import PropTypes from 'prop-types';
 import MUIDataTable from 'mui-datatables';
@@ -12,6 +13,7 @@ import { parseCardDataToArray } from './parse';
 import CardDetailHeader from './CardDetailHeader';
 import { SelectedDeleteToolbar } from 'components';
 import { PARTICIPANT_STATUS } from 'constants/gql';
+import { withUser } from 'core/user';
 
 const columns = [
     {
@@ -106,18 +108,22 @@ class CardDetail extends Component {
     };
 
     render() {
-        const options = {
+        const studentOptions = {
             responsive: 'scroll',
             selectedRows: 'single',
+        };
+        const adminOptions = {
+            ...studentOptions,
             onRowClick: this.handleInstanceClick,
             customToolbarSelect: this.renderInstanceSelectedToolbar,
         };
-        const { card } = this.props;
+        const { card, user } = this.props;
         return (
             <MuiPickersUtilsProvider utils={DateFnsUtils}>
                 <Paper>
                     <CardDetailHeader
                         card={card}
+                        admin={user.admin}
                         handleOnSave={this.handleUpdateCard}
                         handleOnCancel={this.navigateToStudentDetail}
                     />
@@ -126,7 +132,7 @@ class CardDetail extends Component {
                             title={'Card Course History'}
                             data={parseCardDataToArray(card)}
                             columns={columns}
-                            options={options}
+                            options={user.admin ? adminOptions : studentOptions}
                         />
                     </MuiThemeProvider>
                 </Paper>
@@ -140,6 +146,10 @@ CardDetail.propTypes = {
     removeCardParticipation: PropTypes.func.isRequired,
     logParticipantStatus: PropTypes.func.isRequired,
     card: PropTypes.object.isRequired,
+    user: PropTypes.object.isRequired,
 };
 
-export default withRouter(CardDetail);
+export default compose(
+    withRouter,
+    withUser
+)(CardDetail);

@@ -33,6 +33,9 @@ import {
     UserManagement,
     Login,
     StudentOverview,
+    StudentCourses,
+    StudentCourseDetail,
+    StudentCourseInstance,
 } from 'routes';
 import ListItems from './ListItems';
 import StudentListItems from './StudentListItems';
@@ -81,6 +84,15 @@ const Dashboard = ({ classes, user, setUser }) => {
             <Route path="/courseAttendance" component={CourseAttendance} />
             <Route path="/userManagement" component={UserManagement} />
             <Route path="/studentOverview" component={StudentOverview} />
+            <Route path="/studentCourses" component={StudentCourses} />
+            <Route
+                path="/studentCourseDetail"
+                component={StudentCourseDetail}
+            />
+            <Route
+                path="/studentCourseInstance"
+                component={StudentCourseInstance}
+            />
         </Fragment>
     );
     return (

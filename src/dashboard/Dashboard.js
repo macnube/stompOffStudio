@@ -36,6 +36,7 @@ import {
     StudentCourses,
     StudentCourseDetail,
     StudentCourseInstance,
+    StudentCards,
 } from 'routes';
 import ListItems from './ListItems';
 import StudentListItems from './StudentListItems';
@@ -93,6 +94,7 @@ const Dashboard = ({ classes, user, setUser }) => {
                 path="/studentCourseInstance"
                 component={StudentCourseInstance}
             />
+            <Route path="/studentCards" component={StudentCards} />
         </Fragment>
     );
     return (

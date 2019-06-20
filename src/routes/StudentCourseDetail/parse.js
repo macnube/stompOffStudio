@@ -16,3 +16,17 @@ export const parseInstancesToTableData = instances =>
         },
         []
     );
+
+export const parseAbsencesToTableData = absences =>
+    reduce(
+        absences,
+        (acc, absence) => {
+            const result = [absence.id, getTableDate(absence.date)];
+            acc.push(result);
+            return acc;
+        },
+        []
+    );
+
+export const getInstancesTableDates = instances =>
+    instances.map(instance => getTableDate(instance.date));

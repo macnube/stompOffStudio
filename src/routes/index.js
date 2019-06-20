@@ -17,3 +17,4 @@ export { default as StudentOverview } from './StudentOverviewTab';
 export { default as StudentCourses } from './StudentCourses';
 export { default as StudentCourseDetail } from './StudentCourseDetail';
 export { default as StudentCourseInstance } from './StudentCourseInstance';
+export { default as StudentCards } from './StudentCards';

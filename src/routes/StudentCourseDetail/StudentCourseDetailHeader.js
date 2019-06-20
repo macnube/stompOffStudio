@@ -1,15 +1,18 @@
 import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
 
+import { DetailHeader } from 'components';
 import { getTableTime } from 'utils/date';
 import styles from './styles';
 
-const StudentCourseDetailHeader = ({ course, classes }) => {
+const StudentCourseDetailHeader = ({ course, classes, handleOpen }) => {
     const { name, description, duration, startTime, room, day } = course;
-    return (
-        <div className={classes.headerContainer}>
+
+    const renderForm = () => (
+        <Fragment>
             <TextField
                 id="standard-name"
                 label="Name"
@@ -70,13 +73,21 @@ const StudentCourseDetailHeader = ({ course, classes }) => {
                 margin="normal"
                 disabled
             />
-        </div>
+        </Fragment>
+    );
+    return (
+        <DetailHeader renderForm={renderForm}>
+            <Button variant="contained" color="primary" onClick={handleOpen}>
+                Log Absence
+            </Button>
+        </DetailHeader>
     );
 };
 
 StudentCourseDetailHeader.propTypes = {
     classes: PropTypes.object.isRequired,
     course: PropTypes.object.isRequired,
+    handleOpen: PropTypes.func.isRequired,
 };
 
 export default withStyles(styles)(StudentCourseDetailHeader);

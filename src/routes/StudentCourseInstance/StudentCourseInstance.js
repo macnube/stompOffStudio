@@ -9,11 +9,15 @@ const StudentCourseInstance = ({ courseInstance: { notes, recapUrl } }) => {
     return (
         <Paper>
             <Container maxWidth="md">
-                <Player fluid src={recapUrl}>
-                    <ControlBar>
-                        <PlaybackRateMenuButton rates={[5, 2, 1, 0.5, 0.1]} />
-                    </ControlBar>
-                </Player>
+                {recapUrl ? (
+                    <Player fluid src={recapUrl}>
+                        <ControlBar>
+                            <PlaybackRateMenuButton
+                                rates={[5, 2, 1, 0.5, 0.1]}
+                            />
+                        </ControlBar>
+                    </Player>
+                ) : null}
                 <TextField
                     id="standard-name"
                     label="Notes"

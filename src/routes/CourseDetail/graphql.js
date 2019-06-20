@@ -25,7 +25,7 @@ const DETAIL_COURSE_FRAGMENT = gql`
                 ...SmallStudentFragment
             }
         }
-        instances {
+        instances(orderBy: date_DESC) {
             ...SmallCourseInstanceFragment
             participants {
                 ...SmallParticipantFragment

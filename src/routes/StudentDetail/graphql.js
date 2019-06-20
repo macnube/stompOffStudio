@@ -31,10 +31,10 @@ const STUDENT_DETAIL_STUDENT_FRAGMENT = gql`
                 ...SmallCourseFragment
             }
         }
-        cards {
+        cards(orderBy: expirationDate_DESC) {
             ...StudentDetailCardFragment
         }
-        payments {
+        payments(orderBy: date_DESC) {
             ...SmallPaymentFragment
             card {
                 ...SmallCardFragment

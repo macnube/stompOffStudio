@@ -1,5 +1,6 @@
 export * from './card';
 export * from './course';
+export * from './courseAbsence';
 export * from './courseInstance';
 export * from './membership';
 export * from './participant';

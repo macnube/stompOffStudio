@@ -25,7 +25,6 @@ const getCourse = ({ render, id }) => (
         {render}
     </Query>
 );
-
 const updateCourse = ({ render }) => (
     <Mutation mutation={UPDATE_COURSE}>
         {(mutation, result) => render({ mutation, result })}

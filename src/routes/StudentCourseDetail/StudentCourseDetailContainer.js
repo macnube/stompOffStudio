@@ -17,22 +17,20 @@ import {
 import StudentCourseDetail from './StudentCourseDetail';
 import { withUser } from 'core/user';
 
-const getCourse = ({ render, id, studentId }) => {
-    const date = startOfDay(new Date());
-
+const getCourse = ({ render, id, studentId, date }) => {
     return (
         <Query query={GET_COURSE} variables={{ id, studentId, date }}>
             {render}
         </Query>
     );
 };
-const logCourseAbsence = ({ render, id }) => (
+const logCourseAbsence = ({ render, id, studentId, date }) => (
     <Mutation
         mutation={LOG_COURSE_ABSENCE}
         update={(cache, { data: { logCourseAbsence } }) => {
             const { course } = cache.readQuery({
                 query: GET_COURSE,
-                variables: { id },
+                variables: { id, date, studentId },
             });
             const newCourse = {
                 ...course,
@@ -40,7 +38,7 @@ const logCourseAbsence = ({ render, id }) => (
             };
             cache.writeQuery({
                 query: GET_COURSE,
-                variables: { id },
+                variables: { id, date, studentId },
                 data: {
                     course: newCourse,
                 },
@@ -51,13 +49,13 @@ const logCourseAbsence = ({ render, id }) => (
     </Mutation>
 );
 
-const clearCourseAbsence = ({ render, id }) => (
+const clearCourseAbsence = ({ render, id, studentId, date }) => (
     <Mutation
         mutation={CLEAR_COURSE_ABSENCE}
         update={(cache, { data: { clearCourseAbsence } }) => {
             const { course } = cache.readQuery({
                 query: GET_COURSE,
-                variables: { id },
+                variables: { id, date, studentId },
             });
             const newCourse = {
                 ...course,
@@ -68,7 +66,7 @@ const clearCourseAbsence = ({ render, id }) => (
             };
             cache.writeQuery({
                 query: GET_COURSE,
-                variables: { id },
+                variables: { id, date, studentId },
                 data: {
                     course: newCourse,
                 },
@@ -101,9 +99,15 @@ const mapper = {
 
 const StudentCourseDetailContainer = ({ location, user }) => {
     const params = parse(location.search);
+    const date = startOfDay(new Date());
     if (params.id) {
         return (
-            <Adopt mapper={mapper} id={params.id} studentId={user.student.id}>
+            <Adopt
+                mapper={mapper}
+                id={params.id}
+                studentId={user.student.id}
+                date={date}
+            >
                 {({
                     getCourse: { data, loading, error },
                     logCourseAbsence: { mutation: logCourseAbsenceMutation },

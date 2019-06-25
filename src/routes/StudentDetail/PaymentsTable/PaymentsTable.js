@@ -116,7 +116,7 @@ const PaymentsTable = ({
 
     const handleOnPaymentClick = rowData => {
         const payment = find(student.payments, { id: rowData[0] });
-        setPayment(payment);
+        setPayment({ ...payment, student });
         setOpen(true);
     };
 

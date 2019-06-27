@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Select from '@material-ui/core/Select';
@@ -16,15 +17,13 @@ export default function ChartSelector({ total, year, handleOnChangeYear }) {
 
     return (
         <React.Fragment>
-            <Title>Date Range</Title>
-            <Typography component="p" variant="h4">
-                {`€ ${total}`}
-            </Typography>
+            <Title>Total for year</Title>
             <Typography
-                color="textSecondary"
+                component="p"
+                variant="h4"
                 className={classes.depositContext}
             >
-                {`for year ${year}`}
+                {`€ ${total}`}
             </Typography>
             <Select value={year} onChange={handleOnChangeYear}>
                 <MenuItem value={2019}>2019</MenuItem>
@@ -33,3 +32,9 @@ export default function ChartSelector({ total, year, handleOnChangeYear }) {
         </React.Fragment>
     );
 }
+
+ChartSelector.propTypes = {
+    total: PropTypes.number.isRequired,
+    year: PropTypes.number.isRequired,
+    handleOnChangeYear: PropTypes.func.isRequired,
+};

@@ -7,16 +7,14 @@ import PropTypes from 'prop-types';
 import find from 'lodash/find';
 import forEach from 'lodash/forEach';
 import MUIDataTable from 'mui-datatables';
-import AddIcon from '@material-ui/icons/Add';
-import Fab from '@material-ui/core/Fab';
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 
 import {
-    ContentToolbar,
     SelectedDeleteToolbar,
     PaymentDialog,
+    CustomAddToolbar,
 } from 'components';
 import PaymentManagementStudentSelectDialog from './PaymentManagementStudentSelectDialog';
 import { PAYMENT_TYPE } from 'constants/gql';
@@ -157,6 +155,13 @@ class PaymentManagement extends Component {
         />
     );
 
+    renderToolbar = () => (
+        <CustomAddToolbar
+            title={'Add Payment'}
+            handleAddPress={this.handleClickOpen}
+        />
+    );
+
     render() {
         const { payments, classes } = this.props;
         const {
@@ -170,19 +175,11 @@ class PaymentManagement extends Component {
             responsive: 'scroll',
             customToolbarSelect: this.renderSelectedToolbar,
             onRowClick: this.handleOnPaymentClick,
+            customToolbar: this.renderToolbar,
         };
         const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
         return (
             <Fragment>
-                <ContentToolbar>
-                    <Fab
-                        color="primary"
-                        aria-label="Add"
-                        onClick={this.handleClickOpen}
-                    >
-                        <AddIcon />
-                    </Fab>
-                </ContentToolbar>
                 <PaymentManagementStudentSelectDialog
                     open={openStudentSelectDialog}
                     handleStudentSelect={this.handleStudentSelect}

@@ -6,10 +6,10 @@ import forEach from 'lodash/forEach';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import MUIDataTable from 'mui-datatables';
-import AddIcon from '@material-ui/icons/Add';
-import Fab from '@material-ui/core/Fab';
+import Container from '@material-ui/core/Container';
+import Grid from '@material-ui/core/Grid';
 
-import { ContentToolbar, SelectedDeleteToolbar } from 'components';
+import { SelectedDeleteToolbar, CustomAddToolbar } from 'components';
 import EmailButton from './EmailButton';
 import StudentForm from './StudentForm';
 import styles from './styles';
@@ -93,37 +93,42 @@ class StudentManagement extends Component {
         />
     );
 
+    renderToolbar = () => (
+        <CustomAddToolbar
+            title={'Add Student'}
+            handleAddPress={this.handleClickOpen}
+        />
+    );
+
     render() {
         const options = {
             responsive: 'scroll',
             onRowClick: this.handleNavigateToStudentDetail,
             customToolbarSelect: this.renderSelectedToolbar,
+            customToolbar: this.renderToolbar,
         };
-        const { students, createStudent } = this.props;
+        const { students, createStudent, classes } = this.props;
         const { open } = this.state;
         return (
             <Fragment>
-                <ContentToolbar>
-                    <Fab
-                        color="primary"
-                        aria-label="Add"
-                        onClick={this.handleClickOpen}
-                    >
-                        <AddIcon />
-                    </Fab>
-                </ContentToolbar>
                 <StudentForm
                     open={open}
                     handleClose={this.handleClose}
                     navigateToStudentDetail={this.navigateToStudentDetail}
                     createStudent={createStudent}
                 />
-                <MUIDataTable
-                    title={'Students'}
-                    data={parseStudentsToTableData(students)}
-                    columns={columns}
-                    options={options}
-                />
+                <Container maxWidth="lg" className={classes.container}>
+                    <Grid container spacing={3}>
+                        <Grid item xs={12}>
+                            <MUIDataTable
+                                title={'Students'}
+                                data={parseStudentsToTableData(students)}
+                                columns={columns}
+                                options={options}
+                            />
+                        </Grid>
+                    </Grid>
+                </Container>
             </Fragment>
         );
     }

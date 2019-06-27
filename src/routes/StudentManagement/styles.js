@@ -16,9 +16,9 @@ const styles = theme => ({
     menu: {
         width: 200,
     },
-    fab: {
-        float: 'right',
-        margin: theme.spacing.unit,
+    container: {
+        paddingTop: theme.spacing(4),
+        paddingBottom: theme.spacing(4),
     },
 });
 

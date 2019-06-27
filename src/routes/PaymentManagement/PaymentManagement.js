@@ -1,11 +1,17 @@
 import React, { Component, Fragment } from 'react';
+import compose from 'recompose/compose';
+import clsx from 'clsx';
 import { withRouter } from 'react-router-dom';
+import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import find from 'lodash/find';
 import forEach from 'lodash/forEach';
 import MUIDataTable from 'mui-datatables';
 import AddIcon from '@material-ui/icons/Add';
 import Fab from '@material-ui/core/Fab';
+import Container from '@material-ui/core/Container';
+import Grid from '@material-ui/core/Grid';
+import Paper from '@material-ui/core/Paper';
 
 import {
     ContentToolbar,
@@ -14,7 +20,15 @@ import {
 } from 'components';
 import PaymentManagementStudentSelectDialog from './PaymentManagementStudentSelectDialog';
 import { PAYMENT_TYPE } from 'constants/gql';
-import { parsePaymentsToTableData } from './parse';
+import {
+    parsePaymentsToTableData,
+    parsePaymentsToChartData,
+    getTotalFromPayments,
+} from './parse';
+import Chart from './Chart';
+import ChartSelector from './ChartSelector';
+import styles from './styles';
+import { getCurrentYear } from 'utils/date';
 
 const columns = [
     {
@@ -46,6 +60,7 @@ class PaymentManagement extends Component {
         openPaymentDialog: false,
         student: null,
         payment: null,
+        year: getCurrentYear(),
     };
 
     handleClickOpen = () => {
@@ -128,6 +143,11 @@ class PaymentManagement extends Component {
             payment,
         });
     };
+    handleOnChangeYear = event => {
+        this.setState({
+            year: event.target.value,
+        });
+    };
 
     renderSelectedToolbar = (selectedRows, displayData) => (
         <SelectedDeleteToolbar
@@ -138,18 +158,20 @@ class PaymentManagement extends Component {
     );
 
     render() {
-        const { payments } = this.props;
+        const { payments, classes } = this.props;
         const {
             openStudentSelectDialog,
             openPaymentDialog,
             student,
             payment,
+            year,
         } = this.state;
         const options = {
             responsive: 'scroll',
             customToolbarSelect: this.renderSelectedToolbar,
             onRowClick: this.handleOnPaymentClick,
         };
+        const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
         return (
             <Fragment>
                 <ContentToolbar>
@@ -176,12 +198,43 @@ class PaymentManagement extends Component {
                         payment={payment}
                     />
                 ) : null}
-                <MUIDataTable
-                    title={'Payments'}
-                    data={parsePaymentsToTableData(payments)}
-                    columns={columns}
-                    options={options}
-                />
+
+                <Container maxWidth="lg" className={classes.container}>
+                    <Grid container spacing={3}>
+                        {/* Chart Selection*/}
+                        <Grid item xs={12} md={4} lg={3}>
+                            <Paper className={fixedHeightPaper}>
+                                <ChartSelector
+                                    total={getTotalFromPayments(payments, year)}
+                                    handleOnChangeYear={this.handleOnChangeYear}
+                                    year={year}
+                                />
+                            </Paper>
+                        </Grid>
+                        {/* Chart */}
+                        <Grid item xs={12} md={8} lg={9}>
+                            <Paper className={fixedHeightPaper}>
+                                <Chart
+                                    data={parsePaymentsToChartData(
+                                        payments,
+                                        year
+                                    )}
+                                    year={year}
+                                />
+                            </Paper>
+                        </Grid>
+
+                        {/* Payments Table */}
+                        <Grid item xs={12}>
+                            <MUIDataTable
+                                title={'Payments'}
+                                data={parsePaymentsToTableData(payments)}
+                                columns={columns}
+                                options={options}
+                            />
+                        </Grid>
+                    </Grid>
+                </Container>
             </Fragment>
         );
     }
@@ -189,6 +242,7 @@ class PaymentManagement extends Component {
 
 PaymentManagement.propTypes = {
     payments: PropTypes.array.isRequired,
+    classes: PropTypes.object.isRequired,
     deletePayment: PropTypes.func.isRequired,
     createPayment: PropTypes.func.isRequired,
     updatePayment: PropTypes.func.isRequired,
@@ -198,4 +252,7 @@ PaymentManagement.propTypes = {
     history: PropTypes.object.isRequired,
 };
 
-export default withRouter(PaymentManagement);
+export default compose(
+    withRouter,
+    withStyles(styles)
+)(PaymentManagement);

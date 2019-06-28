@@ -74,20 +74,21 @@ class StudioDetailHeader extends Component {
     };
 
     render() {
-        const { handleOnCancel } = this.props;
+        const { handleOnCancel, classes } = this.props;
 
         return (
             <DetailHeader renderForm={this.renderForm}>
-                <Button variant="contained" onClick={handleOnCancel}>
-                    Cancel
-                </Button>
                 <Button
                     variant="contained"
                     color="primary"
                     disabled={!this.state.canSave}
                     onClick={this.handleSave}
+                    className={classes.button}
                 >
                     Save
+                </Button>
+                <Button variant="contained" onClick={handleOnCancel}>
+                    Cancel
                 </Button>
             </DetailHeader>
         );

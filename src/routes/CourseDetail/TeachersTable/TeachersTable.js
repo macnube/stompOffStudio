@@ -1,8 +1,9 @@
 import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import forEach from 'lodash/forEach';
+import MUIDataTable from 'mui-datatables';
 
-import { CustomAddToolbar, SelectedDeleteToolbar, FlatTable } from 'components';
+import { CustomAddToolbar, SelectedDeleteToolbar } from 'components';
 import AddTeacherDialog from './AddTeacherDialog';
 
 const columns = [
@@ -63,7 +64,7 @@ const TeachersTable = ({
     };
     return (
         <Fragment>
-            <FlatTable
+            <MUIDataTable
                 title={'Teachers'}
                 data={data}
                 columns={columns}

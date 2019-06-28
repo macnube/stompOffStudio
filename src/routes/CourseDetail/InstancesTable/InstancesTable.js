@@ -3,8 +3,9 @@ import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import forEach from 'lodash/forEach';
 import reduce from 'lodash/reduce';
+import MUIDataTable from 'mui-datatables';
 
-import { CustomAddToolbar, SelectedDeleteToolbar, FlatTable } from 'components';
+import { CustomAddToolbar, SelectedDeleteToolbar } from 'components';
 import AddInstanceDialog from './AddInstanceDialog';
 import { parseInstancesToTableData } from '../parse';
 import { MEMBERSHIP_STATUS } from 'constants/gql';
@@ -103,7 +104,7 @@ const InstancesTable = ({
 
     return (
         <Fragment>
-            <FlatTable
+            <MUIDataTable
                 title={'Course Instances'}
                 data={parseInstancesToTableData(course.instances)}
                 columns={columns}

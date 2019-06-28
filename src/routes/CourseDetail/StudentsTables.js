@@ -2,8 +2,10 @@ import React, { Fragment } from 'react';
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import forEach from 'lodash/forEach';
+import MUIDataTable from 'mui-datatables';
+import Grid from '@material-ui/core/Grid';
 
-import { CustomAddToolbar, SelectedAddToolbar, FlatTable } from 'components';
+import { CustomAddToolbar, SelectedAddToolbar } from 'components';
 import AddStudentsToCourseDialog from './AddStudentsToCourseDialog';
 import {
     parseActiveMembershipsToTableData,
@@ -174,42 +176,50 @@ const StudentsTables = ({
 
     return (
         <Fragment>
-            <FlatTable
-                title={'Leaders'}
-                data={parseActiveMembershipsToTableData(
-                    course.memberships,
-                    DANCE_ROLE.LEADER
-                )}
-                columns={columns}
-                options={leadersOptions}
-            />
-            <FlatTable
-                title={'Followers'}
-                data={parseActiveMembershipsToTableData(
-                    course.memberships,
-                    DANCE_ROLE.FOLLOWER
-                )}
-                columns={columns}
-                options={followersOptions}
-            />
-            <FlatTable
-                title={'Waitlist'}
-                data={parseMembershipsByStatusToTableData(
-                    course.memberships,
-                    MEMBERSHIP_STATUS.WAITLIST
-                )}
-                columns={waitlistColumns}
-                options={waitlistOptions}
-            />
-            <FlatTable
-                title={'Inactive'}
-                data={parseMembershipsByStatusToTableData(
-                    course.memberships,
-                    MEMBERSHIP_STATUS.INACTIVE
-                )}
-                columns={columns}
-                options={studentOptions}
-            />
+            <Grid item xs={12}>
+                <MUIDataTable
+                    title={'Leaders'}
+                    data={parseActiveMembershipsToTableData(
+                        course.memberships,
+                        DANCE_ROLE.LEADER
+                    )}
+                    columns={columns}
+                    options={leadersOptions}
+                />
+            </Grid>
+            <Grid item xs={12}>
+                <MUIDataTable
+                    title={'Followers'}
+                    data={parseActiveMembershipsToTableData(
+                        course.memberships,
+                        DANCE_ROLE.FOLLOWER
+                    )}
+                    columns={columns}
+                    options={followersOptions}
+                />
+            </Grid>
+            <Grid item xs={12}>
+                <MUIDataTable
+                    title={'Waitlist'}
+                    data={parseMembershipsByStatusToTableData(
+                        course.memberships,
+                        MEMBERSHIP_STATUS.WAITLIST
+                    )}
+                    columns={waitlistColumns}
+                    options={waitlistOptions}
+                />
+            </Grid>
+            <Grid item xs={12}>
+                <MUIDataTable
+                    title={'Inactive'}
+                    data={parseMembershipsByStatusToTableData(
+                        course.memberships,
+                        MEMBERSHIP_STATUS.INACTIVE
+                    )}
+                    columns={columns}
+                    options={studentOptions}
+                />
+            </Grid>
             {course && course.id ? (
                 <AddStudentsToCourseDialog
                     open={openLeaders}

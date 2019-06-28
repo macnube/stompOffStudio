@@ -1,16 +1,20 @@
 import 'date-fns';
 import React, { Component } from 'react';
+import compose from 'recompose/compose';
 import { withRouter } from 'react-router-dom';
+import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
-import Paper from '@material-ui/core/Paper';
 import { MuiPickersUtilsProvider } from 'material-ui-pickers';
 import DateFnsUtils from '@date-io/date-fns';
+import Container from '@material-ui/core/Container';
+import Grid from '@material-ui/core/Grid';
 
 import CourseDetailHeader from './CourseDetailHeader';
 import InstancesTable from './InstancesTable';
 import TeachersTable from './TeachersTable';
 import StudentsTables from './StudentsTables';
 import { parseTeachersToTableData } from './parse';
+import styles from './styles';
 
 class CourseDetail extends Component {
     state = {
@@ -60,6 +64,7 @@ class CourseDetail extends Component {
             createMembership,
             updateMembershipStatus,
             history,
+            classes,
         } = this.props;
         const {
             openTeacherDialog,
@@ -70,53 +75,66 @@ class CourseDetail extends Component {
         } = this.state;
         return (
             <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                <Paper>
-                    <CourseDetailHeader
-                        course={course}
-                        handleOnCancel={this.navigateToCourseManagement}
-                        handleOnSave={this.handleUpdateCourse}
-                    />
-                    <InstancesTable
-                        open={openInstanceDialog}
-                        course={course}
-                        createCourseInstance={createCourseInstance}
-                        deleteCourseInstance={deleteCourseInstance}
-                        handleAdd={() =>
-                            this.handleOpenDialog('openInstanceDialog')
-                        }
-                        handleClose={this.handleClose}
-                    />
-                    <StudentsTables
-                        openLeaders={openCourseLeadersForm}
-                        openFollowers={openCourseFollowersForm}
-                        openWaitlist={openCourseWaitlistForm}
-                        course={course}
-                        createMembership={createMembership}
-                        updateMembershipStatus={updateMembershipStatus}
-                        handleOpenDialog={this.handleOpenDialog}
-                        handleClose={this.handleClose}
-                    />
-                    {course ? (
-                        <TeachersTable
-                            open={openTeacherDialog}
-                            data={parseTeachersToTableData(course.teachers)}
-                            courseId={course.id}
-                            createCourseInstance={createCourseInstance}
-                            removeTeacherFromCourse={removeTeacherFromCourse}
-                            handleAdd={() =>
-                                this.handleOpenDialog('openTeacherDialog')
-                            }
-                            handleClose={this.handleClose}
-                            history={history}
+                <Container maxWidth="lg" className={classes.container}>
+                    <Grid container spacing={3}>
+                        <CourseDetailHeader
+                            course={course}
+                            handleOnCancel={this.navigateToCourseManagement}
+                            handleOnSave={this.handleUpdateCourse}
                         />
-                    ) : null}
-                </Paper>
+                        <Grid item xs={12}>
+                            <InstancesTable
+                                open={openInstanceDialog}
+                                course={course}
+                                createCourseInstance={createCourseInstance}
+                                deleteCourseInstance={deleteCourseInstance}
+                                handleAdd={() =>
+                                    this.handleOpenDialog('openInstanceDialog')
+                                }
+                                handleClose={this.handleClose}
+                            />
+                        </Grid>
+                        <StudentsTables
+                            openLeaders={openCourseLeadersForm}
+                            openFollowers={openCourseFollowersForm}
+                            openWaitlist={openCourseWaitlistForm}
+                            course={course}
+                            createMembership={createMembership}
+                            updateMembershipStatus={updateMembershipStatus}
+                            handleOpenDialog={this.handleOpenDialog}
+                            handleClose={this.handleClose}
+                        />
+                        <Grid item xs={12}>
+                            {course ? (
+                                <TeachersTable
+                                    open={openTeacherDialog}
+                                    data={parseTeachersToTableData(
+                                        course.teachers
+                                    )}
+                                    courseId={course.id}
+                                    createCourseInstance={createCourseInstance}
+                                    removeTeacherFromCourse={
+                                        removeTeacherFromCourse
+                                    }
+                                    handleAdd={() =>
+                                        this.handleOpenDialog(
+                                            'openTeacherDialog'
+                                        )
+                                    }
+                                    handleClose={this.handleClose}
+                                    history={history}
+                                />
+                            ) : null}
+                        </Grid>
+                    </Grid>
+                </Container>
             </MuiPickersUtilsProvider>
         );
     }
 }
 
 CourseDetail.propTypes = {
+    classes: PropTypes.object.isRequired,
     course: PropTypes.object.isRequired,
     updateCourse: PropTypes.func.isRequired,
     removeTeacherFromCourse: PropTypes.func.isRequired,
@@ -128,4 +146,7 @@ CourseDetail.propTypes = {
     history: PropTypes.object.isRequired,
 };
 
-export default withRouter(CourseDetail);
+export default compose(
+    withStyles(styles),
+    withRouter
+)(CourseDetail);

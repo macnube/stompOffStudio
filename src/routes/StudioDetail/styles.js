@@ -4,6 +4,13 @@ const styles = theme => ({
         marginRight: theme.spacing.unit,
         width: 200,
     },
+    container: {
+        paddingTop: theme.spacing(4),
+        paddingBottom: theme.spacing(4),
+    },
+    button: {
+        marginBottom: 10,
+    },
 });
 
 export default styles;

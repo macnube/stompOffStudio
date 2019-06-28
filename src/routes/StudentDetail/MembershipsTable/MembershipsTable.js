@@ -2,8 +2,9 @@ import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import forEach from 'lodash/forEach';
 import find from 'lodash/find';
+import MUIDataTable from 'mui-datatables';
 
-import { CustomAddToolbar, SelectedDeleteToolbar, FlatTable } from 'components';
+import { CustomAddToolbar, SelectedDeleteToolbar } from 'components';
 import { parseMembershipsToTableData } from 'routes/StudentDetail/parse';
 import AddMembershipDialog from './AddMembershipDialog';
 
@@ -67,7 +68,7 @@ const MembershipsTable = ({
     };
     return (
         <Fragment>
-            <FlatTable
+            <MUIDataTable
                 title={'Active Memberships'}
                 data={parseMembershipsToTableData(student.memberships)}
                 columns={columns}

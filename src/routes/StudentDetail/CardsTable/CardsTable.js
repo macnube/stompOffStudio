@@ -1,11 +1,11 @@
 import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import forEach from 'lodash/forEach';
+import MUIDataTable from 'mui-datatables';
 
 import {
     CustomAddToolbar,
     SelectedDeleteToolbar,
-    FlatTable,
     CardDialog,
 } from 'components';
 import { parseCardsToTableData } from '../parse';
@@ -78,7 +78,7 @@ const CardsTable = ({
     };
     return (
         <Fragment>
-            <FlatTable
+            <MUIDataTable
                 title={'Cards'}
                 data={parseCardsToTableData(student.cards)}
                 columns={columns}

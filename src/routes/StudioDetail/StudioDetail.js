@@ -1,16 +1,19 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
+import compose from 'recompose/compose';
 import { withRouter } from 'react-router-dom';
+import { withStyles } from '@material-ui/core/styles';
 import find from 'lodash/find';
 import reduce from 'lodash/reduce';
 import forEach from 'lodash/forEach';
 import PropTypes from 'prop-types';
 import MUIDataTable from 'mui-datatables';
-import Paper from '@material-ui/core/Paper';
-import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
+import Container from '@material-ui/core/Container';
+import Grid from '@material-ui/core/Grid';
 
 import { SelectedDeleteToolbar, CustomAddToolbar } from 'components';
 import RoomForm from './RoomForm';
 import StudioDetailHeader from './StudioDetailHeader';
+import styles from './styles';
 
 const columns = [
     {
@@ -61,17 +64,6 @@ class StudioDetail extends Component {
             onClose();
         }
     };
-
-    getMuiTheme = () =>
-        createMuiTheme({
-            overrides: {
-                MuiPaper: {
-                    elevation4: {
-                        boxShadow: '0 0 0 0',
-                    },
-                },
-            },
-        });
 
     handleOnDeleteRoomsPress = ids => {
         const { deleteRoom } = this.props;
@@ -142,24 +134,17 @@ class StudioDetail extends Component {
             ),
             customToolbarSelect: this.renderSelectedToolbar,
         };
-        const { studio } = this.props;
+        const { studio, classes } = this.props;
         const { open, selectedRoomId } = this.state;
         return (
-            <Fragment>
-                <RoomForm
-                    open={open}
-                    handleClose={this.handleClose}
-                    handleCreate={this.handleCreateRoom}
-                    handleUpdate={this.handleUpdateRoom}
-                    room={find(studio.rooms, { id: selectedRoomId })}
-                />
-                <Paper>
+            <Container maxWidth="lg" className={classes.container}>
+                <Grid container spacing={3}>
                     <StudioDetailHeader
                         studio={studio}
                         handleOnSave={this.handleUpdateStudio}
                         handleOnCancel={this.navigateToStudioManagement}
                     />
-                    <MuiThemeProvider theme={this.getMuiTheme()}>
+                    <Grid item xs={12}>
                         <MUIDataTable
                             title={'Rooms'}
                             data={convertRoomDataToArray(
@@ -168,14 +153,22 @@ class StudioDetail extends Component {
                             columns={columns}
                             options={options}
                         />
-                    </MuiThemeProvider>
-                </Paper>
-            </Fragment>
+                    </Grid>
+                    <RoomForm
+                        open={open}
+                        handleClose={this.handleClose}
+                        handleCreate={this.handleCreateRoom}
+                        handleUpdate={this.handleUpdateRoom}
+                        room={find(studio.rooms, { id: selectedRoomId })}
+                    />
+                </Grid>
+            </Container>
         );
     }
 }
 
 StudioDetail.propTypes = {
+    classes: PropTypes.object.isRequired,
     studio: PropTypes.object.isRequired,
     deleteRoom: PropTypes.func.isRequired,
     createRoom: PropTypes.func.isRequired,
@@ -183,4 +176,7 @@ StudioDetail.propTypes = {
     updateStudio: PropTypes.func.isRequired,
 };
 
-export default withRouter(StudioDetail);
+export default compose(
+    withStyles(styles),
+    withRouter
+)(StudioDetail);

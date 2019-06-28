@@ -209,20 +209,21 @@ class CourseDetailHeader extends Component {
     };
 
     render() {
-        const { handleOnCancel } = this.props;
+        const { handleOnCancel, classes } = this.props;
 
         return (
-            <DetailHeader renderForm={this.renderForm}>
-                <Button variant="contained" onClick={handleOnCancel}>
-                    Cancel
-                </Button>
+            <DetailHeader renderForm={this.renderForm} height="Lg">
                 <Button
                     variant="contained"
                     color="primary"
                     disabled={!this.state.canSave}
                     onClick={this.handleSave}
+                    className={classes.button}
                 >
                     Save
+                </Button>
+                <Button variant="contained" onClick={handleOnCancel}>
+                    Cancel
                 </Button>
             </DetailHeader>
         );

@@ -1,14 +1,18 @@
 import 'date-fns';
 import React, { Component } from 'react';
+import compose from 'recompose/compose';
 import { withRouter } from 'react-router-dom';
+import { withStyles } from '@material-ui/core/styles';
 import toNumber from 'lodash/toNumber';
 import PropTypes from 'prop-types';
-import Paper from '@material-ui/core/Paper';
+import Container from '@material-ui/core/Container';
+import Grid from '@material-ui/core/Grid';
 
 import PaymentsTable from './PaymentsTable';
 import CardsTable from './CardsTable';
 import MembershipsTable from './MembershipsTable';
 import StudentDetailHeader from './StudentDetailHeader';
+import styles from './styles';
 
 class StudentDetail extends Component {
     state = {
@@ -71,6 +75,7 @@ class StudentDetail extends Component {
 
     render() {
         const {
+            classes,
             student,
             clearReferralBonus,
             createCard,
@@ -85,8 +90,9 @@ class StudentDetail extends Component {
         } = this.props;
         const { openMembershipDialog, openCardDialog } = this.state;
         return (
-            <div>
-                <Paper>
+            <Container maxWidth="lg" className={classes.container}>
+                <Grid container spacing={3}>
+                    {/* Header */}
                     <StudentDetailHeader
                         student={student}
                         handleOnCancel={this.navigateToStudentManagement}
@@ -94,44 +100,53 @@ class StudentDetail extends Component {
                         handleOnCreateUser={this.handleOnCreateUser}
                         canCreateUser={!student.user}
                     />
-                    <MembershipsTable
-                        open={openMembershipDialog}
-                        student={student}
-                        deleteMembership={deleteMembership}
-                        handleAdd={() =>
-                            this.handleOpenDialog('openMembershipDialog')
-                        }
-                        handleClose={this.handleClose}
-                        history={history}
-                    />
-                    <CardsTable
-                        open={openCardDialog}
-                        student={student}
-                        createCard={createCard}
-                        deleteCard={deleteCard}
-                        handleAdd={() =>
-                            this.handleOpenDialog('openCardDialog')
-                        }
-                        handleClose={this.handleClose}
-                        history={history}
-                    />
-                    <PaymentsTable
-                        student={student}
-                        clearReferralBonus={clearReferralBonus}
-                        createPayment={createPayment}
-                        deletePayment={deletePayment}
-                        updatePayment={updatePayment}
-                        payCard={payCard}
-                        unpayCard={unpayCard}
-                        handleClose={this.handleClose}
-                    />
-                </Paper>
-            </div>
+
+                    {/* Payments Table */}
+                    <Grid item xs={12}>
+                        <MembershipsTable
+                            open={openMembershipDialog}
+                            student={student}
+                            deleteMembership={deleteMembership}
+                            handleAdd={() =>
+                                this.handleOpenDialog('openMembershipDialog')
+                            }
+                            handleClose={this.handleClose}
+                            history={history}
+                        />
+                    </Grid>
+                    <Grid item xs={12}>
+                        <CardsTable
+                            open={openCardDialog}
+                            student={student}
+                            createCard={createCard}
+                            deleteCard={deleteCard}
+                            handleAdd={() =>
+                                this.handleOpenDialog('openCardDialog')
+                            }
+                            handleClose={this.handleClose}
+                            history={history}
+                        />
+                    </Grid>
+                    <Grid item xs={12}>
+                        <PaymentsTable
+                            student={student}
+                            clearReferralBonus={clearReferralBonus}
+                            createPayment={createPayment}
+                            deletePayment={deletePayment}
+                            updatePayment={updatePayment}
+                            payCard={payCard}
+                            unpayCard={unpayCard}
+                            handleClose={this.handleClose}
+                        />
+                    </Grid>
+                </Grid>
+            </Container>
         );
     }
 }
 
 StudentDetail.propTypes = {
+    classes: PropTypes.object.isRequired,
     student: PropTypes.object.isRequired,
     clearReferralBonus: PropTypes.func.isRequired,
     updateStudent: PropTypes.func.isRequired,
@@ -147,4 +162,7 @@ StudentDetail.propTypes = {
     history: PropTypes.object.isRequired,
 };
 
-export default withRouter(StudentDetail);
+export default compose(
+    withRouter,
+    withStyles(styles)
+)(StudentDetail);

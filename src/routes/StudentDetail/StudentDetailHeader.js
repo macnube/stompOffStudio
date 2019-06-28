@@ -1,4 +1,5 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
+import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import toNumber from 'lodash/toNumber';
 import TextField from '@material-ui/core/TextField';
@@ -7,6 +8,8 @@ import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
+import Grid from '@material-ui/core/Grid';
+import Paper from '@material-ui/core/Paper';
 import { withStyles } from '@material-ui/core/styles';
 
 import { DetailHeader } from 'components';
@@ -107,25 +110,33 @@ class StudentDetailHeader extends Component {
             handleOnCancel,
             handleOnCreateUser,
             canCreateUser,
+            classes,
         } = this.props;
-
         return (
-            <DetailHeader renderForm={this.renderForm}>
-                {canCreateUser ? (
-                    <Button variant="contained" onClick={handleOnCreateUser}>
-                        Create User
-                    </Button>
-                ) : null}
-                <Button variant="contained" onClick={handleOnCancel}>
-                    Cancel
-                </Button>
+            <DetailHeader renderForm={this.renderForm} height="Sm">
                 <Button
                     variant="contained"
                     color="primary"
                     disabled={!this.state.canSave}
                     onClick={this.handleSave}
+                    className={classes.button}
                 >
                     Save
+                </Button>
+                <Button
+                    variant="contained"
+                    onClick={handleOnCancel}
+                    className={classes.button}
+                >
+                    Cancel
+                </Button>
+
+                <Button
+                    variant="contained"
+                    onClick={handleOnCreateUser}
+                    disabled={!canCreateUser}
+                >
+                    Create User
                 </Button>
             </DetailHeader>
         );

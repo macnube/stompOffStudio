@@ -29,7 +29,6 @@ export const parsePaymentsToChartData = (payments, year) => {
         payments,
         (acc, payment) => {
             if (getYear(payment.date) === year) {
-                console.log('here');
                 currentMonthYear = getChartMonthYear(payment.date);
                 if (currentMonthYear === previousMonthYear) {
                     amount += payment.amount;

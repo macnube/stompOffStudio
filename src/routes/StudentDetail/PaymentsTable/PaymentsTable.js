@@ -2,6 +2,7 @@ import React, { Fragment, useState } from 'react';
 import PropTypes from 'prop-types';
 import forEach from 'lodash/forEach';
 import find from 'lodash/find';
+import MUIDataTable from 'mui-datatables';
 
 import {
     CustomAddToolbar,
@@ -145,7 +146,7 @@ const PaymentsTable = ({
     };
     return (
         <Fragment>
-            <FlatTable
+            <MUIDataTable
                 title={'Payments'}
                 data={parsePaymentsToTableData(student.payments)}
                 columns={columns}

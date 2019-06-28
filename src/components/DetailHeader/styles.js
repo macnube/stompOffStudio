@@ -1,11 +1,24 @@
 const styles = theme => ({
-    formContainer: {
-        flexGrow: 1,
-        paddingLeft: 2 * theme.spacing.unit,
-        paddingRight: 2 * theme.spacing.unit,
+    paper: {
+        padding: theme.spacing(2),
+        display: 'flex',
+        overflow: 'auto',
+        flexDirection: 'column',
     },
-    buttonContainer: {
-        marginTop: 2 * theme.spacing.unit,
+    heightSm: {
+        height: 170,
+    },
+    heightMd: {
+        height: 200,
+    },
+    heightLg: {
+        height: 250,
+    },
+    buttonPaper: {
+        padding: theme.spacing(2),
+        display: 'flex',
+        overflow: 'auto',
+        flexDirection: 'column',
     },
 });
 

@@ -1,19 +1,24 @@
 import React, { Component } from 'react';
+import compose from 'recompose/compose';
 import { withRouter } from 'react-router-dom';
+import { withStyles } from '@material-ui/core/styles';
 import isNil from 'lodash/isNil';
 import find from 'lodash/find';
 import PropTypes from 'prop-types';
-import Paper from '@material-ui/core/Paper';
 import { MuiPickersUtilsProvider } from 'material-ui-pickers';
+import MUIDataTable from 'mui-datatables';
 import DateFnsUtils from '@date-io/date-fns';
+import Container from '@material-ui/core/Container';
+import Grid from '@material-ui/core/Grid';
 
 import SelectedParticipantToolbar from './SelectedParticipantToolbar';
 import CourseInstanceHeader from './CourseInstanceHeader';
 import AddMembershipsToCourseInstanceDialog from './AddMembershipsToCourseInstanceDialog';
-import { CardDialog, CustomAddToolbar, FlatTable } from 'components';
+import { CardDialog, CustomAddToolbar } from 'components';
 import { parseParticipantsToTableData } from './parse';
 import { PARTICIPANT_STATUS } from 'constants/gql';
 import { isPastExpiration } from 'utils/date';
+import styles from './styles';
 
 const columns = [
     {
@@ -236,7 +241,7 @@ class CourseInstance extends Component {
             customToolbarSelect: this.renderParticipantSelectedToolbar,
             onRowClick: this.handleNavigateToStudentDetail,
         };
-        const { courseInstance, createCard } = this.props;
+        const { courseInstance, createCard, classes } = this.props;
         const {
             openAddParticipantDialog,
             openCardDialog,
@@ -247,23 +252,27 @@ class CourseInstance extends Component {
         } = this.state;
         return (
             <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                <Paper>
-                    <CourseInstanceHeader
-                        courseInstance={courseInstance}
-                        handleOnCancel={this.navigateToCourseDetail}
-                        handleOnSave={this.handleUpdateCourseInstance}
-                        handleNavigateToCourseAttendance={
-                            this.handleNavigateToCourseAttendance
-                        }
-                    />
-                    <FlatTable
-                        title={'Participants'}
-                        data={parseParticipantsToTableData(
-                            courseInstance.participants
-                        )}
-                        columns={columns}
-                        options={options}
-                    />
+                <Container maxWidth="lg" className={classes.container}>
+                    <Grid container spacing={3}>
+                        <CourseInstanceHeader
+                            courseInstance={courseInstance}
+                            handleOnCancel={this.navigateToCourseDetail}
+                            handleOnSave={this.handleUpdateCourseInstance}
+                            handleNavigateToCourseAttendance={
+                                this.handleNavigateToCourseAttendance
+                            }
+                        />
+                        <Grid item xs={12}>
+                            <MUIDataTable
+                                title={'Participants'}
+                                data={parseParticipantsToTableData(
+                                    courseInstance.participants
+                                )}
+                                columns={columns}
+                                options={options}
+                            />
+                        </Grid>
+                    </Grid>
                     {studentName ? (
                         <CardDialog
                             title={title}
@@ -281,13 +290,14 @@ class CourseInstance extends Component {
                             courseInstance={courseInstance}
                         />
                     ) : null}
-                </Paper>
+                </Container>
             </MuiPickersUtilsProvider>
         );
     }
 }
 
 CourseInstance.propTypes = {
+    classes: PropTypes.object.isRequired,
     courseInstance: PropTypes.object.isRequired,
     updateCourseInstance: PropTypes.func.isRequired,
     logParticipantStatus: PropTypes.func.isRequired,
@@ -298,4 +308,7 @@ CourseInstance.propTypes = {
     card: PropTypes.object,
 };
 
-export default withRouter(CourseInstance);
+export default compose(
+    withStyles(styles),
+    withRouter
+)(CourseInstance);

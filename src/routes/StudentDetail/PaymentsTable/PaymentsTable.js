@@ -7,7 +7,6 @@ import MUIDataTable from 'mui-datatables';
 import {
     CustomAddToolbar,
     SelectedDeleteToolbar,
-    FlatTable,
     PaymentDialog,
 } from 'components';
 import { parsePaymentsToTableData } from '../parse';

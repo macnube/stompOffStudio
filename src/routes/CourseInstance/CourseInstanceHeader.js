@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
+import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import toNumber from 'lodash/toNumber';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import { DatePicker } from 'material-ui-pickers';
-import { withStyles } from '@material-ui/core/styles';
 import { Player, ControlBar, PlaybackRateMenuButton } from 'video-react';
 
 import { DetailHeader } from 'components';
@@ -115,26 +115,32 @@ class CourseInstanceHeader extends Component {
     };
 
     render() {
-        const { handleOnCancel, handleNavigateToCourseAttendance } = this.props;
+        const {
+            handleOnCancel,
+            handleNavigateToCourseAttendance,
+            classes,
+        } = this.props;
         return (
             <DetailHeader renderForm={this.renderForm}>
                 <Button
                     variant="contained"
                     color="primary"
                     onClick={handleNavigateToCourseAttendance}
+                    className={classes.button}
                 >
                     Attendance Tool
-                </Button>
-                <Button variant="contained" onClick={handleOnCancel}>
-                    Cancel
                 </Button>
                 <Button
                     variant="contained"
                     color="primary"
                     disabled={!this.state.canSave}
                     onClick={this.handleSave}
+                    className={classes.button}
                 >
                     Save
+                </Button>
+                <Button variant="contained" onClick={handleOnCancel}>
+                    Cancel
                 </Button>
             </DetailHeader>
         );

@@ -1,5 +1,4 @@
-import React, { Component, Fragment } from 'react';
-import clsx from 'clsx';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import toNumber from 'lodash/toNumber';
 import TextField from '@material-ui/core/TextField';
@@ -8,8 +7,6 @@ import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
-import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
 import { withStyles } from '@material-ui/core/styles';
 
 import { DetailHeader } from 'components';

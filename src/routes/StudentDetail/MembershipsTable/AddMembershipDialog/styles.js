@@ -6,13 +6,13 @@ const styles = theme => ({
         flex: 1,
     },
     button: {
-        margin: theme.spacing.unit,
+        margin: theme.spacing(1),
     },
     leftIcon: {
-        marginRight: theme.spacing.unit,
+        marginRight: theme.spacing(1),
     },
     rightIcon: {
-        marginLeft: theme.spacing.unit,
+        marginLeft: theme.spacing(1),
     },
     iconSmall: {
         fontSize: 20,

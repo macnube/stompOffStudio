@@ -2,10 +2,10 @@ const styles = theme => ({
     toolbar: {
         display: 'flex',
         justifyContent: 'flex-end',
-        marginBottom: theme.spacing.unit,
+        marginBottom: theme.spacing(1),
     },
     action: {
-        paddingLeft: theme.spacing.unit,
+        paddingLeft: theme.spacing(1),
     },
 });
 

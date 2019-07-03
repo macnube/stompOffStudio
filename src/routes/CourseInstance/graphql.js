@@ -11,7 +11,7 @@ import {
 } from 'graphql';
 
 export const GET_COURSE_INSTANCE_FRAGMENT = gql`
-    fragment CourseInstanceFragment on CourseInstance {
+    fragment GetCourseInstanceFragment on CourseInstance {
         id
         participants {
             id

@@ -4,8 +4,9 @@ import compose from 'recompose/compose';
 import find from 'lodash/find';
 import PropTypes from 'prop-types';
 import MUIDataTable from 'mui-datatables';
-import Paper from '@material-ui/core/Paper';
-import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core/styles';
+import Container from '@material-ui/core/Container';
+import Grid from '@material-ui/core/Grid';
 import { MuiPickersUtilsProvider } from 'material-ui-pickers';
 import DateFnsUtils from '@date-io/date-fns';
 
@@ -14,6 +15,7 @@ import CardDetailHeader from './CardDetailHeader';
 import { SelectedDeleteToolbar } from 'components';
 import { PARTICIPANT_STATUS } from 'constants/gql';
 import { withUser } from 'core/user';
+import styles from './styles';
 
 const columns = [
     {
@@ -32,17 +34,6 @@ const columns = [
 
 class CardDetail extends Component {
     handleInstanceClick = rowData => this.navigateToCourseInstance(rowData[0]);
-
-    getMuiTheme = () =>
-        createMuiTheme({
-            overrides: {
-                MuiPaper: {
-                    elevation4: {
-                        boxShadow: '0 0 0 0',
-                    },
-                },
-            },
-        });
 
     handleUpdateCard = card => {
         const { id, expirationDate, value } = card;
@@ -117,31 +108,37 @@ class CardDetail extends Component {
             onRowClick: this.handleInstanceClick,
             customToolbarSelect: this.renderInstanceSelectedToolbar,
         };
-        const { card, user } = this.props;
+        const { card, user, classes } = this.props;
         return (
             <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                <Paper>
-                    <CardDetailHeader
-                        card={card}
-                        admin={user.admin}
-                        handleOnSave={this.handleUpdateCard}
-                        handleOnCancel={this.navigateToStudentDetail}
-                    />
-                    <MuiThemeProvider theme={this.getMuiTheme()}>
-                        <MUIDataTable
-                            title={'Card Course History'}
-                            data={parseCardDataToArray(card)}
-                            columns={columns}
-                            options={user.admin ? adminOptions : studentOptions}
+                <Container maxWidth="lg" className={classes.container}>
+                    <Grid container spacing={3}>
+                        <CardDetailHeader
+                            card={card}
+                            admin={user.admin}
+                            handleOnSave={this.handleUpdateCard}
+                            handleOnCancel={this.navigateToStudentDetail}
                         />
-                    </MuiThemeProvider>
-                </Paper>
+                        <Grid item xs={12}>
+                            <MUIDataTable
+                                title={'Card Course History'}
+                                data={parseCardDataToArray(card)}
+                                columns={columns}
+                                options={
+                                    user.admin ? adminOptions : studentOptions
+                                }
+                            />
+                        </Grid>
+                    </Grid>
+                </Container>
             </MuiPickersUtilsProvider>
         );
     }
 }
 
 CardDetail.propTypes = {
+    classes: PropTypes.object.isRequired,
+    history: PropTypes.object.isRequired,
     updateCard: PropTypes.func.isRequired,
     removeCardParticipation: PropTypes.func.isRequired,
     logParticipantStatus: PropTypes.func.isRequired,
@@ -151,5 +148,6 @@ CardDetail.propTypes = {
 
 export default compose(
     withRouter,
+    withStyles(styles),
     withUser
 )(CardDetail);

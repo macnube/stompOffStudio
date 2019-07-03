@@ -8,14 +8,28 @@ import { withStyles } from '@material-ui/core/styles';
 
 import styles from './styles';
 
-const DetailHeader = ({ classes, children, renderForm, height = 'Md' }) => {
+const DetailHeader = ({
+    classes,
+    children,
+    renderForm,
+    height = 'Md',
+    formOnly = false,
+}) => {
     const fixedHeightPaper = clsx(classes.paper, classes[`height${height}`]);
 
     const fixedHeightButtonPaper = clsx(
         classes.buttonPaper,
         classes[`height${height}`]
     );
-    return (
+    return formOnly ? (
+        <Fragment>
+            <Grid item xs={12} md={12} lg={12}>
+                <Paper elevation={3} className={fixedHeightPaper}>
+                    {renderForm()}
+                </Paper>
+            </Grid>
+        </Fragment>
+    ) : (
         <Fragment>
             <Grid item xs={12} md={4} lg={3}>
                 <Paper elevation={3} className={fixedHeightButtonPaper}>
@@ -36,6 +50,7 @@ DetailHeader.propTypes = {
     renderForm: PropTypes.func.isRequired,
     children: PropTypes.node,
     height: PropTypes.oneOf(['Sm', 'Md', 'Lg']),
+    formOnly: PropTypes.bool,
 };
 
 export default withStyles(styles)(DetailHeader);

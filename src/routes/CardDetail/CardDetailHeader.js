@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import toNumber from 'lodash/toNumber';
 import TextField from '@material-ui/core/TextField';
@@ -116,25 +116,26 @@ class CardDetailHeader extends Component {
     };
 
     render() {
-        const { handleOnCancel, admin } = this.props;
+        const { handleOnCancel, admin, classes } = this.props;
 
         return (
-            <DetailHeader renderForm={this.renderForm}>
-                {admin ? (
-                    <Fragment>
-                        <Button variant="contained" onClick={handleOnCancel}>
-                            Cancel
-                        </Button>
-                        <Button
-                            variant="contained"
-                            color="primary"
-                            disabled={!this.state.canSave}
-                            onClick={this.handleSave}
-                        >
-                            Save
-                        </Button>
-                    </Fragment>
-                ) : null}
+            <DetailHeader renderForm={this.renderForm} formOnly={!admin}>
+                <Button
+                    variant="contained"
+                    color="primary"
+                    disabled={!this.state.canSave}
+                    onClick={this.handleSave}
+                    className={classes.button}
+                >
+                    Save
+                </Button>
+                <Button
+                    variant="contained"
+                    onClick={handleOnCancel}
+                    className={classes.button}
+                >
+                    Cancel
+                </Button>
             </DetailHeader>
         );
     }

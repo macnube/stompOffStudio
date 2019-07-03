@@ -1,24 +1,24 @@
 const styles = theme => ({
     appBarSpacer: theme.mixins.toolbar,
     nameField: {
-        marginLeft: theme.spacing.unit,
-        marginRight: theme.spacing.unit,
+        marginLeft: theme.spacing(1),
+        marginRight: theme.spacing(1),
     },
     topForm: {
-        paddingLeft: 2 * theme.spacing.unit,
-        paddingRight: 2 * theme.spacing.unit,
+        paddingLeft: 2 * theme.spacing(1),
+        paddingRight: 2 * theme.spacing(1),
     },
     textField: {
-        marginLeft: theme.spacing.unit,
-        marginRight: theme.spacing.unit,
+        marginLeft: theme.spacing(1),
+        marginRight: theme.spacing(1),
         width: 200,
     },
     formControl: {
-        marginLeft: theme.spacing.unit,
+        marginLeft: theme.spacing(1),
     },
     emailField: {
-        marginLeft: theme.spacing.unit,
-        marginRight: theme.spacing.unit,
+        marginLeft: theme.spacing(1),
+        marginRight: theme.spacing(1),
         width: 400,
     },
     menu: {
@@ -26,7 +26,7 @@ const styles = theme => ({
     },
     fab: {
         float: 'right',
-        margin: theme.spacing.unit,
+        margin: theme.spacing(1),
     },
 });
 

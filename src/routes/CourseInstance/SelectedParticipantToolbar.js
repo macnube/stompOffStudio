@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import find from 'lodash/find';
 import Button from '@material-ui/core/Button';
-import AddIcon from '@material-ui/icons/Add';
 import { withStyles } from '@material-ui/core/styles';
 
 import { PARTICIPANT_STATUS } from 'constants/gql';
@@ -32,37 +31,34 @@ const SelectedParticipantToolbar = ({
             <Button
                 variant="contained"
                 size="small"
-                className={classes.button}
+                className={classes.toolbarButton}
                 onClick={() => handleResetLogPress(selectedId)}
                 color="primary"
             >
-                <AddIcon className={classes.leftIcon} />
                 Reset
             </Button>
             <Button
                 variant="contained"
                 size="small"
-                className={classes.button}
+                className={classes.toolbarButton}
                 onClick={() => handleLogAsAbsentPress(selectedId)}
                 color="primary"
             >
-                <AddIcon className={classes.leftIcon} />
                 Absent
             </Button>
             <Button
                 variant="contained"
                 size="small"
-                className={classes.button}
+                className={classes.toolbarButton}
                 onClick={() => handleLogAsPresentPress(selectedId)}
                 color="primary"
             >
-                <AddIcon className={classes.leftIcon} />
                 Present
             </Button>
             <Button
                 variant="contained"
                 size="small"
-                className={classes.button}
+                className={classes.toolbarButton}
                 onClick={() => handleDeleteParticipant(selectedId)}
                 color="secondary"
             >

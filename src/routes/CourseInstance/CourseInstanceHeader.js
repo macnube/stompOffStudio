@@ -1,9 +1,10 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import toNumber from 'lodash/toNumber';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
+import Grid from '@material-ui/core/Grid';
 import { DatePicker } from 'material-ui-pickers';
 import { Player, ControlBar, PlaybackRateMenuButton } from 'video-react';
 
@@ -92,15 +93,6 @@ class CourseInstanceHeader extends Component {
                     onChange={this.handleChange('recapUrl')}
                     margin="normal"
                 />
-                {recapUrl ? (
-                    <Player fluid src={recapUrl}>
-                        <ControlBar>
-                            <PlaybackRateMenuButton
-                                rates={[5, 2, 1, 0.5, 0.1]}
-                            />
-                        </ControlBar>
-                    </Player>
-                ) : null}
                 <TextField
                     id="standard-name"
                     label="Notes"
@@ -120,29 +112,43 @@ class CourseInstanceHeader extends Component {
             handleNavigateToCourseAttendance,
             classes,
         } = this.props;
+        const { recapUrl } = this.state;
         return (
-            <DetailHeader renderForm={this.renderForm}>
-                <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={handleNavigateToCourseAttendance}
-                    className={classes.button}
-                >
-                    Attendance Tool
-                </Button>
-                <Button
-                    variant="contained"
-                    color="primary"
-                    disabled={!this.state.canSave}
-                    onClick={this.handleSave}
-                    className={classes.button}
-                >
-                    Save
-                </Button>
-                <Button variant="contained" onClick={handleOnCancel}>
-                    Cancel
-                </Button>
-            </DetailHeader>
+            <Fragment>
+                <DetailHeader renderForm={this.renderForm}>
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={handleNavigateToCourseAttendance}
+                        className={classes.button}
+                    >
+                        Attendance Tool
+                    </Button>
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        disabled={!this.state.canSave}
+                        onClick={this.handleSave}
+                        className={classes.button}
+                    >
+                        Save
+                    </Button>
+                    <Button variant="contained" onClick={handleOnCancel}>
+                        Cancel
+                    </Button>
+                </DetailHeader>
+                {recapUrl ? (
+                    <Grid item xs={12}>
+                        <Player fluid src={recapUrl}>
+                            <ControlBar>
+                                <PlaybackRateMenuButton
+                                    rates={[5, 2, 1, 0.5, 0.1]}
+                                />
+                            </ControlBar>
+                        </Player>
+                    </Grid>
+                ) : null}
+            </Fragment>
         );
     }
 }

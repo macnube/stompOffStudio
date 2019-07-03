@@ -12,6 +12,10 @@ const styles = theme => ({
         paddingLeft: 2 * theme.spacing.unit,
         paddingRight: 2 * theme.spacing.unit,
     },
+    container: {
+        paddingTop: theme.spacing(4),
+        paddingBottom: theme.spacing(4),
+    },
 });
 
 export default styles;

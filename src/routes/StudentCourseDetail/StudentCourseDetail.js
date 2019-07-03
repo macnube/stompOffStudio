@@ -1,22 +1,25 @@
-import 'date-fns';
 import React, { useState } from 'react';
 import compose from 'recompose/compose';
+import { withStyles } from '@material-ui/core/styles';
 import forEach from 'lodash/forEach';
 import find from 'lodash/find';
 import reduce from 'lodash/reduce';
 import keys from 'lodash/keys';
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import Paper from '@material-ui/core/Paper';
+import Container from '@material-ui/core/Container';
+import Grid from '@material-ui/core/Grid';
 import { MuiPickersUtilsProvider } from 'material-ui-pickers';
 import DateFnsUtils from '@date-io/date-fns';
+import MUIDataTable from 'mui-datatables';
 
 import StudentCourseDetailHeader from './StudentCourseDetailHeader';
-import { FlatTable, SelectedDeleteToolbar } from 'components';
+import { SelectedDeleteToolbar } from 'components';
 import StudentAbsenceDialog from './StudentAbsenceDialog';
 import { parseInstancesToTableData, parseAbsencesToTableData } from './parse';
 import { withUser } from 'core/user';
 import { getTableDateFromCalendarPicker, getTableDate } from 'utils/date';
+import styles from './styles';
 
 const columns = [
     {
@@ -46,6 +49,7 @@ const absencesColumns = [
 ];
 
 const StudentCourseDetail = ({
+    classes,
     course,
     history,
     user,
@@ -152,35 +156,42 @@ const StudentCourseDetail = ({
     };
     return (
         <MuiPickersUtilsProvider utils={DateFnsUtils}>
-            <Paper>
-                <StudentCourseDetailHeader
-                    course={course}
-                    handleOpen={() => setOpen(true)}
-                />
-                <FlatTable
-                    title={'Course Instances'}
-                    data={parseInstancesToTableData(course.instances)}
-                    columns={columns}
-                    options={options}
-                />
-                <FlatTable
-                    title={'Upcoming Course Absences'}
-                    data={parseAbsencesToTableData(course.absences)}
-                    columns={absencesColumns}
-                    options={absencesOptions}
-                />
-                <StudentAbsenceDialog
-                    open={open}
-                    course={course}
-                    handleLogAbsence={handleLogAbsence}
-                    handleClose={handleClose}
-                />
-            </Paper>
+            <Container maxWidth="lg" className={classes.container}>
+                <Grid container spacing={3}>
+                    <StudentCourseDetailHeader
+                        course={course}
+                        handleOpen={() => setOpen(true)}
+                    />
+                    <Grid item xs={12}>
+                        <MUIDataTable
+                            title={'Course Instances'}
+                            data={parseInstancesToTableData(course.instances)}
+                            columns={columns}
+                            options={options}
+                        />
+                    </Grid>
+                    <Grid item xs={12}>
+                        <MUIDataTable
+                            title={'Upcoming Course Absences'}
+                            data={parseAbsencesToTableData(course.absences)}
+                            columns={absencesColumns}
+                            options={absencesOptions}
+                        />
+                    </Grid>
+                </Grid>
+            </Container>
+            <StudentAbsenceDialog
+                open={open}
+                course={course}
+                handleLogAbsence={handleLogAbsence}
+                handleClose={handleClose}
+            />
         </MuiPickersUtilsProvider>
     );
 };
 
 StudentCourseDetail.propTypes = {
+    classes: PropTypes.object.isRequired,
     course: PropTypes.object.isRequired,
     history: PropTypes.object.isRequired,
     user: PropTypes.object.isRequired,
@@ -192,5 +203,6 @@ StudentCourseDetail.propTypes = {
 
 export default compose(
     withUser,
+    withStyles(styles),
     withRouter
 )(StudentCourseDetail);

@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
@@ -12,7 +12,7 @@ const StudentCourseDetailHeader = ({ course, classes, handleOpen }) => {
     const { name, description, duration, startTime, room, day } = course;
 
     const renderForm = () => (
-        <Fragment>
+        <form>
             <TextField
                 id="standard-name"
                 label="Name"
@@ -73,7 +73,7 @@ const StudentCourseDetailHeader = ({ course, classes, handleOpen }) => {
                 margin="normal"
                 disabled
             />
-        </Fragment>
+        </form>
     );
     return (
         <DetailHeader renderForm={renderForm}>

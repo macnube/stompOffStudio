@@ -30,7 +30,7 @@ const UserSettingsContainer = ({ open, handleClose, handleLogout }) => (
             },
         }) => {
             if (loading) return null;
-            if (error) return `Error: ${error}`;
+            if (error) return null;
             return (
                 <UserSettings
                     user={data.currentUser}

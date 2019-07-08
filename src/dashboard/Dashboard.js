@@ -15,8 +15,9 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import SettingsIcon from '@material-ui/icons/Settings';
+import LogAbsenceIcon from '@material-ui/icons/PersonAddDisabled';
 
-import { UserSettingsDialog } from 'components';
+import { UserSettingsDialog, LogAbsenceDialog } from 'components';
 import {
     Overview,
     StudentDetail,
@@ -46,6 +47,7 @@ import { withUser } from 'core/user';
 const Dashboard = ({ classes, user, setUser }) => {
     const [open, setOpen] = useState(true);
     const [openUserSettings, setOpenUserSettings] = useState(false);
+    const [openLogAbsence, setOpenLogAbsence] = useState(false);
 
     const handleDrawerOpen = () => {
         setOpen(true);
@@ -67,6 +69,15 @@ const Dashboard = ({ classes, user, setUser }) => {
     const handleLogout = () => {
         localStorage.removeItem('authUser');
         setUser({ admin: false, isAuthenticated: false, student: null });
+    };
+
+    const handleOpenLogAbsence = () => {
+        setOpenLogAbsence(true);
+    };
+
+    const handleCloseLogAbsence = onClose => {
+        onClose();
+        setOpenLogAbsence(false);
     };
 
     const renderRoutes = () => (
@@ -128,6 +139,14 @@ const Dashboard = ({ classes, user, setUser }) => {
                     >
                         Dashboard
                     </Typography>
+                    {user.isAuthenticated && !user.admin ? (
+                        <IconButton
+                            onClick={handleOpenLogAbsence}
+                            color="inherit"
+                        >
+                            <LogAbsenceIcon />
+                        </IconButton>
+                    ) : null}
                     <IconButton
                         onClick={handleOpenUserSettings}
                         color="inherit"
@@ -165,6 +184,10 @@ const Dashboard = ({ classes, user, setUser }) => {
                     open={openUserSettings}
                     handleClose={handleCloseUserSettings}
                     handleLogout={handleLogout}
+                />
+                <LogAbsenceDialog
+                    open={openLogAbsence}
+                    handleClose={handleCloseLogAbsence}
                 />
             </main>
         </div>

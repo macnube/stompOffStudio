@@ -9,7 +9,7 @@ import {
     SMALL_MEMBERSHIP_FRAGMENT,
 } from 'graphql';
 
-const STUDENT_DETAIL_COURSE_FRAGMENT = gql`
+export const STUDENT_DETAIL_COURSE_FRAGMENT = gql`
     fragment StudentDetailCourseFragment on Course {
         ...LargeCourseFragment
         instances(orderBy: date_DESC) {

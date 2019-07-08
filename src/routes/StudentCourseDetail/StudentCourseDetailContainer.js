@@ -14,6 +14,7 @@ import {
     LOG_PARTICIPANT_ABSENCE,
     CLEAR_PARTICIPANT_ABSENCE,
 } from './graphql';
+import { UPCOMING_ABSENCES_BY_STUDENT } from 'routes/StudentOverviewTab/graphql';
 import StudentCourseDetail from './StudentCourseDetail';
 import { withUser } from 'core/user';
 
@@ -43,6 +44,25 @@ const logCourseAbsence = ({ render, id, studentId, date }) => (
                     course: newCourse,
                 },
             });
+            try {
+                const { upcomingAbsencesByStudent } = cache.readQuery({
+                    query: UPCOMING_ABSENCES_BY_STUDENT,
+                    variables: { id: studentId },
+                });
+                if (upcomingAbsencesByStudent) {
+                    cache.writeQuery({
+                        query: UPCOMING_ABSENCES_BY_STUDENT,
+                        variables: { id: studentId },
+                        data: {
+                            upcomingAbsencesByStudent: upcomingAbsencesByStudent.concat(
+                                [logCourseAbsence]
+                            ),
+                        },
+                    });
+                }
+            } catch (e) {
+                console.log('error is: ', e);
+            }
         }}
     >
         {(mutation, result) => render({ mutation, result })}

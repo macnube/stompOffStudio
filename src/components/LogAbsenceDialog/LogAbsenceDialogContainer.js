@@ -4,22 +4,76 @@ import { Query, Mutation } from 'react-apollo';
 import { Adopt } from 'react-adopt';
 import startOfDay from 'date-fns/startOfDay';
 
-import { GET_COURSES_BY_STUDENT } from './graphql';
 import {
-    LOG_COURSE_ABSENCE,
+    LOG_ABSENCE_GET_COURSES_BY_STUDENT,
+    LOG_ABSENCE_LOG_COURSE_ABSENCE,
+} from './graphql';
+import {
     LOG_PARTICIPANT_ABSENCE,
+    GET_COURSE,
 } from 'routes/StudentCourseDetail/graphql';
+import { UPCOMING_ABSENCES_BY_STUDENT } from 'routes/StudentOverviewTab/graphql';
 import LogAbsenceDialog from './LogAbsenceDialog';
 import { withUser } from 'core/user';
 
 const getCourses = ({ render, id, date }) => (
-    <Query query={GET_COURSES_BY_STUDENT} variables={{ id, date }}>
+    <Query query={LOG_ABSENCE_GET_COURSES_BY_STUDENT} variables={{ id, date }}>
         {render}
     </Query>
 );
 
-const logCourseAbsence = ({ render }) => (
-    <Mutation mutation={LOG_COURSE_ABSENCE}>
+const logCourseAbsence = ({ render, id, date }) => (
+    <Mutation
+        mutation={LOG_ABSENCE_LOG_COURSE_ABSENCE}
+        update={(cache, { data: { logCourseAbsence } }) => {
+            try {
+                const { upcomingAbsencesByStudent } = cache.readQuery({
+                    query: UPCOMING_ABSENCES_BY_STUDENT,
+                    variables: { id },
+                });
+                if (upcomingAbsencesByStudent) {
+                    cache.writeQuery({
+                        query: UPCOMING_ABSENCES_BY_STUDENT,
+                        variables: { id },
+                        data: {
+                            upcomingAbsencesByStudent: upcomingAbsencesByStudent.concat(
+                                [logCourseAbsence]
+                            ),
+                        },
+                    });
+                }
+            } catch (e) {
+                console.log('error is: ', e);
+            }
+            try {
+                const { course } = cache.readQuery({
+                    query: GET_COURSE,
+                    variables: {
+                        id: logCourseAbsence.course.id,
+                        date,
+                        studentId: id,
+                    },
+                });
+                const newCourse = {
+                    ...course,
+                    absences: course.absences.concat([logCourseAbsence]),
+                };
+                cache.writeQuery({
+                    query: GET_COURSE,
+                    variables: {
+                        id: logCourseAbsence.course.id,
+                        date,
+                        studentId: id,
+                    },
+                    data: {
+                        course: newCourse,
+                    },
+                });
+            } catch (e) {
+                console.log('e is: ', e);
+            }
+        }}
+    >
         {(mutation, result) => render({ mutation, result })}
     </Mutation>
 );

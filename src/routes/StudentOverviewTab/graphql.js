@@ -33,20 +33,15 @@ export const GET_INSTANCES_BY_STUDENT = gql`
     ${SMALL_COURSE_INSTANCE_FRAGMENT}
 `;
 
-export const GET_UNPAID_CARDS_BY_STUDENT = gql`
-    query OverviewGetUnpaidCardsByStudent($id: ID!) {
-        unpaidCardsByStudent(id: $id) {
+export const UPCOMING_ABSENCES_BY_STUDENT = gql`
+    query OverviewGetAbsences($id: ID!) {
+        upcomingAbsencesByStudent(id: $id) {
             id
-            payment {
-                id
+            date
+            course {
+                ...SmallCourseFragment
             }
-            participationHistory {
-                id
-            }
-            paid
-            expirationDate
-            value
-            originalValue
         }
     }
+    ${SMALL_COURSE_FRAGMENT}
 `;

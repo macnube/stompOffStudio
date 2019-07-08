@@ -56,3 +56,18 @@ export const parsePaymentsToTableData = payments =>
         },
         []
     );
+
+export const parseAbsencesToTableData = absences =>
+    reduce(
+        absences,
+        (acc, absence) => {
+            const result = [
+                absence.course.id,
+                getTableDate(absence.date),
+                absence.course.name,
+            ];
+            acc.push(result);
+            return acc;
+        },
+        []
+    );

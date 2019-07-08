@@ -6,7 +6,7 @@ import { withRouter } from 'react-router-dom';
 import Paper from '@material-ui/core/Paper';
 
 import { FlatTable } from 'components';
-import { parseInstancesToTableData, parseCardsToTableData } from './parse';
+import { parseInstancesToTableData, parseAbsencesToTableData } from './parse';
 
 const instanceColumns = [
     {
@@ -32,7 +32,7 @@ const instanceColumns = [
     },
 ];
 
-const cardsColumns = [
+const absencesColumns = [
     {
         name: 'ID',
         options: {
@@ -40,13 +40,10 @@ const cardsColumns = [
         },
     },
     {
-        name: 'Value',
+        name: 'Date',
     },
     {
-        name: 'Expiration Date',
-    },
-    {
-        name: 'Remaining Value',
+        name: 'Course',
     },
 ];
 
@@ -62,9 +59,9 @@ class StudentOverview extends React.Component {
         this.navigateToInstance(rowData[0]);
     };
 
-    handleNavigateToCardDetail = rowData => {
+    handleNavigateToCourseDetail = rowData => {
         this.props.history.push({
-            pathname: './cardDetail',
+            pathname: './studentCourseDetail',
             search: `id=${rowData[0]}`,
         });
     };
@@ -76,13 +73,13 @@ class StudentOverview extends React.Component {
             onRowClick: this.handleNavigateToInstance,
         };
 
-        const cardOptions = {
+        const absencesOptions = {
             responsive: 'scroll',
             selectableRows: 'none',
-            onRowClick: this.handleNavigateToCardDetail,
+            onRowClick: this.handleNavigateToCourseDetail,
         };
 
-        const { instances, unpaidCards } = this.props;
+        const { instances, absences } = this.props;
         const now = new Date();
         const recentInstances = filter(instances, instance => {
             return isAfter(now, parseISO(instance.date));
@@ -94,22 +91,22 @@ class StudentOverview extends React.Component {
         return (
             <Paper>
                 <FlatTable
-                    title={'Recent Classes'}
-                    data={parseInstancesToTableData(recentInstances)}
-                    columns={instanceColumns}
-                    options={instanceOptions}
-                />
-                <FlatTable
                     title={'Upcoming Classes'}
                     data={parseInstancesToTableData(upcomingInstances)}
                     columns={instanceColumns}
                     options={instanceOptions}
                 />
                 <FlatTable
-                    title={'Unpaid Cards'}
-                    data={parseCardsToTableData(unpaidCards)}
-                    columns={cardsColumns}
-                    options={cardOptions}
+                    title={'Upcoming Course Absences'}
+                    data={parseAbsencesToTableData(absences)}
+                    columns={absencesColumns}
+                    options={absencesOptions}
+                />
+                <FlatTable
+                    title={'Recent Classes'}
+                    data={parseInstancesToTableData(recentInstances)}
+                    columns={instanceColumns}
+                    options={instanceOptions}
                 />
             </Paper>
         );
@@ -118,7 +115,7 @@ class StudentOverview extends React.Component {
 
 StudentOverview.propTypes = {
     instances: PropTypes.array.isRequired,
-    unpaidCards: PropTypes.array.isRequired,
+    absences: PropTypes.array.isRequired,
     history: PropTypes.object.isRequired,
 };
 

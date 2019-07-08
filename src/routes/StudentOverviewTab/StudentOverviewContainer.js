@@ -2,10 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Query } from 'react-apollo';
 import { Adopt } from 'react-adopt';
+import startOfDay from 'date-fns/startOfDay';
 
 import {
     GET_INSTANCES_BY_STUDENT,
-    GET_UNPAID_CARDS_BY_STUDENT,
+    UPCOMING_ABSENCES_BY_STUDENT,
 } from './graphql';
 import StudentOverview from './StudentOverview';
 import { withUser } from 'core/user';
@@ -16,15 +17,15 @@ const getInstancesByStudent = ({ render, id }) => (
     </Query>
 );
 
-const getUnpaidCardsByStudent = ({ render, id }) => (
-    <Query query={GET_UNPAID_CARDS_BY_STUDENT} variables={{ id }}>
+const upcomingAbsences = ({ render, id }) => (
+    <Query query={UPCOMING_ABSENCES_BY_STUDENT} variables={{ id }}>
         {render}
     </Query>
 );
 
 const mapper = {
     getInstancesByStudent,
-    getUnpaidCardsByStudent,
+    upcomingAbsences,
 };
 
 const StudentOverviewContainer = ({ user }) => {
@@ -36,18 +37,18 @@ const StudentOverviewContainer = ({ user }) => {
                     error: overviewInstancesError,
                     loading: overviewLoading,
                 },
-                getUnpaidCardsByStudent: { data: cardsData },
+                upcomingAbsences: { data: absencesData },
             }) => {
                 if (overviewLoading) return null;
                 if (overviewInstancesError)
                     return `Error: ${overviewInstancesError}`;
-                if (instancesByStudentData && cardsData) {
+                if (instancesByStudentData && absencesData) {
                     return (
                         <StudentOverview
                             instances={
                                 instancesByStudentData.instancesByStudent
                             }
-                            unpaidCards={cardsData.unpaidCardsByStudent}
+                            absences={absencesData.upcomingAbsencesByStudent}
                         />
                     );
                 }

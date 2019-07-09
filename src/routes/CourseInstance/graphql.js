@@ -33,6 +33,9 @@ const COURSE_INSTANCE_PARTICIPANT_FRAGMENT = gql`
                 cards {
                     ...MediumCardFragment
                 }
+                memberships {
+                    ...SmallMembershipFragment
+                }
             }
         }
     }

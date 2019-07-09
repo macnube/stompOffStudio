@@ -44,7 +44,7 @@ class CourseAttendance extends Component {
         }
     }
 
-    handleAddCardOpen = ({ id, student }) => {
+    handleAddCardOpen = ({ id, membership: { student } }) => {
         this.setState({
             openCardDialog: true,
             studentId: student.id,

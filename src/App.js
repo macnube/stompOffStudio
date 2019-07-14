@@ -16,7 +16,7 @@ const setupClient = (user, setUser) =>
     new ApolloClient({
         uri: isDev()
             ? 'http://localhost:4000'
-            : 'https://portal.lanasedlmayr.com:4000',
+            : 'https://portal.lanasedlmayr.com/api',
         request: async operation => {
             const authUser = localStorage.getItem('authUser');
             if (authUser) {

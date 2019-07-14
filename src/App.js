@@ -14,7 +14,7 @@ const isDev = () => process.env.NODE_ENV === 'development';
 
 const setupClient = (user, setUser) =>
     new ApolloClient({
-        uri: isDev() ? 'http://localhost:4000' : 'http://165.22.201.30:4000',
+        uri: isDev() ? 'http://localhost:4000' : 'https://165.22.201.30:4000',
         request: async operation => {
             const authUser = localStorage.getItem('authUser');
             if (authUser) {

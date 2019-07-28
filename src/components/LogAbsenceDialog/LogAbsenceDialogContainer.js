@@ -7,11 +7,9 @@ import startOfDay from 'date-fns/startOfDay';
 import {
     LOG_ABSENCE_GET_COURSES_BY_STUDENT,
     LOG_ABSENCE_LOG_COURSE_ABSENCE,
+    LOG_ABSENCE_COURSE_WITH_ABSENCES_FRAGMENT,
 } from './graphql';
-import {
-    LOG_PARTICIPANT_ABSENCE,
-    GET_COURSE,
-} from 'routes/StudentCourseDetail/graphql';
+import { LOG_PARTICIPANT_ABSENCE } from 'routes/StudentCourseDetail/graphql';
 import { UPCOMING_ABSENCES_BY_STUDENT } from 'routes/StudentOverviewTab/graphql';
 import LogAbsenceDialog from './LogAbsenceDialog';
 import { withUser } from 'core/user';
@@ -46,27 +44,26 @@ const logCourseAbsence = ({ render, id, date }) => (
                 console.log('error is: ', e);
             }
             try {
-                const { course } = cache.readQuery({
-                    query: GET_COURSE,
+                const course = cache.readFragment({
+                    id: `Course:${logCourseAbsence.course.id}`,
                     variables: {
-                        id: logCourseAbsence.course.id,
                         date,
-                        studentId: id,
+                        id,
                     },
+                    fragment: LOG_ABSENCE_COURSE_WITH_ABSENCES_FRAGMENT,
+                    fragmentName: 'LogAbsenceCourseWithAbsencesFragment',
                 });
-                const newCourse = {
-                    ...course,
-                    absences: course.absences.concat([logCourseAbsence]),
-                };
-                cache.writeQuery({
-                    query: GET_COURSE,
+                cache.writeFragment({
+                    id: `Course:${logCourseAbsence.course.id}`,
                     variables: {
-                        id: logCourseAbsence.course.id,
                         date,
-                        studentId: id,
+                        id,
                     },
+                    fragment: LOG_ABSENCE_COURSE_WITH_ABSENCES_FRAGMENT,
+                    fragmentName: 'LogAbsenceCourseWithAbsencesFragment',
                     data: {
-                        course: newCourse,
+                        ...course,
+                        absences: course.absences.concat([logCourseAbsence]),
                     },
                 });
             } catch (e) {

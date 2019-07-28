@@ -28,28 +28,33 @@ const LogAbsenceDialog = ({
     successDate,
 }) => {
     const yesterday = subDays(new Date(), 1);
-    const [absentDate, setAbsentDate] = useState(yesterday);
+    const [calendarDate, setCalendarDate] = useState(yesterday);
+    const [submittedDate, setSubmittedDate] = useState(yesterday);
     const [selectedCourse, setSelectedCourse] = useState(null);
+    const [calendarError, setCalendarError] = useState(false);
 
-    const isSuccessful = () =>
-        isSameDay(new Date(successDate), new Date(absentDate));
+    const isSuccessful = () => {
+        return isSameDay(new Date(successDate), new Date(submittedDate));
+    };
 
     const clearForm = () => {
         setSelectedCourse(null);
-        setAbsentDate(yesterday);
+        setSubmittedDate(yesterday);
+        setCalendarError(false);
     };
 
-    const handleSetAbsenceDate = absence => {
-        setAbsentDate(absence);
+    const handleSetCalendarDate = date => {
+        setCalendarDate(date);
     };
 
-    const isAlreadyLogged = () =>
-        some(
+    const isAlreadyLogged = () => {
+        return some(
             selectedCourse.absences,
             absence =>
                 getTableDate(absence.date) ===
-                getTableDate(new Date(absentDate).toISOString())
+                getTableDate(new Date(calendarDate).toISOString())
         );
+    };
 
     const isNotCourseDate = date =>
         date
@@ -67,8 +72,8 @@ const LogAbsenceDialog = ({
             membership: { student: { id: user.student.id } },
         });
 
-    const getMatchingInstance = absentDate => {
-        const absentTableDate = getTableDateFromCalendarPicker(absentDate);
+    const getMatchingInstance = calendarDate => {
+        const absentTableDate = getTableDateFromCalendarPicker(calendarDate);
         return find(
             selectedCourse.instances,
             instance => getTableDate(instance.date) === absentTableDate
@@ -79,12 +84,12 @@ const LogAbsenceDialog = ({
         if (!isAlreadyLogged()) {
             logCourseAbsence({
                 variables: {
-                    date: absentDate,
+                    date: calendarDate,
                     courseId: selectedCourse.id,
                     studentId: user.student.id,
                 },
             });
-            const instance = getMatchingInstance(absentDate);
+            const instance = getMatchingInstance(calendarDate);
             const participant =
                 instance && getParticipantFromInstance(instance);
             if (participant) {
@@ -94,7 +99,10 @@ const LogAbsenceDialog = ({
                     },
                 });
             }
+            setSubmittedDate(calendarDate);
+            setCalendarError(false);
         }
+        setCalendarError(true);
     };
 
     const renderCourseSelect = () => {
@@ -132,7 +140,7 @@ const LogAbsenceDialog = ({
                 <Button
                     onClick={clearForm}
                     color="primary"
-                    disabled={!absentDate}
+                    disabled={!calendarDate}
                 >
                     Log Another Absence
                 </Button>
@@ -147,14 +155,16 @@ const LogAbsenceDialog = ({
         return (
             <Fragment>
                 <DialogTitle id="form-dialog-title">
-                    Select date of absence
+                    {calendarError
+                        ? 'Absence already logged, select new date'
+                        : 'Select date of absence'}
                 </DialogTitle>
                 <DialogContent>
                     <Calendar
                         disablePast
                         shouldDisableDate={isNotCourseDate}
-                        date={absentDate}
-                        onChange={handleSetAbsenceDate}
+                        date={calendarDate}
+                        onChange={handleSetCalendarDate}
                     />
                 </DialogContent>
                 <DialogActions>
@@ -167,7 +177,7 @@ const LogAbsenceDialog = ({
                     <Button
                         onClick={handleOnLogAbsence}
                         color="primary"
-                        disabled={!absentDate}
+                        disabled={!calendarDate}
                     >
                         Log Absence
                     </Button>

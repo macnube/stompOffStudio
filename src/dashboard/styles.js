@@ -31,7 +31,7 @@ const styles = theme => ({
     },
     menuButton: {
         marginLeft: 12,
-        marginRight: 36,
+        marginRight: 5,
     },
     menuButtonHidden: {
         display: 'none',

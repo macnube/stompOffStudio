@@ -9,7 +9,10 @@ const rootImportConfig = [
             components: './src/components',
             constants: './src/constants',
             utils: './src/utils',
+            graphql: './src/graphql',
+            core: './src/core',
             src: './src',
+            assets: './src/assets',
         },
     },
 ];

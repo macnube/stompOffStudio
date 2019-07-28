@@ -36,7 +36,7 @@ const styles = theme => ({
     menuButtonHidden: {
         display: 'none',
     },
-    title: {
+    spacer: {
         flexGrow: 1,
     },
     drawerPaper: {

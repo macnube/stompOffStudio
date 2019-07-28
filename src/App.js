@@ -6,7 +6,7 @@ import get from 'lodash/get';
 import 'video-react/dist/video-react.css';
 
 import './App.css';
-import { notify, setUser as setErrorUser, serializeValue } from 'errors';
+import { notify, setUser as setErrorUser, serializeValue } from 'src/errors';
 import { UserAuthContext } from 'core/user';
 import Dashboard from './dashboard';
 

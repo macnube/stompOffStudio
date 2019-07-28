@@ -1,11 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import 'errors/setup';
+import 'src/errors/setup';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-import { getErrorBoundary } from 'errors';
+import { getErrorBoundary } from 'src/errors';
 
 var ErrorBoundary = getErrorBoundary();
 

@@ -16,6 +16,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import SettingsIcon from '@material-ui/icons/Settings';
 import LogAbsenceIcon from '@material-ui/icons/PersonAddDisabled';
+import logo from 'assets/logo.png';
 
 import { UserSettingsDialog, LogAbsenceDialog } from 'components';
 import {
@@ -132,15 +133,8 @@ const Dashboard = ({ classes, user, setUser }) => {
                             >
                                 <MenuIcon />
                             </IconButton>
-                            <Typography
-                                component="h1"
-                                variant="h6"
-                                color="inherit"
-                                noWrap
-                                className={classes.title}
-                            >
-                                Classes with Lana
-                            </Typography>
+                            <img src={logo} height={40} />
+                            <div className={classes.spacer} />
                         </Fragment>
                     ) : null}
 

@@ -1,4 +1,5 @@
 import reduce from 'lodash/reduce';
+import reverse from 'lodash/reverse';
 
 import { getTableDate, getChartMonthYear, getYear } from 'utils/date';
 
@@ -21,7 +22,8 @@ export const parsePaymentsToTableData = payments =>
         []
     );
 
-export const parsePaymentsToChartData = (payments, year) => {
+export const parsePaymentsToChartData = (p, year) => {
+    const payments = reverse(p);
     let previousMonthYear = getChartMonthYear(payments[0].date);
     let currentMonthYear;
     let amount = 0;

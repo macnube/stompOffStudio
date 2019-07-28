@@ -45,7 +45,7 @@ import styles from './styles';
 import { withUser } from 'core/user';
 
 const Dashboard = ({ classes, user, setUser }) => {
-    const [open, setOpen] = useState(true);
+    const [open, setOpen] = useState(false);
     const [openUserSettings, setOpenUserSettings] = useState(false);
     const [openLogAbsence, setOpenLogAbsence] = useState(false);
 
@@ -119,26 +119,31 @@ const Dashboard = ({ classes, user, setUser }) => {
                 )}
             >
                 <Toolbar disableGutters={!open} className={classes.toolbar}>
-                    <IconButton
-                        color="inherit"
-                        aria-label="Open drawer"
-                        onClick={handleDrawerOpen}
-                        className={classNames(
-                            classes.menuButton,
-                            open && classes.menuButtonHidden
-                        )}
-                    >
-                        <MenuIcon />
-                    </IconButton>
-                    <Typography
-                        component="h1"
-                        variant="h6"
-                        color="inherit"
-                        noWrap
-                        className={classes.title}
-                    >
-                        Dashboard
-                    </Typography>
+                    {user.isAuthenticated ? (
+                        <Fragment>
+                            <IconButton
+                                color="inherit"
+                                aria-label="Open drawer"
+                                onClick={handleDrawerOpen}
+                                className={classNames(
+                                    classes.menuButton,
+                                    open && classes.menuButtonHidden
+                                )}
+                            >
+                                <MenuIcon />
+                            </IconButton>
+                            <Typography
+                                component="h1"
+                                variant="h6"
+                                color="inherit"
+                                noWrap
+                                className={classes.title}
+                            >
+                                Classes with Lana
+                            </Typography>
+                        </Fragment>
+                    ) : null}
+
                     {user.isAuthenticated && !user.admin ? (
                         <IconButton
                             onClick={handleOpenLogAbsence}
@@ -147,36 +152,38 @@ const Dashboard = ({ classes, user, setUser }) => {
                             <LogAbsenceIcon />
                         </IconButton>
                     ) : null}
-                    <IconButton
-                        onClick={handleOpenUserSettings}
-                        color="inherit"
-                    >
-                        <SettingsIcon />
-                    </IconButton>
+                    {user.isAuthenticated ? (
+                        <IconButton
+                            onClick={handleOpenUserSettings}
+                            color="inherit"
+                        >
+                            <SettingsIcon />
+                        </IconButton>
+                    ) : null}
                 </Toolbar>
             </AppBar>
-            <Drawer
-                variant="permanent"
-                classes={{
-                    paper: classNames(
-                        classes.drawerPaper,
-                        !open && classes.drawerPaperClose
-                    ),
-                }}
-                open={open}
-            >
-                <div className={classes.toolbarIcon}>
-                    <IconButton onClick={handleDrawerClose}>
-                        <ChevronLeftIcon />
-                    </IconButton>
-                </div>
-                <Divider />
-                {user.isAuthenticated ? (
+            {user.isAuthenticated ? (
+                <Drawer
+                    variant="permanent"
+                    classes={{
+                        paper: classNames(
+                            classes.drawerPaper,
+                            !open && classes.drawerPaperClose
+                        ),
+                    }}
+                    open={open}
+                >
+                    <div className={classes.toolbarIcon}>
+                        <IconButton onClick={handleDrawerClose}>
+                            <ChevronLeftIcon />
+                        </IconButton>
+                    </div>
+                    <Divider />
                     <List>
                         {user.admin ? <ListItems /> : <StudentListItems />}
                     </List>
-                ) : null}
-            </Drawer>
+                </Drawer>
+            ) : null}
             <main className={classes.content}>
                 <div className={classes.appBarSpacer} />
                 {user.isAuthenticated ? renderRoutes() : <Login />}

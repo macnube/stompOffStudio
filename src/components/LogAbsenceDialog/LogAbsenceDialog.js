@@ -1,9 +1,12 @@
 import DateFnsUtils from '@date-io/date-fns';
 import React, { Fragment, useState } from 'react';
+import { withStyles } from '@material-ui/core/styles';
+import isSameDay from 'date-fns/isSameDay';
+import subDays from 'date-fns/subDays';
 import some from 'lodash/some';
 import find from 'lodash/find';
+import map from 'lodash/map';
 import PropTypes from 'prop-types';
-import MUIDataTable from 'mui-datatables';
 import { MuiPickersUtilsProvider, Calendar } from 'material-ui-pickers';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -11,20 +14,8 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Button from '@material-ui/core/Button';
 
+import styles from './styles';
 import { getTableDate, getTableDateFromCalendarPicker } from 'utils/date';
-import { parseCoursesToTableData } from './parse';
-
-const columns = [
-    {
-        name: 'ID',
-        options: {
-            display: 'false',
-        },
-    },
-    {
-        name: 'Name',
-    },
-];
 
 const LogAbsenceDialog = ({
     courses,
@@ -33,12 +24,19 @@ const LogAbsenceDialog = ({
     open,
     handleClose,
     user,
+    classes,
+    successDate,
 }) => {
-    const [absentDate, setAbsentDate] = useState(new Date());
+    const yesterday = subDays(new Date(), 1);
+    const [absentDate, setAbsentDate] = useState(yesterday);
     const [selectedCourse, setSelectedCourse] = useState(null);
+
+    const isSuccessful = () =>
+        isSameDay(new Date(successDate), new Date(absentDate));
 
     const clearForm = () => {
         setSelectedCourse(null);
+        setAbsentDate(yesterday);
     };
 
     const handleSetAbsenceDate = absence => {
@@ -59,8 +57,8 @@ const LogAbsenceDialog = ({
             .slice(0, 3)
             .toUpperCase() !== selectedCourse.day;
 
-    const handleCourseClick = rowData => {
-        const selectedCourse = find(courses, { id: rowData[0] });
+    const handleCourseClick = id => {
+        const selectedCourse = find(courses, { id });
         setSelectedCourse(selectedCourse);
     };
 
@@ -97,62 +95,86 @@ const LogAbsenceDialog = ({
                 });
             }
         }
-        handleClose(clearForm);
     };
 
     const renderCourseSelect = () => {
-        const options = {
-            responsive: 'scroll',
-            selectableRows: 'none',
-            onRowClick: handleCourseClick,
-        };
         return (
             <Fragment>
                 <DialogTitle id="form-dialog-title">
                     Log absence for...
                 </DialogTitle>
-                <DialogContent>
-                    <MUIDataTable
-                        title={'Select Course'}
-                        data={parseCoursesToTableData(courses)}
-                        columns={columns}
-                        options={options}
-                    />
-                </DialogContent>
+                {map(courses, course => {
+                    return (
+                        <Button
+                            key={course.id}
+                            onClick={() => handleCourseClick(course.id)}
+                            variant="outlined"
+                            className={classes.button}
+                        >
+                            {course.name}
+                        </Button>
+                    );
+                })}
             </Fragment>
         );
     };
 
-    const renderLogAbsence = () => (
+    const renderSuccess = () => (
         <Fragment>
-            <DialogTitle id="form-dialog-title">
-                Select date of absence
-            </DialogTitle>
-            <DialogContent>
-                <Calendar
-                    disablePast
-                    shouldDisableDate={isNotCourseDate}
-                    date={absentDate}
-                    onChange={handleSetAbsenceDate}
-                />
-            </DialogContent>
+            <DialogTitle id="form-dialog-title">Success!</DialogTitle>
             <DialogActions>
                 <Button
                     onClick={handleClose.bind(null, clearForm)}
                     color="primary"
                 >
-                    Cancel
+                    Done
                 </Button>
                 <Button
-                    onClick={handleOnLogAbsence}
+                    onClick={clearForm}
                     color="primary"
                     disabled={!absentDate}
                 >
-                    Log Absence
+                    Log Another Absence
                 </Button>
             </DialogActions>
         </Fragment>
     );
+
+    const renderLogAbsence = () => {
+        if (isSuccessful()) {
+            return renderSuccess();
+        }
+        return (
+            <Fragment>
+                <DialogTitle id="form-dialog-title">
+                    Select date of absence
+                </DialogTitle>
+                <DialogContent>
+                    <Calendar
+                        disablePast
+                        shouldDisableDate={isNotCourseDate}
+                        date={absentDate}
+                        onChange={handleSetAbsenceDate}
+                    />
+                </DialogContent>
+                <DialogActions>
+                    <Button
+                        onClick={handleClose.bind(null, clearForm)}
+                        color="primary"
+                    >
+                        Cancel
+                    </Button>
+                    <Button
+                        onClick={handleOnLogAbsence}
+                        color="primary"
+                        disabled={!absentDate}
+                    >
+                        Log Absence
+                    </Button>
+                </DialogActions>
+            </Fragment>
+        );
+    };
 
     return (
         <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -169,11 +191,13 @@ const LogAbsenceDialog = ({
 
 LogAbsenceDialog.propTypes = {
     user: PropTypes.object.isRequired,
+    classes: PropTypes.object.isRequired,
     courses: PropTypes.array.isRequired,
+    successDate: PropTypes.string.isRequired,
     open: PropTypes.bool.isRequired,
     handleClose: PropTypes.func.isRequired,
     logCourseAbsence: PropTypes.func.isRequired,
     logParticipantAbsence: PropTypes.func.isRequired,
 };
 
-export default LogAbsenceDialog;
+export default withStyles(styles)(LogAbsenceDialog);

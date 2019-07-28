@@ -96,7 +96,10 @@ const LogAbsenceDialogContainer = ({ open, handleClose, user }) => {
         <Adopt mapper={mapper} id={user.student.id} date={date}>
             {({
                 getCourses: { data, loading, error },
-                logCourseAbsence: { mutation: logCourseAbsenceMutation },
+                logCourseAbsence: {
+                    mutation: logCourseAbsenceMutation,
+                    result: logCourseAbsenceMutationResult,
+                },
                 logParticipantAbsence: {
                     mutation: logParticipantAbsenceMutation,
                 },
@@ -108,6 +111,12 @@ const LogAbsenceDialogContainer = ({ open, handleClose, user }) => {
                         courses={data.coursesByStudent}
                         logCourseAbsence={logCourseAbsenceMutation}
                         logParticipantAbsence={logParticipantAbsenceMutation}
+                        successDate={
+                            logCourseAbsenceMutationResult.data
+                                ? logCourseAbsenceMutationResult.data
+                                      .logCourseAbsence.date
+                                : ''
+                        }
                         open={open}
                         handleClose={handleClose}
                         user={user}

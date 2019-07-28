@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Query } from 'react-apollo';
 import { Adopt } from 'react-adopt';
-import startOfDay from 'date-fns/startOfDay';
 
 import {
     GET_INSTANCES_BY_STUDENT,

@@ -163,18 +163,12 @@ export const GET_STUDENT_FRAGMENT = gql`
 
 export const CREATE_COURSE_INSTANCE = gql`
     mutation StudentDetailCreateCourseInstance(
-        $topic: String!
-        $notes: String
         $date: DateTime!
-        $recapUrl: String
         $courseId: ID!
         $membershipIds: [ID!]!
     ) {
         createCourseInstance(
-            topic: $topic
-            notes: $notes
             date: $date
-            recapUrl: $recapUrl
             courseId: $courseId
             membershipIds: $membershipIds
         ) {

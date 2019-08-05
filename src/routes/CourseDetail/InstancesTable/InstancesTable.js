@@ -21,9 +21,6 @@ const columns = [
         name: 'Date',
     },
     {
-        name: 'Topic',
-    },
-    {
         name: '# of Leaders',
     },
     {
@@ -40,8 +37,7 @@ const InstancesTable = ({
     handleClose,
     history,
 }) => {
-    const handleCreate = instance => {
-        const { topic, notes, recapUrl, date } = instance;
+    const handleCreate = date => {
         const membershipIds = reduce(
             course.memberships,
             (result, membership) => {
@@ -55,9 +51,6 @@ const InstancesTable = ({
         );
         createCourseInstance({
             variables: {
-                topic,
-                notes,
-                recapUrl,
                 date,
                 courseId: course.id,
                 membershipIds,

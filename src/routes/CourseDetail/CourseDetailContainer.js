@@ -175,7 +175,6 @@ const CourseDetailContainer = ({ location }) => {
                     if (loading) return null;
                     if (error) return `Error: ${error}`;
                     if (data.course) {
-                        console.log('course is: ', data.course);
                         return (
                             <CourseDetail
                                 course={data.course}

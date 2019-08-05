@@ -1,4 +1,4 @@
-const styles = theme => ({
+const styles = () => ({
     button: {
         marginBottom: 10,
         marginRight: 10,

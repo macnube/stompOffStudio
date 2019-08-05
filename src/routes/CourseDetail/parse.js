@@ -82,7 +82,6 @@ export const parseInstancesToTableData = instances =>
             const result = [
                 instance.id,
                 getTableDate(instance.date),
-                instance.topic,
                 getNumberByRole(instance.participants, DANCE_ROLE.LEADER),
                 getNumberByRole(instance.participants, DANCE_ROLE.FOLLOWER),
             ];
@@ -91,3 +90,4 @@ export const parseInstancesToTableData = instances =>
         },
         []
     );
+

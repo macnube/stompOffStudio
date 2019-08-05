@@ -24,12 +24,6 @@ const instanceColumns = [
     {
         name: 'Topic',
     },
-    {
-        name: '# of Leaders',
-    },
-    {
-        name: '# of Followers',
-    },
 ];
 
 const absencesColumns = [

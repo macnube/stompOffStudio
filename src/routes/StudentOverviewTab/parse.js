@@ -1,8 +1,6 @@
 import reduce from 'lodash/reduce';
 
-import { DANCE_ROLE } from 'constants/gql';
 import { getTableDate } from 'utils/date';
-import { getNumberByRole } from 'routes/CourseDetail/parse';
 
 export const parseInstancesToTableData = instances =>
     reduce(
@@ -13,8 +11,6 @@ export const parseInstancesToTableData = instances =>
                 getTableDate(instance.date),
                 instance.course.name,
                 instance.topic,
-                getNumberByRole(instance.participants, DANCE_ROLE.LEADER),
-                getNumberByRole(instance.participants, DANCE_ROLE.FOLLOWER),
             ];
             acc.push(result);
             return acc;

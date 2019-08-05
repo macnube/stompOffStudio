@@ -54,7 +54,6 @@ class AddInstanceDialog extends React.Component {
                     </DialogTitle>
                     <DialogContent>
                         <Calendar
-                            disablePast
                             shouldDisableDate={this.isNotCourseDate}
                             date={date}
                             onChange={this.handleSetDate}

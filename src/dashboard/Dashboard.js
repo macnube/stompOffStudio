@@ -1,7 +1,7 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import compose from 'recompose/compose';
-import { Route } from 'react-router-dom';
+import { Route, withRouter } from 'react-router-dom';
 import classNames from 'classnames';
 import { withStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -44,7 +44,7 @@ import StudentListItems from './StudentListItems';
 import styles from './styles';
 import { withUser } from 'core/user';
 
-const Dashboard = ({ classes, user, setUser }) => {
+const Dashboard = ({ classes, user, setUser, location }) => {
     const [open, setOpen] = useState(false);
     const [openUserSettings, setOpenUserSettings] = useState(false);
     const [openLogAbsence, setOpenLogAbsence] = useState(false);
@@ -56,6 +56,8 @@ const Dashboard = ({ classes, user, setUser }) => {
     const handleDrawerClose = () => {
         setOpen(false);
     };
+
+    useEffect(handleDrawerClose, [location]);
 
     const handleCloseUserSettings = onClose => {
         onClose();
@@ -198,9 +200,11 @@ Dashboard.propTypes = {
     classes: PropTypes.object.isRequired,
     user: PropTypes.object.isRequired,
     setUser: PropTypes.func.isRequired,
+    history: PropTypes.object.isRequired,
 };
 
 export default compose(
     withStyles(styles),
+    withRouter,
     withUser
 )(Dashboard);

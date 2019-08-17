@@ -73,15 +73,6 @@ class Login extends React.Component {
                                 autoComplete="current-password"
                             />
                         </FormControl>
-                        <FormControlLabel
-                            control={
-                                <Checkbox
-                                    value="remembership"
-                                    color="primary"
-                                />
-                            }
-                            label="Remembership me"
-                        />
                         <Button
                             fullWidth
                             variant="contained"

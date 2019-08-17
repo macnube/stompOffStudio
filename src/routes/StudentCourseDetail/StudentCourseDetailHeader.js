@@ -75,13 +75,7 @@ const StudentCourseDetailHeader = ({ course, classes, handleOpen }) => {
             />
         </form>
     );
-    return (
-        <DetailHeader renderForm={renderForm}>
-            <Button variant="contained" color="primary" onClick={handleOpen}>
-                Log Absence
-            </Button>
-        </DetailHeader>
-    );
+    return <DetailHeader renderForm={renderForm} formOnly />;
 };
 
 StudentCourseDetailHeader.propTypes = {

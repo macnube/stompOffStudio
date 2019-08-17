@@ -101,6 +101,7 @@ class CourseInstanceHeader extends Component {
                     onChange={this.handleChange('notes')}
                     margin="normal"
                     fullWidth
+                    multiline
                 />
             </form>
         );

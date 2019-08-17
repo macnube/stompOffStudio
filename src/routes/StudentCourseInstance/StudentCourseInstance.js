@@ -36,6 +36,7 @@ const StudentCourseInstance = ({
                     value={notes}
                     margin="normal"
                     fullWidth
+                    multiline
                 />
             </Container>
         </Paper>

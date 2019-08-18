@@ -1,8 +1,8 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import MUIDataTable from 'mui-datatables';
 
+import { ClickableTable } from 'components';
 import { parseCardsToTableData } from './parse';
 
 const columns = [
@@ -37,7 +37,7 @@ const StudentCards = ({ cards, history }) => {
         onRowClick: handleNavigateToCardDetail,
     };
     return (
-        <MUIDataTable
+        <ClickableTable
             title={'Cards'}
             data={parseCardsToTableData(cards)}
             columns={columns}

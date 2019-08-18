@@ -11,10 +11,9 @@ import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 import { MuiPickersUtilsProvider } from 'material-ui-pickers';
 import DateFnsUtils from '@date-io/date-fns';
-import MUIDataTable from 'mui-datatables';
 
 import StudentCourseDetailHeader from './StudentCourseDetailHeader';
-import { SelectedDeleteToolbar } from 'components';
+import { SelectedDeleteToolbar, ClickableTable } from 'components';
 import StudentAbsenceDialog from './StudentAbsenceDialog';
 import { parseInstancesToTableData, parseAbsencesToTableData } from './parse';
 import { withUser } from 'core/user';
@@ -163,7 +162,7 @@ const StudentCourseDetail = ({
                         handleOpen={() => setOpen(true)}
                     />
                     <Grid item xs={12}>
-                        <MUIDataTable
+                        <ClickableTable
                             title={'Course Instances'}
                             data={parseInstancesToTableData(course.instances)}
                             columns={columns}
@@ -171,7 +170,7 @@ const StudentCourseDetail = ({
                         />
                     </Grid>
                     <Grid item xs={12}>
-                        <MUIDataTable
+                        <ClickableTable
                             title={'Upcoming Course Absences'}
                             data={parseAbsencesToTableData(course.absences)}
                             columns={absencesColumns}

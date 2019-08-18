@@ -1,4 +1,5 @@
 export { default as CardDialog } from './CardDialog';
+export { default as ClickableTable } from './ClickableTable';
 export { default as ContentToolbar } from './ContentToolbar';
 export { default as CustomEmailToolbar } from './CustomEmailToolbar';
 export { default as CustomAddToolbar } from './CustomAddToolbar';

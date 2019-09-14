@@ -17,8 +17,8 @@ const SelectedParticipantToolbar = ({
     const selectedDataIndex = selectedRows.data[0].dataIndex;
     const selectedId = find(displayData, { dataIndex: selectedDataIndex })
         .data[0];
-    const handleLogAsPresentPress = handleLogParticipantStatus(
-        PARTICIPANT_STATUS.PRESENT
+    const handleLogAsNoShowPress = handleLogParticipantStatus(
+        PARTICIPANT_STATUS.NO_SHOW
     );
     const handleLogAsAbsentPress = handleLogParticipantStatus(
         PARTICIPANT_STATUS.ABSENT
@@ -50,10 +50,10 @@ const SelectedParticipantToolbar = ({
                 variant="contained"
                 size="small"
                 className={classes.toolbarButton}
-                onClick={() => handleLogAsPresentPress(selectedId)}
+                onClick={() => handleLogAsNoShowPress(selectedId)}
                 color="primary"
             >
-                Present
+                No Show
             </Button>
             <Button
                 variant="contained"

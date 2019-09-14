@@ -55,8 +55,6 @@ const CardDetailContainer = ({ location }) => {
                     },
                 }) => {
                     if (loading) return null;
-                    if (error) return `Error: ${error}`;
-                    console.log('data is: ', data.card);
                     return (
                         <CardDetail
                             card={data.card}

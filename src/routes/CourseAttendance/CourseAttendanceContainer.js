@@ -5,17 +5,13 @@ import { Redirect } from 'react-router-dom';
 import { Query, Mutation } from 'react-apollo';
 import { Adopt } from 'react-adopt';
 
-import {
-    LOG_CARD_PARTICIPATION,
-    LOG_PARTICIPANT_STATUS,
-} from 'routes/CourseInstance/graphql';
+import { LOG_PARTICIPANT_STATUS } from 'routes/CourseInstance/graphql';
 import { CREATE_CARD } from 'routes/StudentDetail/graphql';
-import { GET_COURSE_INSTANCE } from './graphql';
+import { GET_COURSE_INSTANCE, LOG_CARD_PARTICIPATION } from './graphql';
 import CourseAttendance from './CourseAttendance';
 import { getEndOfYesterday } from 'utils/date';
 
 const getCourseInstance = ({ render, id }) => {
-    console.log('date is: ', getEndOfYesterday());
     return (
         <Query
             query={GET_COURSE_INSTANCE}

@@ -7,6 +7,7 @@ import {
     SMALL_COURSE_FRAGMENT,
     SMALL_MEMBERSHIP_FRAGMENT,
     MEDIUM_CARD_FRAGMENT,
+    LARGE_CARD_FRAGMENT,
 } from 'graphql';
 
 export const GET_COURSE_INSTANCE_FRAGMENT = gql`
@@ -67,4 +68,21 @@ export const GET_COURSE_INSTANCE = gql`
         }
     }
     ${COURSE_ATTENDANCE_COURSE_INSTANCE_FRAGMENT}
+`;
+
+export const LOG_CARD_PARTICIPATION = gql`
+    mutation CourseAttendanceLogCardParticipation(
+        $id: ID!
+        $participantId: ID!
+        $value: Int!
+    ) {
+        logCardParticipation(
+            id: $id
+            participantId: $participantId
+            value: $value
+        ) {
+            ...LargeCardFragment
+        }
+    }
+    ${LARGE_CARD_FRAGMENT}
 `;

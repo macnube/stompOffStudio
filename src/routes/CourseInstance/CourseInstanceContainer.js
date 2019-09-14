@@ -36,24 +36,6 @@ const logParticipantStatus = ({ render, id }) => (
     </Mutation>
 );
 
-const logCardParticipation = ({ render, id }) => (
-    <Mutation mutation={LOG_CARD_PARTICIPATION}>
-        {(mutation, result) => render({ mutation, result })}
-    </Mutation>
-);
-
-const createCard = ({ render }) => (
-    <Mutation mutation={CREATE_CARD}>
-        {(mutation, result) => render({ mutation, result })}
-    </Mutation>
-);
-
-const deactivateCard = ({ render }) => (
-    <Mutation mutation={DEACTIVATE_CARD}>
-        {(mutation, result) => render({ mutation, result })}
-    </Mutation>
-);
-
 const deleteParticipant = ({ render, id }) => (
     <Mutation
         mutation={DELETE_PARTICIPANT}
@@ -83,9 +65,6 @@ const mapper = {
     getCourseInstance,
     updateCourseInstance,
     logParticipantStatus,
-    logCardParticipation,
-    createCard,
-    deactivateCard,
     deleteParticipant,
 };
 
@@ -100,44 +79,15 @@ const CourseInstanceContainer = ({ location }) => {
                     logParticipantStatus: {
                         mutation: logParticipantStatusMutation,
                     },
-                    logCardParticipation: {
-                        mutation: logCardParticipationMutation,
-                    },
-                    createCard: {
-                        mutation: createCardMutation,
-                        result: createCardResult,
-                    },
-                    deactivateCard: { mutation: deactivateCardMutation },
                     deleteParticipant: { mutation: deleteParticipantMutation },
                 }) => {
                     if (loading) return null;
                     if (error) return `Error: ${error}`;
-                    if (createCardResult.data) {
-                        return (
-                            <CourseInstance
-                                courseInstance={data.courseInstance}
-                                updateCourseInstance={updateCourseMutation}
-                                logParticipantStatus={
-                                    logParticipantStatusMutation
-                                }
-                                logCardParticipation={
-                                    logCardParticipationMutation
-                                }
-                                createCard={createCardMutation}
-                                deactivateCard={deactivateCardMutation}
-                                card={createCardResult.data.createCard}
-                                deleteParticipant={deleteParticipantMutation}
-                            />
-                        );
-                    }
                     return (
                         <CourseInstance
                             courseInstance={data.courseInstance}
                             updateCourseInstance={updateCourseMutation}
                             logParticipantStatus={logParticipantStatusMutation}
-                            logCardParticipation={logCardParticipationMutation}
-                            createCard={createCardMutation}
-                            deactivateCard={deactivateCardMutation}
                             deleteParticipant={deleteParticipantMutation}
                         />
                     );

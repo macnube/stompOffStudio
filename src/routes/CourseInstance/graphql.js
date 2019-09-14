@@ -110,29 +110,3 @@ export const DELETE_PARTICIPANT = gql`
         }
     }
 `;
-
-export const LOG_CARD_PARTICIPATION = gql`
-    mutation CourseInstanceLogCardParticipation(
-        $id: ID!
-        $participantId: ID!
-        $value: Int!
-    ) {
-        logCardParticipation(
-            id: $id
-            participantId: $participantId
-            value: $value
-        ) {
-            ...LargeCardFragment
-        }
-    }
-    ${LARGE_CARD_FRAGMENT}
-`;
-
-export const DEACTIVATE_CARD = gql`
-    mutation CourseInstanceDeactivateCard($id: ID!) {
-        deactivateCard(id: $id) {
-            id
-            active
-        }
-    }
-`;

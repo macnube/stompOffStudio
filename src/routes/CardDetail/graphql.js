@@ -14,6 +14,9 @@ const CARD_DETAIL_CARD_FRAGMENT = gql`
             ...SmallParticipantFragment
             courseInstance {
                 ...SmallCourseInstanceFragment
+                course {
+                    name
+                }
             }
         }
         student {

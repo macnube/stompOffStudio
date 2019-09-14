@@ -8,6 +8,7 @@ export const parseCardDataToArray = card =>
         (acc, participant) => {
             const result = [
                 participant.courseInstance.id,
+                participant.courseInstance.course.name,
                 participant.courseInstance.topic,
                 getTableDate(participant.courseInstance.date),
             ];

@@ -28,6 +28,9 @@ const columns = [
         name: 'Name',
     },
     {
+        name: 'Topic',
+    },
+    {
         name: 'Date',
     },
 ];

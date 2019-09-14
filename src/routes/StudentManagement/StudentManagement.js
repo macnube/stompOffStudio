@@ -13,7 +13,7 @@ import { SelectedDeleteToolbar, CustomAddToolbar } from 'components';
 import EmailButton from './EmailButton';
 import StudentForm from './StudentForm';
 import styles from './styles';
-import { parseStudentsToTableData } from './parse';
+import { parseStudentsToTableData, getEmailsFromSelectedRows } from './parse';
 
 const columns = [
     {
@@ -75,11 +75,24 @@ class StudentManagement extends Component {
         });
     };
 
-    renderEmailButton = ids => {
+    handleOnEmailPress = emails => {
+        const { sendMailgunEmail } = this.props;
+        sendMailgunEmail({
+            variables: {
+                tag: 'test',
+                from: 'paul.mccloud@gmail.com',
+                to: emails,
+                subject: 'test',
+                text: 'Testing mailgun email!',
+            },
+        });
+    };
+
+    renderEmailButton = (selectedRows, displayData) => () => {
+        const emails = getEmailsFromSelectedRows(selectedRows, displayData);
         return (
             <EmailButton
-                handleOnEmailPress={ids => console.log('ids are: ', ids)}
-                selectedIds={ids}
+                handleOnEmailPress={() => this.handleOnEmailPress(emails)}
             />
         );
     };
@@ -89,7 +102,7 @@ class StudentManagement extends Component {
             selectedRows={selectedRows}
             displayData={displayData}
             handleOnDeletePress={this.handleOnDeletePress}
-            renderChildren={this.renderEmailButton}
+            renderChildren={this.renderEmailButton(selectedRows, displayData)}
         />
     );
 
@@ -139,6 +152,7 @@ StudentManagement.propTypes = {
     students: PropTypes.array.isRequired,
     deleteStudent: PropTypes.func.isRequired,
     createStudent: PropTypes.func.isRequired,
+    sendMailgunEmail: PropTypes.func.isRequired,
 };
 
 export default compose(

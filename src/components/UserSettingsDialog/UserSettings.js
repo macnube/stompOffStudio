@@ -62,7 +62,6 @@ class UserSettings extends Component {
             selectedRows={selectedRows}
             displayData={displayData}
             handleOnDeletePress={this.handleOnDeletePress}
-            renderChildren={this.renderAdminToggleButton}
         />
     );
 

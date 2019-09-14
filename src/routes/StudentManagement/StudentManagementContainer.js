@@ -3,7 +3,12 @@ import filter from 'lodash/filter';
 import { Query, Mutation } from 'react-apollo';
 import { Adopt } from 'react-adopt';
 
-import { GET_STUDENTS, DELETE_STUDENT, CREATE_STUDENT } from './graphql';
+import {
+    GET_STUDENTS,
+    DELETE_STUDENT,
+    CREATE_STUDENT,
+    SEND_MAILGUN_EMAIL,
+} from './graphql';
 import StudentManagement from './StudentManagement';
 
 const getStudents = ({ render }) => (
@@ -45,10 +50,17 @@ const createStudent = ({ render }) => (
     </Mutation>
 );
 
+const sendMailgunEmail = ({ render }) => (
+    <Mutation mutation={SEND_MAILGUN_EMAIL}>
+        {(mutation, result) => render({ mutation, result })}
+    </Mutation>
+);
+
 const mapper = {
     getStudents,
     deleteStudent,
     createStudent,
+    sendMailgunEmail,
 };
 
 const StudentManagementContainer = () => (
@@ -57,6 +69,7 @@ const StudentManagementContainer = () => (
             getStudents: { data, loading, error },
             deleteStudent: { mutation: deleteStudentMutation },
             createStudent: { mutation: createStudentMutation },
+            sendMailgunEmail: { mutation: sendMailgunEmailMutation },
         }) => {
             if (loading) return null;
             if (error) return `Error: ${error}`;
@@ -66,6 +79,7 @@ const StudentManagementContainer = () => (
                     students={data.students}
                     deleteStudent={deleteStudentMutation}
                     createStudent={createStudentMutation}
+                    sendMailgunEmail={sendMailgunEmailMutation}
                 />
             );
         }}

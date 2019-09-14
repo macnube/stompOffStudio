@@ -4,16 +4,15 @@ import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
 import EmailIcon from '@material-ui/icons/Email';
 
-const EmailButton = ({ selectedIds, handleOnEmailPress }) => (
+const EmailButton = ({ handleOnEmailPress }) => (
     <Tooltip title={'Email'}>
-        <IconButton onClick={() => handleOnEmailPress(selectedIds)}>
+        <IconButton onClick={handleOnEmailPress}>
             <EmailIcon />
         </IconButton>
     </Tooltip>
 );
 
 EmailButton.propTypes = {
-    selectedIds: PropTypes.array.isRequired,
     handleOnEmailPress: PropTypes.func.isRequired,
 };
 

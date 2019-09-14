@@ -56,3 +56,25 @@ export const DELETE_STUDENT = gql`
         }
     }
 `;
+
+export const SEND_MAILGUN_EMAIL = gql`
+    mutation StudentManagementSendMailgunEmail(
+        $tag: String!
+        $from: String!
+        $to: [String!]!
+        $subject: String!
+        $text: String!
+        $recipientVariables: Json
+    ) {
+        sendMailgunEmail(
+            tag: $tag
+            from: $from
+            to: $to
+            subject: $subject
+            text: $text
+            recipientVariables: $recipientVariables
+        ) {
+            success
+        }
+    }
+`;

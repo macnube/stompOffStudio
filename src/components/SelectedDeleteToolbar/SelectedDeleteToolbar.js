@@ -10,8 +10,8 @@ import TrashIcon from '@material-ui/icons/Delete';
 const defaultGetIds = (selectedRows, displayData) =>
     reduce(
         displayData,
-        (result, row, index) => {
-            if (keys(selectedRows.lookup).includes(index.toString())) {
+        (result, row) => {
+            if (keys(selectedRows.lookup).includes(row.dataIndex.toString())) {
                 result.push(row.data[0]);
                 return result;
             }

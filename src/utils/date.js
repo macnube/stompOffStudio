@@ -3,6 +3,7 @@ import parseISO from 'date-fns/parseISO';
 import isBefore from 'date-fns/isBefore';
 import endOfDay from 'date-fns/endOfDay';
 import addWeeks from 'date-fns/addWeeks';
+import endOfYesterday from 'date-fns/endOfYesterday';
 import { default as dateFnsGetYear } from 'date-fns/getYear';
 
 export const getTableDate = date => format(parseISO(date), 'MMM do, yyyy');
@@ -10,6 +11,7 @@ export const getTableTime = date => format(parseISO(date), 'HH:mm');
 export const getChartMonthYear = date => format(parseISO(date), 'MMM, yyyy');
 export const getCurrentYear = () => dateFnsGetYear(new Date());
 export const getYear = date => dateFnsGetYear(parseISO(date));
+export const getEndOfYesterday = () => endOfYesterday();
 
 export const getDayFromCalendarPicker = date =>
     format(parseISO(new Date(date).toISOString()), 'ddd');

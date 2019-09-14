@@ -12,7 +12,6 @@ import NewCardDialog from './NewCardDialog';
 import CardWarningDialog from './CardWarningDialog';
 import { PARTICIPANT_STATUS } from 'constants/gql';
 import { isBeforeExpiration, expiresNextWeek } from 'utils/date';
-import { isCardActive } from 'utils/card';
 import { CARD_WARNING_MESSAGE } from './constants';
 
 class CourseAttendance extends Component {
@@ -119,9 +118,8 @@ class CourseAttendance extends Component {
     handleParticipantClick = id => {
         const { logCardParticipation, courseInstance } = this.props;
         const participant = find(courseInstance.participants, { id });
-        const activeCard = find(participant.membership.student.cards, card =>
-            isCardActive(card)
-        );
+        const cards = participant.membership.student.cards;
+        const activeCard = cards && cards[0];
 
         if (participant.status === PARTICIPANT_STATUS.PRESENT) {
             return this.handleRemoveParticipation(participant, activeCard);

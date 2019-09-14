@@ -6,18 +6,25 @@ import { Query, Mutation } from 'react-apollo';
 import { Adopt } from 'react-adopt';
 
 import {
-    GET_COURSE_INSTANCE,
     LOG_CARD_PARTICIPATION,
     LOG_PARTICIPANT_STATUS,
 } from 'routes/CourseInstance/graphql';
 import { CREATE_CARD } from 'routes/StudentDetail/graphql';
+import { GET_COURSE_INSTANCE } from './graphql';
 import CourseAttendance from './CourseAttendance';
+import { getEndOfYesterday } from 'utils/date';
 
-const getCourseInstance = ({ render, id }) => (
-    <Query query={GET_COURSE_INSTANCE} variables={{ id }}>
-        {render}
-    </Query>
-);
+const getCourseInstance = ({ render, id }) => {
+    console.log('date is: ', getEndOfYesterday());
+    return (
+        <Query
+            query={GET_COURSE_INSTANCE}
+            variables={{ id, date: getEndOfYesterday() }}
+        >
+            {render}
+        </Query>
+    );
+};
 
 const logParticipantStatus = ({ render, id }) => (
     <Mutation mutation={LOG_PARTICIPANT_STATUS}>

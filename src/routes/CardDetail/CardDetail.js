@@ -64,34 +64,22 @@ class CardDetail extends Component {
         });
     };
 
-    handleOnDeleteInstancePress = id => {
-        const {
-            removeCardParticipation,
-            logParticipantStatus,
-            card,
-        } = this.props;
+    handleOnDeleteParticipationPress = id => {
+        const { removeCardParticipation, card } = this.props;
 
         removeCardParticipation({
             variables: {
                 id: card.id,
                 participantId: id,
-                value: ++card.value,
-            },
-        });
-
-        logParticipantStatus({
-            variables: {
-                id,
-                status: PARTICIPANT_STATUS.PRESENT,
             },
         });
     };
 
-    renderInstanceSelectedToolbar = (selectedRows, displayData) => (
+    renderParticipationHistorySelectedToolbar = (selectedRows, displayData) => (
         <SelectedDeleteToolbar
             selectedRows={selectedRows}
             displayData={displayData}
-            handleOnDeletePress={this.handleOnDeleteInstancePress}
+            handleOnDeletePress={this.handleOnDeleteParticipationPress}
             getIds={this.getRowId}
         />
     );
@@ -109,7 +97,7 @@ class CardDetail extends Component {
         const adminOptions = {
             ...studentOptions,
             onRowClick: this.handleInstanceClick,
-            customToolbarSelect: this.renderInstanceSelectedToolbar,
+            customToolbarSelect: this.renderParticipationHistorySelectedToolbar,
         };
         const { card, user, classes } = this.props;
         return (
@@ -144,7 +132,6 @@ CardDetail.propTypes = {
     history: PropTypes.object.isRequired,
     updateCard: PropTypes.func.isRequired,
     removeCardParticipation: PropTypes.func.isRequired,
-    logParticipantStatus: PropTypes.func.isRequired,
     card: PropTypes.object.isRequired,
     user: PropTypes.object.isRequired,
 };

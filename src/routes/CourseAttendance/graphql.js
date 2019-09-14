@@ -30,7 +30,7 @@ const COURSE_ATTENDANCE_PARTICIPANT_FRAGMENT = gql`
             student {
                 ...SmallStudentFragment
 
-                cards(where: { active: true, expirationDate_gte: $date }) {
+                cards {
                     ...MediumCardFragment
                 }
                 memberships {
@@ -62,7 +62,7 @@ export const COURSE_ATTENDANCE_COURSE_INSTANCE_FRAGMENT = gql`
 `;
 
 export const GET_COURSE_INSTANCE = gql`
-    query CourseAttendanceGetCourseInstance($id: ID!, $date: DateTime!) {
+    query CourseAttendanceGetCourseInstance($id: ID!) {
         courseInstance(id: $id) {
             ...CourseAttendanceCourseInstanceFragment
         }
@@ -74,13 +74,8 @@ export const LOG_CARD_PARTICIPATION = gql`
     mutation CourseAttendanceLogCardParticipation(
         $id: ID!
         $participantId: ID!
-        $value: Int!
     ) {
-        logCardParticipation(
-            id: $id
-            participantId: $participantId
-            value: $value
-        ) {
+        logCardParticipation(id: $id, participantId: $participantId) {
             ...LargeCardFragment
         }
     }

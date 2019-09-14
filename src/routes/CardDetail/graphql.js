@@ -61,16 +61,8 @@ export const UPDATE_CARD = gql`
 `;
 
 export const REMOVE_CARD_PARTICIPATION = gql`
-    mutation CardDetailRemoveCardParticipation(
-        $id: ID!
-        $participantId: ID!
-        $value: Int!
-    ) {
-        removeCardParticipation(
-            id: $id
-            participantId: $participantId
-            value: $value
-        ) {
+    mutation CardDetailRemoveCardParticipation($id: ID!, $participantId: ID!) {
+        removeCardParticipation(id: $id, participantId: $participantId) {
             ...CardDetailCardFragment
         }
     }

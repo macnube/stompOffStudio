@@ -4,6 +4,7 @@ import isBefore from 'date-fns/isBefore';
 import endOfDay from 'date-fns/endOfDay';
 import addWeeks from 'date-fns/addWeeks';
 import endOfYesterday from 'date-fns/endOfYesterday';
+import startOfDay from 'date-fns/startOfDay';
 import { default as dateFnsGetYear } from 'date-fns/getYear';
 
 export const getTableDate = date => format(parseISO(date), 'MMM do, yyyy');
@@ -24,6 +25,12 @@ export const isPastExpiration = date =>
 
 export const isBeforeExpiration = date =>
     isBefore(endOfDay(new Date()), parseISO(date));
+
+export const isValidCardDate = expirationDate => {
+    const startOfToday = startOfDay(new Date());
+    const parsedExpiration = parseISO(expirationDate);
+    return isBefore(startOfToday, parsedExpiration);
+};
 
 export const expiresNextWeek = date =>
     isBefore(parseISO(date), addWeeks(new Date(), 1));

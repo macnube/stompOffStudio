@@ -11,8 +11,9 @@ import Grid from '@material-ui/core/Grid';
 import NewCardDialog from './NewCardDialog';
 import CardWarningDialog from './CardWarningDialog';
 import { PARTICIPANT_STATUS } from 'constants/gql';
-import { isBeforeExpiration, expiresNextWeek } from 'utils/date';
+import { isValidCardDate, expiresNextWeek } from 'utils/date';
 import { CARD_WARNING_MESSAGE } from './constants';
+import { isCardActive } from 'utils/card';
 
 class CourseAttendance extends Component {
     state = {
@@ -34,7 +35,6 @@ class CourseAttendance extends Component {
                 variables: {
                     id: card.id,
                     participantId: this.state.participantId,
-                    value: card.value - 1,
                 },
             });
             this.setState({
@@ -88,29 +88,29 @@ class CourseAttendance extends Component {
         });
     };
 
-    handleRemoveParticipation = (participant, activeCard) => {
-        const { logCardParticipation } = this.props;
+    handleRemoveParticipation = async (participant, activeCard) => {
+        const { removeCardParticipation } = this.props;
         if (activeCard) {
-            logCardParticipation({
+            await removeCardParticipation({
                 variables: {
                     id: activeCard.id,
                     participantId: participant.id,
-                    value: activeCard.value + 1,
                 },
             });
+
             this.handleResetParticipationStatus(participant.id);
         }
         const recentCard = find(participant.membership.student.cards, card =>
-            isBeforeExpiration(card.expirationDate)
+            isValidCardDate(card.expirationDate)
         );
         if (recentCard) {
-            logCardParticipation({
+            removeCardParticipation({
                 variables: {
                     id: recentCard.id,
                     participantId: participant.id,
-                    value: recentCard.value + 1,
                 },
             });
+
             this.handleResetParticipationStatus(participant.id);
         }
     };
@@ -119,7 +119,7 @@ class CourseAttendance extends Component {
         const { logCardParticipation, courseInstance } = this.props;
         const participant = find(courseInstance.participants, { id });
         const cards = participant.membership.student.cards;
-        const activeCard = cards && cards[0];
+        const activeCard = find(cards, card => isCardActive(card));
 
         if (participant.status === PARTICIPANT_STATUS.PRESENT) {
             return this.handleRemoveParticipation(participant, activeCard);
@@ -144,7 +144,6 @@ class CourseAttendance extends Component {
             variables: {
                 id: activeCard.id,
                 participantId: id,
-                value: activeCard.value - 1,
             },
         });
         this.handleLogParticipationPresent(id);
@@ -211,6 +210,7 @@ CourseAttendance.propTypes = {
     courseInstance: PropTypes.object.isRequired,
     logParticipantStatus: PropTypes.func.isRequired,
     logCardParticipation: PropTypes.func.isRequired,
+    removeCardParticipation: PropTypes.func.isRequired,
     createCard: PropTypes.func.isRequired,
     card: PropTypes.object,
 };

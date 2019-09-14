@@ -7,6 +7,7 @@ import { Adopt } from 'react-adopt';
 
 import { LOG_PARTICIPANT_STATUS } from 'routes/CourseInstance/graphql';
 import { CREATE_CARD } from 'routes/StudentDetail/graphql';
+import { REMOVE_CARD_PARTICIPATION } from 'routes/CardDetail/graphql';
 import { GET_COURSE_INSTANCE, LOG_CARD_PARTICIPATION } from './graphql';
 import CourseAttendance from './CourseAttendance';
 import { getEndOfYesterday } from 'utils/date';
@@ -40,11 +41,18 @@ const createCard = ({ render }) => (
     </Mutation>
 );
 
+const removeCardParticipation = ({ render }) => (
+    <Mutation mutation={REMOVE_CARD_PARTICIPATION}>
+        {(mutation, result) => render({ mutation, result })}
+    </Mutation>
+);
+
 const mapper = {
     getCourseInstance,
     logParticipantStatus,
     logCardParticipation,
     createCard,
+    removeCardParticipation,
 };
 
 const CourseAttendanceContainer = ({ location }) => {
@@ -63,6 +71,9 @@ const CourseAttendanceContainer = ({ location }) => {
                     createCard: {
                         mutation: createCardMutation,
                         result: createCardResult,
+                    },
+                    removeCardParticipation: {
+                        mutation: removeCardParticipationMutation,
                     },
                 }) => {
                     if (loading) return null;
@@ -89,6 +100,9 @@ const CourseAttendanceContainer = ({ location }) => {
                             logParticipantStatus={logParticipantStatusMutation}
                             logCardParticipation={logCardParticipationMutation}
                             createCard={createCardMutation}
+                            removeCardParticipation={
+                                removeCardParticipationMutation
+                            }
                         />
                     );
                 }}

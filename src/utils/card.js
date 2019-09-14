@@ -1,4 +1,4 @@
-import { isBeforeExpiration } from './date';
+import { isValidCardDate } from './date';
 
 export const isCardActive = card =>
-    card.value > 0 && isBeforeExpiration(card.expirationDate);
+    card.value > 0 && isValidCardDate(card.expirationDate);

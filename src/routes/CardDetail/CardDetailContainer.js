@@ -5,7 +5,6 @@ import { Query, Mutation } from 'react-apollo';
 import { Adopt } from 'react-adopt';
 
 import { GET_CARD, UPDATE_CARD, REMOVE_CARD_PARTICIPATION } from './graphql';
-import { LOG_PARTICIPANT_STATUS } from 'routes/CourseInstance/graphql';
 import CardDetail from './CardDetail';
 
 const getCard = ({ render, id }) => (
@@ -26,17 +25,10 @@ const removeCardParticipation = ({ render }) => (
     </Mutation>
 );
 
-const logParticipantStatus = ({ render }) => (
-    <Mutation mutation={LOG_PARTICIPANT_STATUS}>
-        {(mutation, result) => render({ mutation, result })}
-    </Mutation>
-);
-
 const mapper = {
     getCard,
     updateCard,
     removeCardParticipation,
-    logParticipantStatus,
 };
 
 const CardDetailContainer = ({ location }) => {
@@ -50,9 +42,6 @@ const CardDetailContainer = ({ location }) => {
                     removeCardParticipation: {
                         mutation: removeCardParticipationMutation,
                     },
-                    logParticipantStatus: {
-                        mutation: logParticipantStatusMutation,
-                    },
                 }) => {
                     if (loading) return null;
                     return (
@@ -62,7 +51,6 @@ const CardDetailContainer = ({ location }) => {
                             removeCardParticipation={
                                 removeCardParticipationMutation
                             }
-                            logParticipantStatus={logParticipantStatusMutation}
                         />
                     );
                 }}

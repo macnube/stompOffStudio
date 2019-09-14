@@ -98,7 +98,7 @@ const InstancesTable = ({
     return (
         <Fragment>
             <MUIDataTable
-                title={'Course Instances'}
+                title={'Course History'}
                 data={parseInstancesToTableData(course.instances)}
                 columns={columns}
                 options={options}

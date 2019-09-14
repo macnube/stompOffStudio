@@ -8,6 +8,7 @@ import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { MuiPickersUtilsProvider, DatePicker } from 'material-ui-pickers';
 import DateFnsUtils from '@date-io/date-fns';
@@ -17,6 +18,7 @@ class CardDialog extends React.Component {
     state = {
         expirationDate: addWeeks(new Date(), 9),
         value: 8,
+        errorMessage: '',
     };
 
     componentDidMount() {
@@ -42,16 +44,23 @@ class CardDialog extends React.Component {
         });
     };
 
-    handleCreate = () => {
+    handleCreate = async () => {
         const { createCard, handleClose, studentId } = this.props;
         const { expirationDate, value } = this.state;
-        createCard({
-            variables: {
-                expirationDate,
-                value,
-                studentId,
-            },
-        });
+        try {
+            await createCard({
+                variables: {
+                    expirationDate,
+                    value,
+                    studentId,
+                },
+            });
+        } catch (e) {
+            return this.setState({
+                errorMessage: e.message,
+            });
+        }
+
         handleClose(this.clearForm);
     };
 
@@ -60,12 +69,13 @@ class CardDialog extends React.Component {
             name: '',
             mobile: '',
             email: '',
+            errorMessage: '',
         });
     };
 
     render() {
         const { classes, open, handleClose, title } = this.props;
-        const { value, expirationDate } = this.state;
+        const { value, expirationDate, errorMessage } = this.state;
         return (
             <MuiPickersUtilsProvider utils={DateFnsUtils}>
                 <Dialog
@@ -74,6 +84,9 @@ class CardDialog extends React.Component {
                     aria-labelledby="form-dialog-title"
                 >
                     <DialogTitle id="form-dialog-title">{title}</DialogTitle>
+                    {errorMessage ? (
+                        <DialogContentText>{errorMessage}</DialogContentText>
+                    ) : null}
                     <DialogContent>
                         <TextField
                             id="filled-number"

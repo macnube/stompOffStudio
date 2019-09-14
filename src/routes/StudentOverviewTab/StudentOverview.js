@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import filter from 'lodash/filter';
-import { isAfter, parseISO } from 'date-fns';
+import { isAfter, parseISO, isBefore, isSameDay, startOfToday } from 'date-fns';
 import { withRouter } from 'react-router-dom';
 import Paper from '@material-ui/core/Paper';
 
@@ -74,12 +74,16 @@ class StudentOverview extends React.Component {
         };
 
         const { instances, absences } = this.props;
-        const now = new Date();
+        const today = startOfToday();
+
         const recentInstances = filter(instances, instance => {
-            return isAfter(now, parseISO(instance.date));
+            return isBefore(parseISO(instance.date), today);
         });
-        const upcomingInstances = filter(instances, instance =>
-            isAfter(parseISO(instance.date), now)
+        const upcomingInstances = filter(
+            instances,
+            instance =>
+                isAfter(parseISO(instance.date), today) ||
+                isSameDay(parseISO(instance.date), today)
         );
 
         return (

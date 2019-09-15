@@ -90,29 +90,34 @@ class CourseAttendance extends Component {
 
     handleRemoveParticipation = async (participant, activeCard) => {
         const { removeCardParticipation } = this.props;
-        if (activeCard) {
-            await removeCardParticipation({
-                variables: {
-                    id: activeCard.id,
-                    participantId: participant.id,
-                },
-            });
+        try {
+            if (activeCard) {
+                await removeCardParticipation({
+                    variables: {
+                        id: activeCard.id,
+                        participantId: participant.id,
+                    },
+                });
+            }
+            const recentCard = find(
+                participant.membership.student.cards,
+                card => isValidCardDate(card.expirationDate)
+            );
+            if (recentCard) {
+                await removeCardParticipation({
+                    variables: {
+                        id: recentCard.id,
+                        participantId: participant.id,
+                    },
+                });
 
-            this.handleResetParticipationStatus(participant.id);
+                this.handleResetParticipationStatus(participant.id);
+            }
+        } catch (error) {
+            console.log('error is: ', error);
         }
-        const recentCard = find(participant.membership.student.cards, card =>
-            isValidCardDate(card.expirationDate)
-        );
-        if (recentCard) {
-            removeCardParticipation({
-                variables: {
-                    id: recentCard.id,
-                    participantId: participant.id,
-                },
-            });
 
-            this.handleResetParticipationStatus(participant.id);
-        }
+        this.handleResetParticipationStatus(participant.id);
     };
 
     handleParticipantClick = id => {

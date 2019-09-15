@@ -8,16 +8,16 @@ import { Adopt } from 'react-adopt';
 import { LOG_PARTICIPANT_STATUS } from 'routes/CourseInstance/graphql';
 import { CREATE_CARD } from 'routes/StudentDetail/graphql';
 import { REMOVE_CARD_PARTICIPATION } from 'routes/CardDetail/graphql';
-import { GET_COURSE_INSTANCE, LOG_CARD_PARTICIPATION } from './graphql';
+import {
+    COURSE_ATTENDANCE_GET_COURSE_INSTANCE,
+    LOG_CARD_PARTICIPATION,
+} from './graphql';
 import CourseAttendance from './CourseAttendance';
 import { getEndOfYesterday } from 'utils/date';
 
 const getCourseInstance = ({ render, id }) => {
     return (
-        <Query
-            query={GET_COURSE_INSTANCE}
-            variables={{ id, date: getEndOfYesterday() }}
-        >
+        <Query query={COURSE_ATTENDANCE_GET_COURSE_INSTANCE} variables={{ id }}>
             {render}
         </Query>
     );
@@ -91,6 +91,9 @@ const CourseAttendanceContainer = ({ location }) => {
                                 }
                                 createCard={createCardMutation}
                                 card={createCardResult.data.createCard}
+                                removeCardParticipation={
+                                    removeCardParticipationMutation
+                                }
                             />
                         );
                     }

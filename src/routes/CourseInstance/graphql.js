@@ -7,7 +7,6 @@ import {
     SMALL_COURSE_FRAGMENT,
     SMALL_MEMBERSHIP_FRAGMENT,
     MEDIUM_CARD_FRAGMENT,
-    LARGE_CARD_FRAGMENT,
 } from 'graphql';
 
 export const GET_COURSE_INSTANCE_FRAGMENT = gql`
@@ -107,6 +106,15 @@ export const DELETE_PARTICIPANT = gql`
     mutation CourseInstanceDeleteParticipant($id: ID!) {
         deleteParticipant(id: $id) {
             id
+        }
+    }
+`;
+
+export const DEACTIVATE_CARD = gql`
+    mutation CourseInstanceDeactivateCard($id: ID!) {
+        deactivateCard(id: $id) {
+            id
+            active
         }
     }
 `;

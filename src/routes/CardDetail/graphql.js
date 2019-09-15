@@ -5,6 +5,7 @@ import {
     SMALL_PARTICIPANT_FRAGMENT,
     SMALL_COURSE_INSTANCE_FRAGMENT,
     SMALL_STUDENT_FRAGMENT,
+    SMALL_COURSE_FRAGMENT,
 } from 'graphql';
 
 const CARD_DETAIL_CARD_FRAGMENT = gql`
@@ -15,7 +16,7 @@ const CARD_DETAIL_CARD_FRAGMENT = gql`
             courseInstance {
                 ...SmallCourseInstanceFragment
                 course {
-                    name
+                    ...SmallCourseFragment
                 }
             }
         }
@@ -27,6 +28,7 @@ const CARD_DETAIL_CARD_FRAGMENT = gql`
     ${MEDIUM_CARD_FRAGMENT}
     ${SMALL_PARTICIPANT_FRAGMENT}
     ${SMALL_COURSE_INSTANCE_FRAGMENT}
+    ${SMALL_COURSE_FRAGMENT}
 `;
 
 export const GET_CARD = gql`

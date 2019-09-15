@@ -10,15 +10,6 @@ import {
     LARGE_CARD_FRAGMENT,
 } from 'graphql';
 
-export const GET_COURSE_INSTANCE_FRAGMENT = gql`
-    fragment GetCourseInstanceFragment on CourseInstance {
-        id
-        participants {
-            id
-        }
-    }
-`;
-
 const COURSE_ATTENDANCE_PARTICIPANT_FRAGMENT = gql`
     fragment CourseAttendanceParticipantFragment on Participant {
         ...SmallParticipantFragment
@@ -61,7 +52,7 @@ export const COURSE_ATTENDANCE_COURSE_INSTANCE_FRAGMENT = gql`
     ${MEDIUM_COURSE_INSTANCE_FRAGMENT}
 `;
 
-export const GET_COURSE_INSTANCE = gql`
+export const COURSE_ATTENDANCE_GET_COURSE_INSTANCE = gql`
     query CourseAttendanceGetCourseInstance($id: ID!) {
         courseInstance(id: $id) {
             ...CourseAttendanceCourseInstanceFragment

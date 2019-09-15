@@ -44,26 +44,31 @@ const CardDetailContainer = ({ location }) => {
                     },
                 }) => {
                     if (loading) return null;
+                    if (error) {
+                        console.log('error is: ', error);
+                    }
+                    if (data && data.card) {
+                        return (
+                            <CardDetail
+                                card={data.card}
+                                updateCard={updateCardMutation}
+                                removeCardParticipation={
+                                    removeCardParticipationMutation
+                                }
+                            />
+                        );
+                    }
                     return (
-                        <CardDetail
-                            card={data.card}
-                            updateCard={updateCardMutation}
-                            removeCardParticipation={
-                                removeCardParticipationMutation
-                            }
+                        <Redirect
+                            to={{
+                                pathname: '/studentManagement',
+                            }}
                         />
                     );
                 }}
             </Adopt>
         );
     }
-    return (
-        <Redirect
-            to={{
-                pathname: '/studentManagement',
-            }}
-        />
-    );
 };
 
 export default CardDetailContainer;

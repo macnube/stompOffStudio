@@ -53,7 +53,7 @@ class NewCardDialog extends React.Component {
     getUserReadableDate = date => format(date, 'MMM do, yyyy');
 
     render() {
-        const { open, handleClose } = this.props;
+        const { open, handleClose, handleDropIn } = this.props;
         const { numberOfCourses, expirationDate } = this.state;
         return (
             <Dialog
@@ -80,6 +80,9 @@ class NewCardDialog extends React.Component {
                     >
                         Cancel
                     </Button>
+                    <Button onClick={handleDropIn} color="primary">
+                        Student Dropin
+                    </Button>
                     <Button onClick={this.handleOrder} color="primary">
                         Order
                     </Button>
@@ -93,6 +96,7 @@ NewCardDialog.propTypes = {
     open: PropTypes.bool.isRequired,
     handleClose: PropTypes.func.isRequired,
     handleCreate: PropTypes.func.isRequired,
+    handleDropIn: PropTypes.func.isRequired,
     numberOfCourses: PropTypes.number,
 };
 

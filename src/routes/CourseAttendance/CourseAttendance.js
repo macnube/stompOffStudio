@@ -166,6 +166,11 @@ class CourseAttendance extends Component {
         this.handleClose();
     };
 
+    handleDropIn = () => {
+        this.handleLogParticipationPresent(this.state.participantId);
+        this.handleClose();
+    };
+
     render() {
         const { courseInstance } = this.props;
         const {
@@ -196,6 +201,7 @@ class CourseAttendance extends Component {
                     <NewCardDialog
                         open={openCardDialog}
                         handleCreate={this.handleCreateCard}
+                        handleDropIn={this.handleDropIn}
                         handleClose={this.handleClose}
                         numberOfCourses={numberOfCourses}
                         studentId={studentId}

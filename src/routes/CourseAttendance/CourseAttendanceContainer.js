@@ -13,7 +13,6 @@ import {
     LOG_CARD_PARTICIPATION,
 } from './graphql';
 import CourseAttendance from './CourseAttendance';
-import { getEndOfYesterday } from 'utils/date';
 
 const getCourseInstance = ({ render, id }) => {
     return (

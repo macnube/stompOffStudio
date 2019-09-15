@@ -207,11 +207,13 @@ class CourseAttendance extends Component {
                         studentId={studentId}
                     />
                 ) : null}
-                <CardWarningDialog
-                    open={openCardWarningDialog}
-                    message={warning}
-                    handleClose={this.handleClose}
-                />
+                {warning ? (
+                    <CardWarningDialog
+                        open={openCardWarningDialog}
+                        message={warning}
+                        handleClose={this.handleClose}
+                    />
+                ) : null}
             </Fragment>
         );
     }

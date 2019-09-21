@@ -36,8 +36,16 @@ const columns = [
     },
 ];
 
-const waitlistColumns = [
+const inactiveColumns = [
     ...columns,
+    {
+        name: 'Role',
+    },
+];
+
+const waitlistColumns = [
+    ...inactiveColumns,
+
     {
         name: 'Waitlist Date',
     },
@@ -216,7 +224,7 @@ const StudentsTables = ({
                         course.memberships,
                         MEMBERSHIP_STATUS.INACTIVE
                     )}
-                    columns={columns}
+                    columns={inactiveColumns}
                     options={studentOptions}
                 />
             </Grid>

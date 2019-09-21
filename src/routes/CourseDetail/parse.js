@@ -36,6 +36,7 @@ export const parseMembershipsByStatusToTableData = (memberships, status) =>
                 id,
                 name,
                 email,
+                membership.role,
                 membership.waitlistDate
                     ? getTableDate(membership.waitlistDate)
                     : '',

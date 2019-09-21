@@ -5,9 +5,6 @@ export const parseCardsToTableData = cards =>
     reduce(
         cards,
         (acc, card) => {
-            if (card.paid) {
-                return acc;
-            }
             const result = [
                 card.id,
                 card.originalValue,

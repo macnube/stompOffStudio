@@ -46,6 +46,7 @@ class CourseInstanceHeader extends Component {
     handleSetDate = date => {
         this.setState({
             date,
+            canSave: true,
         });
     };
 

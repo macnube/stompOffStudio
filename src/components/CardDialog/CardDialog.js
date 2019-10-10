@@ -16,7 +16,7 @@ import styles from './styles';
 
 class CardDialog extends React.Component {
     state = {
-        expirationDate: addWeeks(new Date(), 9),
+        startDate: new Date(),
         value: 8,
         errorMessage: '',
     };
@@ -38,19 +38,19 @@ class CardDialog extends React.Component {
         this.setState({ [name]: value });
     };
 
-    handleSetExpirationDate = expirationDate => {
+    handleSetStartDate = startDate => {
         this.setState({
-            expirationDate,
+            startDate,
         });
     };
 
     handleCreate = async () => {
         const { createCard, handleClose, studentId } = this.props;
-        const { expirationDate, value } = this.state;
+        const { startDate, value } = this.state;
         try {
             await createCard({
                 variables: {
-                    expirationDate,
+                    expirationDate: addWeeks(startDate, 9),
                     value,
                     studentId,
                 },
@@ -75,7 +75,7 @@ class CardDialog extends React.Component {
 
     render() {
         const { classes, open, handleClose, title } = this.props;
-        const { value, expirationDate, errorMessage } = this.state;
+        const { value, startDate, errorMessage } = this.state;
         return (
             <MuiPickersUtilsProvider utils={DateFnsUtils}>
                 <Dialog
@@ -102,10 +102,10 @@ class CardDialog extends React.Component {
                         />
                         <DatePicker
                             margin="normal"
-                            label="Expiration Date"
-                            value={expirationDate}
+                            label="Date of First Class"
+                            value={startDate}
                             className={classes.textField}
-                            onChange={this.handleSetExpirationDate}
+                            onChange={this.handleSetStartDate}
                         />
                     </DialogContent>
                     <DialogActions>

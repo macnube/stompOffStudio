@@ -6,6 +6,7 @@ import {
     SMALL_STUDENT_FRAGMENT,
     SMALL_COURSE_FRAGMENT,
     SMALL_MEMBERSHIP_FRAGMENT,
+    MEDIUM_MEMBERSHIP_FRAGMENT,
     MEDIUM_CARD_FRAGMENT,
     LARGE_CARD_FRAGMENT,
 } from 'graphql';
@@ -25,7 +26,7 @@ const COURSE_ATTENDANCE_PARTICIPANT_FRAGMENT = gql`
                     ...MediumCardFragment
                 }
                 memberships {
-                    ...SmallMembershipFragment
+                    ...MediumMembershipFragment
                 }
             }
         }
@@ -33,6 +34,7 @@ const COURSE_ATTENDANCE_PARTICIPANT_FRAGMENT = gql`
     ${MEDIUM_CARD_FRAGMENT}
     ${SMALL_COURSE_FRAGMENT}
     ${SMALL_MEMBERSHIP_FRAGMENT}
+    ${MEDIUM_MEMBERSHIP_FRAGMENT}
     ${SMALL_STUDENT_FRAGMENT}
     ${SMALL_PARTICIPANT_FRAGMENT}
 `;

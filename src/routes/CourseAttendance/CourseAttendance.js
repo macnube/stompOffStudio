@@ -2,6 +2,7 @@ import 'date-fns';
 import React, { Component, Fragment } from 'react';
 import { withRouter } from 'react-router-dom';
 import map from 'lodash/map';
+import filter from 'lodash/filter';
 import isNil from 'lodash/isNil';
 import find from 'lodash/find';
 import PropTypes from 'prop-types';
@@ -10,7 +11,7 @@ import Grid from '@material-ui/core/Grid';
 
 import NewCardDialog from './NewCardDialog';
 import CardWarningDialog from './CardWarningDialog';
-import { PARTICIPANT_STATUS } from 'constants/gql';
+import { PARTICIPANT_STATUS, MEMBERSHIP_STATUS } from 'constants/gql';
 import { isValidCardDate, expiresNextWeek } from 'utils/date';
 import { CARD_WARNING_MESSAGE } from './constants';
 import { isCardActive } from 'utils/card';
@@ -44,10 +45,15 @@ class CourseAttendance extends Component {
     }
 
     handleAddCardOpen = ({ id, membership: { student } }) => {
+        const numberOfCourses = filter(
+            student.memberships,
+            membership => membership.status === MEMBERSHIP_STATUS.ACTIVE
+        ).length;
+        debugger;
         this.setState({
             openCardDialog: true,
             studentId: student.id,
-            numberOfCourses: student.memberships.length,
+            numberOfCourses,
             participantId: id,
         });
     };

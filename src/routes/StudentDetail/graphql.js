@@ -6,7 +6,7 @@ import {
     MEDIUM_CARD_FRAGMENT,
     SMALL_COURSE_FRAGMENT,
     MEDIUM_STUDENT_FRAGMENT,
-    SMALL_MEMBERSHIP_FRAGMENT,
+    MEDIUM_MEMBERSHIP_FRAGMENT,
     SMALL_PAYMENT_FRAGMENT,
     SMALL_CARD_FRAGMENT,
 } from 'graphql';
@@ -26,7 +26,7 @@ const STUDENT_DETAIL_STUDENT_FRAGMENT = gql`
     fragment StudentDetailStudentFragment on Student {
         ...MediumStudentFragment
         memberships {
-            ...SmallMembershipFragment
+            ...MediumMembershipFragment
             course {
                 ...SmallCourseFragment
             }
@@ -48,7 +48,7 @@ const STUDENT_DETAIL_STUDENT_FRAGMENT = gql`
     ${SMALL_CARD_FRAGMENT}
     ${STUDENT_DETAIL_CARD_FRAGMENT}
     ${SMALL_COURSE_FRAGMENT}
-    ${SMALL_MEMBERSHIP_FRAGMENT}
+    ${MEDIUM_MEMBERSHIP_FRAGMENT}
     ${MEDIUM_STUDENT_FRAGMENT}
 `;
 

@@ -1,17 +1,21 @@
 import reduce from 'lodash/reduce';
 
 import { getTableDate } from 'utils/date';
+import { MEMBERSHIP_STATUS } from 'constants/gql';
 
 export const parseMembershipsToTableData = memberships =>
     reduce(
         memberships,
         (acc, membership) => {
-            const result = [
-                membership.id,
-                membership.course.name,
-                membership.role,
-            ];
-            acc.push(result);
+            if (membership.status === MEMBERSHIP_STATUS.ACTIVE) {
+                const result = [
+                    membership.id,
+                    membership.course.name,
+                    membership.role,
+                ];
+                acc.push(result);
+                return acc;
+            }
             return acc;
         },
         []

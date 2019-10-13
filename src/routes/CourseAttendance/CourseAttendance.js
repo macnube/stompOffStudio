@@ -49,7 +49,6 @@ class CourseAttendance extends Component {
             student.memberships,
             membership => membership.status === MEMBERSHIP_STATUS.ACTIVE
         ).length;
-        debugger;
         this.setState({
             openCardDialog: true,
             studentId: student.id,
@@ -109,6 +108,7 @@ class CourseAttendance extends Component {
                 participant.membership.student.cards,
                 card => isValidCardDate(card.expirationDate)
             );
+            debugger;
             if (recentCard) {
                 await removeCardParticipation({
                     variables: {

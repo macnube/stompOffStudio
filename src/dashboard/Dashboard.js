@@ -25,6 +25,7 @@ import {
     CourseManagement,
     CourseDetail,
     TeacherManagement,
+    RegistrationManagement,
     StudioManagement,
     StudioDetail,
     PaymentManagement,
@@ -97,6 +98,10 @@ const Dashboard = ({ classes, user, setUser, location }) => {
             <Route path="/cardDetail" component={CardDetail} />
             <Route path="/courseAttendance" component={CourseAttendance} />
             <Route path="/userManagement" component={UserManagement} />
+            <Route
+                path="/registrationManagement"
+                component={RegistrationManagement}
+            />
             <Route path="/studentOverview" component={StudentOverview} />
             <Route path="/studentCourses" component={StudentCourses} />
             <Route

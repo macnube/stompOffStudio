@@ -11,7 +11,7 @@ const defaultToolbarStyles = {
 
 class CustomAddToolbar extends React.Component {
     render() {
-        const { classes, handleAddPress, title } = this.props;
+        const { classes, handleAddPress, title, children } = this.props;
 
         return (
             <React.Fragment>
@@ -23,12 +23,14 @@ class CustomAddToolbar extends React.Component {
                         <AddIcon className={classes.deleteIcon} />
                     </IconButton>
                 </Tooltip>
+                {children}
             </React.Fragment>
         );
     }
 }
 
 CustomAddToolbar.propTypes = {
+    children: PropTypes.array,
     classes: PropTypes.object.isRequired,
     handleAddPress: PropTypes.func.isRequired,
     title: PropTypes.string.isRequired,

@@ -10,6 +10,7 @@ import ClassIcon from '@material-ui/icons/CastForEducation';
 import TeacherIcon from '@material-ui/icons/RecordVoiceOver';
 import StudioIcon from '@material-ui/icons/AccountBalance';
 import UserIcon from '@material-ui/icons/Person';
+import NewRegistration from '@material-ui/icons/PersonAdd';
 
 export const ListItems = () => (
     <div>
@@ -87,6 +88,18 @@ export const ListItems = () => (
                     <UserIcon />
                 </ListItemIcon>
                 <ListItemText primary="User Management" />
+            </ListItem>
+        </NavLink>
+        <NavLink
+            exact
+            to="/registrationManagement"
+            style={{ textDecoration: 'none' }}
+        >
+            <ListItem button>
+                <ListItemIcon>
+                    <NewRegistration />
+                </ListItemIcon>
+                <ListItemText primary="Registration Management" />
             </ListItem>
         </NavLink>
     </div>

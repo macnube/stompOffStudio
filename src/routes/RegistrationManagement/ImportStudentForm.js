@@ -18,6 +18,8 @@ const REGISTRATION_TO_COURSE_NAME_MAP = {
     'Balboa II': 'Balboa II',
     'Authentic Jazz II': 'Solo Jazz II',
     'Lindy Hop II': 'Lindy Hop III',
+    'Balboa III': 'Balboa II',
+    'Balboa I': 'Balboa II',
 };
 
 const TEST_REGISTRATION_TO_COURSE_NAME_MAP = {

@@ -5,7 +5,7 @@ import { isAfter, parseISO, isBefore, isSameDay, startOfToday } from 'date-fns';
 import { withRouter } from 'react-router-dom';
 import Paper from '@material-ui/core/Paper';
 
-import { FlatTable } from 'components';
+import { NoToolbarTable } from 'components';
 import { parseInstancesToTableData, parseAbsencesToTableData } from './parse';
 
 const instanceColumns = [
@@ -88,19 +88,19 @@ class StudentOverview extends React.Component {
 
         return (
             <Paper>
-                <FlatTable
+                <NoToolbarTable
                     title={'Upcoming Classes'}
                     data={parseInstancesToTableData(upcomingInstances)}
                     columns={instanceColumns}
                     options={instanceOptions}
                 />
-                <FlatTable
+                <NoToolbarTable
                     title={'Upcoming Course Absences'}
                     data={parseAbsencesToTableData(absences)}
                     columns={absencesColumns}
                     options={absencesOptions}
                 />
-                <FlatTable
+                <NoToolbarTable
                     title={'Recent Classes'}
                     data={parseInstancesToTableData(recentInstances)}
                     columns={instanceColumns}

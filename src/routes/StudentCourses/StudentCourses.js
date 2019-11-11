@@ -2,7 +2,7 @@ import React from 'react';
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
-import { ClickableTable } from 'components';
+import { NoToolbarTable } from 'components';
 import { parseCoursesToTableData } from './parse';
 
 const columns = [
@@ -43,7 +43,7 @@ const StudentCourses = ({ courses, history }) => {
         onRowClick: handleNavigateToClassDetail,
     };
     return (
-        <ClickableTable
+        <NoToolbarTable
             title={'Your Courses'}
             data={parseCoursesToTableData(courses)}
             columns={columns}

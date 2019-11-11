@@ -7,6 +7,7 @@ export { default as DetailHeader } from './DetailHeader';
 export { default as FlatTable } from './FlatTable';
 export { default as FullScreenDialog } from './FullScreenDialog';
 export { default as LogAbsenceDialog } from './LogAbsenceDialog';
+export { default as NoToolbarTable } from './NoToolbarTable';
 export { default as PaymentDialog } from './PaymentDialog';
 export { default as SelectedDeleteToolbar } from './SelectedDeleteToolbar';
 export { default as SelectedAddToolbar } from './SelectedAddToolbar';

@@ -80,7 +80,6 @@ class StudentManagement extends Component {
         sendMailgunEmail({
             variables: {
                 tag: 'test',
-                from: 'paul.mccloud@gmail.com',
                 to: emails,
                 subject: 'test',
                 text: 'Testing mailgun email!',

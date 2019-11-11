@@ -60,7 +60,6 @@ export const DELETE_STUDENT = gql`
 export const SEND_MAILGUN_EMAIL = gql`
     mutation StudentManagementSendMailgunEmail(
         $tag: String!
-        $from: String!
         $to: [String!]!
         $subject: String!
         $text: String!
@@ -68,7 +67,6 @@ export const SEND_MAILGUN_EMAIL = gql`
     ) {
         sendMailgunEmail(
             tag: $tag
-            from: $from
             to: $to
             subject: $subject
             text: $text

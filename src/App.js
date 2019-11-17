@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { HashRouter as Router, Route } from 'react-router-dom';
+import { HashRouter as Router, Route, Redirect } from 'react-router-dom';
 import ApolloClient from 'apollo-boost';
 import { ApolloProvider } from 'react-apollo';
 import get from 'lodash/get';
@@ -34,12 +34,20 @@ const setupClient = (user, setUser) =>
                 if (isDev()) {
                     console.log('graphQLErrors are: ', graphQLErrors);
                 }
-                if (message === 'Not Authorised!' && user.isAuthenticated) {
-                    setUser({
-                        admin: false,
-                        isAuthenticated: false,
-                        student: null,
-                    });
+                if (message === 'Not Authorised!') {
+                    if (user.isAuthenticated) {
+                        setUser({
+                            admin: false,
+                            isAuthenticated: false,
+                            student: null,
+                        });
+                    } else if (!window.location.href.match('resetPassword')) {
+                        const baseUrl = isDev()
+                            ? 'http://localhost:3000/#'
+                            : 'portal.lanasedlmayr.com/#';
+
+                        window.location.href = `${baseUrl}/login`;
+                    }
                 } else {
                     notify('GraphQL Error', {
                         metaData: {

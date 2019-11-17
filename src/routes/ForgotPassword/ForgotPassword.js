@@ -9,38 +9,33 @@ import InputLabel from '@material-ui/core/InputLabel';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
-import Link from '@material-ui/core/Link';
 import withStyles from '@material-ui/core/styles/withStyles';
 
 import styles from './styles';
 
-class Login extends React.Component {
+class ForgotPassword extends React.Component {
     state = {
         email: '',
-        password: '',
+        emailValidation: '',
     };
 
     handleChange = name => event => {
         this.setState({ [name]: event.target.value });
     };
 
-    handleLogin = () => {
-        const { email, password } = this.state;
-        this.props.login({
+    handleSendResetEmail = () => {
+        const { email } = this.state;
+        console.log('here');
+        this.props.sendResetEmail({
             variables: {
                 email,
-                password,
             },
         });
     };
 
-    handleForgotPassword = () => {
-        window.location.href = '/#/forgotPassword';
-    };
-
     render() {
-        const { classes } = this.props;
-        const { email, password } = this.state;
+        const { classes, recipientEmail } = this.props;
+        const { email, emailValidation } = this.state;
         return (
             <main className={classes.main}>
                 <CssBaseline />
@@ -49,7 +44,7 @@ class Login extends React.Component {
                         <LockOutlinedIcon />
                     </Avatar>
                     <Typography component="h1" variant="h5">
-                        Sign in
+                        Forgot Password
                     </Typography>
                     <form className={classes.form}>
                         <FormControl margin="normal" required fullWidth>
@@ -66,32 +61,32 @@ class Login extends React.Component {
                             />
                         </FormControl>
                         <FormControl margin="normal" required fullWidth>
-                            <InputLabel htmlFor="password">Password</InputLabel>
+                            <InputLabel htmlFor="email">
+                                Enter Email Address Again
+                            </InputLabel>
                             <Input
-                                name="password"
-                                type="password"
-                                id="password"
-                                value={password}
-                                onChange={this.handleChange('password')}
-                                autoComplete="current-password"
+                                id="emailValidation"
+                                name="emailValidation"
+                                autoComplete="emailValidation"
+                                value={emailValidation}
+                                onChange={this.handleChange('emailValidation')}
                             />
                         </FormControl>
-                        <Typography>
-                            <Link
-                                onClick={this.handleForgotPassword}
-                                className={classes.link}
-                            >
-                                Forgot Password?
-                            </Link>
-                        </Typography>
+                        {recipientEmail ? (
+                            <Typography color="primary" variant="h6">
+                                Successfully sent to {recipientEmail}, please
+                                check your email
+                            </Typography>
+                        ) : null}
                         <Button
                             fullWidth
                             variant="contained"
                             color="primary"
                             className={classes.submit}
-                            onClick={this.handleLogin}
+                            onClick={this.handleSendResetEmail}
+                            disabled={email !== emailValidation}
                         >
-                            Sign in
+                            Send Reset Email
                         </Button>
                     </form>
                 </Paper>
@@ -100,9 +95,10 @@ class Login extends React.Component {
     }
 }
 
-Login.propTypes = {
+ForgotPassword.propTypes = {
     classes: PropTypes.object.isRequired,
-    login: PropTypes.func.isRequired,
+    sendResetEmail: PropTypes.func.isRequired,
+    recipientEmail: PropTypes.string,
 };
 
-export default withStyles(styles)(Login);
+export default withStyles(styles)(ForgotPassword);

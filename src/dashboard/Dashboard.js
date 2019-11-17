@@ -34,6 +34,8 @@ import {
     CardDetail,
     UserManagement,
     Login,
+    ForgotPassword,
+    ResetPassword,
     StudentOverview,
     StudentCourses,
     StudentCourseDetail,
@@ -115,6 +117,14 @@ const Dashboard = ({ classes, user, setUser, location }) => {
             <Route path="/studentCards" component={StudentCards} />
         </Fragment>
     );
+
+    const renderLoggedOutRoutes = () => (
+        <Fragment>
+            <Route path="/forgotPassword" component={ForgotPassword} />
+            <Route path="/login" component={Login} />
+            <Route path="/resetPassword" component={ResetPassword} />
+        </Fragment>
+    );
     return (
         <div className={classes.root}>
             <CssBaseline />
@@ -186,7 +196,9 @@ const Dashboard = ({ classes, user, setUser, location }) => {
             ) : null}
             <main className={classes.content}>
                 <div className={classes.appBarSpacer} />
-                {user.isAuthenticated ? renderRoutes() : <Login />}
+                {user.isAuthenticated
+                    ? renderRoutes()
+                    : renderLoggedOutRoutes()}
                 <UserSettingsDialog
                     open={openUserSettings}
                     handleClose={handleCloseUserSettings}

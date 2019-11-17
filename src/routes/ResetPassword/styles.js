@@ -30,9 +30,6 @@ const styles = theme => ({
     submit: {
         marginTop: theme.spacing(3),
     },
-    link: {
-        cursor: 'pointer',
-    },
 });
 
 export default styles;

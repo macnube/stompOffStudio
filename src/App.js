@@ -42,11 +42,7 @@ const setupClient = (user, setUser) =>
                             student: null,
                         });
                     } else if (!window.location.href.match('resetPassword')) {
-                        const baseUrl = isDev()
-                            ? 'http://localhost:3000/#'
-                            : 'portal.lanasedlmayr.com/#';
-
-                        window.location.href = `${baseUrl}/login`;
+                        window.location.href = `#/login`;
                     }
                 } else {
                     notify('GraphQL Error', {

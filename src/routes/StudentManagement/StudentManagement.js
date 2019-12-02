@@ -79,10 +79,10 @@ class StudentManagement extends Component {
         const { sendMailgunEmail } = this.props;
         sendMailgunEmail({
             variables: {
-                tag: 'test',
-                to: emails,
-                subject: 'test',
-                text: 'Testing mailgun email!',
+                tag: 'STUDENT_EMAILS',
+                to: ['miss.lana.sedlmayr@gmail.com'],
+                subject: 'Selected Student Emails',
+                text: `Selected student emails from the app are: ${emails}`,
             },
         });
     };

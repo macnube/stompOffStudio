@@ -14,6 +14,8 @@ export const MEDIUM_CARD_FRAGMENT = gql`
         paid
         value
         originalValue
+        privateLessonLength
+        privateLessonUseDate
     }
     ${SMALL_CARD_FRAGMENT}
 `;

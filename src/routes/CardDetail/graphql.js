@@ -8,7 +8,7 @@ import {
     SMALL_COURSE_FRAGMENT,
 } from 'graphql';
 
-const CARD_DETAIL_CARD_FRAGMENT = gql`
+export const CARD_DETAIL_CARD_FRAGMENT = gql`
     fragment CardDetailCardFragment on Card {
         ...MediumCardFragment
         participationHistory {
@@ -54,8 +54,14 @@ export const UPDATE_CARD = gql`
         $id: ID!
         $expirationDate: DateTime!
         $value: Int!
+        $privateLessonLength: Int!
     ) {
-        updateCard(id: $id, expirationDate: $expirationDate, value: $value) {
+        updateCard(
+            id: $id
+            expirationDate: $expirationDate
+            value: $value
+            privateLessonLength: $privateLessonLength
+        ) {
             ...MediumCardFragment
         }
     }
@@ -65,6 +71,21 @@ export const UPDATE_CARD = gql`
 export const REMOVE_CARD_PARTICIPATION = gql`
     mutation CardDetailRemoveCardParticipation($id: ID!, $participantId: ID!) {
         removeCardParticipation(id: $id, participantId: $participantId) {
+            ...CardDetailCardFragment
+        }
+    }
+    ${CARD_DETAIL_CARD_FRAGMENT}
+`;
+
+export const MARK_PRIVATE_LESSON_USED = gql`
+    mutation CardDetailMarkPrivateLessonUsed(
+        $id: ID!
+        $privateLessonUseDate: DateTime!
+    ) {
+        markPrivateLessonUsed(
+            id: $id
+            privateLessonUseDate: $privateLessonUseDate
+        ) {
             ...CardDetailCardFragment
         }
     }

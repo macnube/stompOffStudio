@@ -5,6 +5,11 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
 import { DatePicker } from 'material-ui-pickers';
+import { Calendar } from 'material-ui-pickers';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogTitle from '@material-ui/core/DialogTitle';
 
 import { DetailHeader } from 'components';
 import styles from './styles';
@@ -15,16 +20,20 @@ class CardDetailHeader extends Component {
         expirationDate: new Date(),
         value: 5,
         canSave: false,
+        privateLessonLength: 0,
+        privateLessonUseDate: new Date(),
+        openCalendar: false,
     };
 
     componentDidMount() {
         const { card } = this.props;
         if (card) {
-            const { id, expirationDate, value } = card;
+            const { id, expirationDate, value, privateLessonLength } = card;
             this.setState({
                 id,
                 expirationDate,
                 value,
+                privateLessonLength,
             });
         }
     }
@@ -34,16 +43,46 @@ class CardDetailHeader extends Component {
         if (isNumber) {
             value = toNumber(value);
         }
-        console.log('value is: ', value);
         this.setState({ [name]: value, canSave: true });
     };
 
+    handleOpenCalendar = () => {
+        this.setState({
+            openCalendar: true,
+        });
+    };
+
+    handleCloseCalendar = () => {
+        this.setState({
+            openCalendar: false,
+        });
+    };
+
+    handleSetCalendarDate = date => {
+        this.setState({
+            privateLessonUseDate: date,
+        });
+    };
+
+    handleOnMarkPrivateLessonUsed = (id, privateLessonUseDate) => {
+        this.props.markPrivateLessonUsed({
+            variables: {
+                id,
+                privateLessonUseDate,
+            },
+        });
+        this.setState({
+            openCalendar: false,
+        });
+    };
+
     handleSave = () => {
-        const { id, expirationDate, value } = this.state;
+        const { id, expirationDate, value, privateLessonLength } = this.state;
         this.props.handleOnSave({
             id,
             expirationDate,
             value,
+            privateLessonLength,
         });
         this.setState({
             canSave: false,
@@ -59,7 +98,7 @@ class CardDetailHeader extends Component {
 
     renderForm = () => {
         const { classes, card, admin } = this.props;
-        const { value, expirationDate } = this.state;
+        const { value, expirationDate, privateLessonLength } = this.state;
         return (
             <form>
                 <TextField
@@ -82,6 +121,19 @@ class CardDetailHeader extends Component {
                     }}
                     margin="normal"
                     disabled={!admin}
+                />
+                <TextField
+                    id="filled-number"
+                    label="Private Lesson Length"
+                    value={privateLessonLength}
+                    onChange={this.handleChange('privateLessonLength', true)}
+                    type="number"
+                    className={classes.textField}
+                    InputLabelProps={{
+                        shrink: true,
+                    }}
+                    margin="normal"
+                    disabled={card.privateLessonUseDate || !admin}
                 />
                 {card.payment ? (
                     <TextField
@@ -116,14 +168,21 @@ class CardDetailHeader extends Component {
     };
 
     render() {
-        const { handleOnCancel, admin, classes } = this.props;
+        const { handleOnCancel, card, admin, classes } = this.props;
+
+        const {
+            canSave,
+            privateLessonLength,
+            privateLessonUseDate,
+            openCalendar,
+        } = this.state;
 
         return (
             <DetailHeader renderForm={this.renderForm} formOnly={!admin}>
                 <Button
                     variant="contained"
                     color="primary"
-                    disabled={!this.state.canSave}
+                    disabled={!canSave}
                     onClick={this.handleSave}
                     className={classes.button}
                 >
@@ -136,6 +195,53 @@ class CardDetailHeader extends Component {
                 >
                     Cancel
                 </Button>
+                {admin ? (
+                    <Button
+                        variant="contained"
+                        onClick={this.handleOpenCalendar}
+                        className={classes.button}
+                        disabled={
+                            privateLessonLength === 0 ||
+                            card.privateLessonUseDate
+                        }
+                    >
+                        Use Private
+                    </Button>
+                ) : null}
+                <Dialog
+                    open={openCalendar}
+                    onClose={this.handleCloseCalendar}
+                    aria-labelledby="form-dialog-title"
+                >
+                    <DialogTitle id="form-dialog-title">
+                        Select date private was used
+                    </DialogTitle>
+                    <DialogContent>
+                        <Calendar
+                            date={privateLessonUseDate}
+                            onChange={this.handleSetCalendarDate}
+                        />
+                    </DialogContent>
+                    <DialogActions>
+                        <Button
+                            onClick={this.handleCloseCalendar}
+                            color="primary"
+                        >
+                            Cancel
+                        </Button>
+                        <Button
+                            onClick={() =>
+                                this.handleOnMarkPrivateLessonUsed(
+                                    card.id,
+                                    privateLessonUseDate
+                                )
+                            }
+                            color="primary"
+                        >
+                            Log Private Lesson Used
+                        </Button>
+                    </DialogActions>
+                </Dialog>
             </DetailHeader>
         );
     }
@@ -146,6 +252,7 @@ CardDetailHeader.propTypes = {
     card: PropTypes.object.isRequired,
     handleOnSave: PropTypes.func.isRequired,
     handleOnCancel: PropTypes.func.isRequired,
+    markPrivateLessonUsed: PropTypes.func.isRequired,
     admin: PropTypes.bool.isRequired,
 };
 

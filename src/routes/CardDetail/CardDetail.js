@@ -38,12 +38,13 @@ class CardDetail extends Component {
     handleInstanceClick = rowData => this.navigateToCourseInstance(rowData[0]);
 
     handleUpdateCard = card => {
-        const { id, expirationDate, value } = card;
+        const { id, expirationDate, value, privateLessonLength } = card;
         this.props.updateCard({
             variables: {
                 id,
                 expirationDate,
                 value,
+                privateLessonLength,
             },
         });
     };
@@ -98,7 +99,7 @@ class CardDetail extends Component {
             onRowClick: this.handleInstanceClick,
             customToolbarSelect: this.renderParticipationHistorySelectedToolbar,
         };
-        const { card, user, classes } = this.props;
+        const { card, user, classes, markPrivateLessonUsed } = this.props;
         return (
             <MuiPickersUtilsProvider utils={DateFnsUtils}>
                 <Container maxWidth="lg" className={classes.container}>
@@ -108,6 +109,10 @@ class CardDetail extends Component {
                             admin={user.admin}
                             handleOnSave={this.handleUpdateCard}
                             handleOnCancel={this.navigateToStudentDetail}
+                            handleOnMarkPrivateLessonUsed={
+                                this.handleMarkPrivateLessonUsed
+                            }
+                            markPrivateLessonUsed={markPrivateLessonUsed}
                         />
                         <Grid item xs={12}>
                             <MUIDataTable
@@ -131,6 +136,7 @@ CardDetail.propTypes = {
     history: PropTypes.object.isRequired,
     updateCard: PropTypes.func.isRequired,
     removeCardParticipation: PropTypes.func.isRequired,
+    markPrivateLessonUsed: PropTypes.func.isRequired,
     card: PropTypes.object.isRequired,
     user: PropTypes.object.isRequired,
 };

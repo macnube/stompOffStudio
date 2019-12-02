@@ -4,7 +4,13 @@ import { Redirect } from 'react-router-dom';
 import { Query, Mutation } from 'react-apollo';
 import { Adopt } from 'react-adopt';
 
-import { GET_CARD, UPDATE_CARD, REMOVE_CARD_PARTICIPATION } from './graphql';
+import {
+    GET_CARD,
+    UPDATE_CARD,
+    REMOVE_CARD_PARTICIPATION,
+    MARK_PRIVATE_LESSON_USED,
+    CARD_DETAIL_CARD_FRAGMENT,
+} from './graphql';
 import CardDetail from './CardDetail';
 
 const getCard = ({ render, id }) => (
@@ -25,10 +31,36 @@ const removeCardParticipation = ({ render }) => (
     </Mutation>
 );
 
+const markPrivateLessonUsed = ({ render }) => (
+    <Mutation
+        mutation={MARK_PRIVATE_LESSON_USED}
+        update={(cache, { data: { markPrivateLessonUsed } }) => {
+            const card = cache.readFragment({
+                id: `Card:${markPrivateLessonUsed.id}`,
+                fragment: CARD_DETAIL_CARD_FRAGMENT,
+                fragmentName: 'CardDetailCardFragment',
+            });
+            cache.writeFragment({
+                id: `Card:${card.id}`,
+                fragment: CARD_DETAIL_CARD_FRAGMENT,
+                fragmentName: 'CardDetailCardFragment',
+                data: {
+                    ...card,
+                    privateLessonUseDate:
+                        markPrivateLessonUsed.privateLessonUseDate,
+                },
+            });
+        }}
+    >
+        {(mutation, result) => render({ mutation, result })}
+    </Mutation>
+);
+
 const mapper = {
     getCard,
     updateCard,
     removeCardParticipation,
+    markPrivateLessonUsed,
 };
 
 const CardDetailContainer = ({ location }) => {
@@ -42,6 +74,9 @@ const CardDetailContainer = ({ location }) => {
                     removeCardParticipation: {
                         mutation: removeCardParticipationMutation,
                     },
+                    markPrivateLessonUsed: {
+                        mutation: markPrivateLessonUsedMutation,
+                    },
                 }) => {
                     if (loading) return null;
                     if (error) {
@@ -54,6 +89,9 @@ const CardDetailContainer = ({ location }) => {
                                 updateCard={updateCardMutation}
                                 removeCardParticipation={
                                     removeCardParticipationMutation
+                                }
+                                markPrivateLessonUsed={
+                                    markPrivateLessonUsedMutation
                                 }
                             />
                         );

@@ -66,6 +66,7 @@ const App = () => {
         isAuthenticated: false,
         isAdmin: false,
         student: null,
+        email: '',
     });
 
     useEffect(() => {
@@ -79,6 +80,7 @@ const App = () => {
                     admin: user.admin,
                     isAuthenticated: true,
                     student: user.student,
+                    email: user.email,
                 });
             }
         };

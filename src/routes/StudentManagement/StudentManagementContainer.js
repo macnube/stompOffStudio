@@ -10,6 +10,7 @@ import {
     SEND_MAILGUN_EMAIL,
 } from './graphql';
 import StudentManagement from './StudentManagement';
+import { withUser } from 'core/user';
 
 const getStudents = ({ render }) => (
     <Query query={GET_STUDENTS}>{render}</Query>
@@ -63,7 +64,7 @@ const mapper = {
     sendMailgunEmail,
 };
 
-const StudentManagementContainer = () => (
+const StudentManagementContainer = ({ user }) => (
     <Adopt mapper={mapper}>
         {({
             getStudents: { data, loading, error },
@@ -80,10 +81,11 @@ const StudentManagementContainer = () => (
                     deleteStudent={deleteStudentMutation}
                     createStudent={createStudentMutation}
                     sendMailgunEmail={sendMailgunEmailMutation}
+                    user={user}
                 />
             );
         }}
     </Adopt>
 );
 
-export default StudentManagementContainer;
+export default withUser(StudentManagementContainer);

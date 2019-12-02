@@ -25,11 +25,16 @@ const LoginContainer = ({ setUser }) => {
                 if (loginResult.data) {
                     const authUser = JSON.stringify(loginResult.data.login);
                     localStorage.setItem('authUser', authUser);
-                    const { admin, student } = loginResult.data.login.user;
+                    const {
+                        admin,
+                        student,
+                        email,
+                    } = loginResult.data.login.user;
                     setUser({
                         admin,
                         isAuthenticated: true,
                         student,
+                        email,
                     });
                     const redirectPath = admin
                         ? '/overview'

@@ -77,7 +77,6 @@ class StudentManagement extends Component {
 
     handleOnEmailPress = emails => {
         const { sendMailgunEmail, user } = this.props;
-        console.log('user is: ', user);
         sendMailgunEmail({
             variables: {
                 tag: 'STUDENT_EMAILS',

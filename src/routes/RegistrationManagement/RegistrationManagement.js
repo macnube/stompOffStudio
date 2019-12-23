@@ -132,8 +132,6 @@ class RegistrationManagement extends Component {
                 });
             })
             .then(response => {
-                var result = response.result;
-                var numRows = result.values ? result.values.length : 0;
                 const cleanedImportData = removeExistingStudentsFromImportData(
                     response.result.values,
                     this.props.students

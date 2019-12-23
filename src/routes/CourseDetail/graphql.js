@@ -185,3 +185,12 @@ export const DELETE_COURSE_INSTANCE = gql`
         }
     }
 `;
+
+export const CANCEL_COURSE_INSTANCE = gql`
+    mutation StudentDetailCancelCourseInstance($id: ID!) {
+        cancelCourseInstance(id: $id) {
+            ...CreateCourseInstanceFragment
+        }
+    }
+    ${DETAIL_COURSE_INSTANCE_FRAGMENT}
+`;

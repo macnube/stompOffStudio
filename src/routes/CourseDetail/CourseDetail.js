@@ -13,6 +13,7 @@ import CourseDetailHeader from './CourseDetailHeader';
 import InstancesTable from './InstancesTable';
 import TeachersTable from './TeachersTable';
 import StudentsTables from './StudentsTables';
+import ErrorDialog from './ErrorDialog';
 import { parseTeachersToTableData } from './parse';
 import styles from './styles';
 
@@ -23,6 +24,8 @@ class CourseDetail extends Component {
         openCourseFollowersForm: false,
         openInstanceDialog: false,
         openCourseWaitlistForm: false,
+        openErrorDialog: false,
+        errorMessage: '',
     };
 
     navigateToCourseManagement = () => {
@@ -35,6 +38,13 @@ class CourseDetail extends Component {
         this.setState({ [name]: true });
     };
 
+    handleOnError = message => {
+        this.setState({
+            openErrorDialog: true,
+            errorMessage: message,
+        });
+    };
+
     handleClose = () => {
         this.setState({
             openTeacherDialog: false,
@@ -42,6 +52,8 @@ class CourseDetail extends Component {
             openCourseFollowersForm: false,
             openInstanceDialog: false,
             openCourseWaitlistForm: false,
+            openErrorDialog: false,
+            errorMessage: '',
         });
     };
 
@@ -60,6 +72,7 @@ class CourseDetail extends Component {
             course,
             createCourseInstance,
             deleteCourseInstance,
+            cancelCourseInstance,
             removeTeacherFromCourse,
             createMembership,
             updateMembershipStatus,
@@ -72,6 +85,9 @@ class CourseDetail extends Component {
             openInstanceDialog,
             openCourseWaitlistForm,
             openCourseFollowersForm,
+            openErrorDialog,
+            openCancelInstanceDialog,
+            errorMessage,
         } = this.state;
         return (
             <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -85,9 +101,12 @@ class CourseDetail extends Component {
                         <Grid item xs={12}>
                             <InstancesTable
                                 open={openInstanceDialog}
+                                openCancelInstance={openCancelInstanceDialog}
+                                handleOnError={this.handleOnError}
                                 course={course}
                                 createCourseInstance={createCourseInstance}
                                 deleteCourseInstance={deleteCourseInstance}
+                                cancelCourseInstance={cancelCourseInstance}
                                 handleAdd={() =>
                                     this.handleOpenDialog('openInstanceDialog')
                                 }
@@ -127,6 +146,13 @@ class CourseDetail extends Component {
                             ) : null}
                         </Grid>
                     </Grid>
+                    {errorMessage ? (
+                        <ErrorDialog
+                            open={openErrorDialog}
+                            message={errorMessage}
+                            handleOnClose={this.handleClose}
+                        />
+                    ) : null}
                 </Container>
             </MuiPickersUtilsProvider>
         );
@@ -140,6 +166,7 @@ CourseDetail.propTypes = {
     removeTeacherFromCourse: PropTypes.func.isRequired,
     deleteMembership: PropTypes.func.isRequired,
     createCourseInstance: PropTypes.func.isRequired,
+    cancelCourseInstance: PropTypes.func.isRequired,
     deleteCourseInstance: PropTypes.func.isRequired,
     updateMembershipStatus: PropTypes.func.isRequired,
     createMembership: PropTypes.func.isRequired,

@@ -5,6 +5,7 @@ export const SMALL_COURSE_INSTANCE_FRAGMENT = gql`
         id
         date
         topic
+        isCancelled
     }
 `;
 

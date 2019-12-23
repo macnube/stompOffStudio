@@ -17,6 +17,7 @@ import {
     CREATE_COURSE_INSTANCE,
     DELETE_COURSE_INSTANCE,
     GET_COURSE,
+    CANCEL_COURSE_INSTANCE,
 } from './graphql';
 import CourseDetail from './CourseDetail';
 
@@ -132,6 +133,12 @@ const createCourseInstance = ({ render }) => (
     </Mutation>
 );
 
+const cancelCourseInstance = ({ render }) => (
+    <Mutation mutation={CANCEL_COURSE_INSTANCE}>
+        {(mutation, result) => render({ mutation, result })}
+    </Mutation>
+);
+
 const createMembership = ({ render }) => (
     <Mutation mutation={CREATE_MEMBERSHIP}>
         {(mutation, result) => render({ mutation, result })}
@@ -147,6 +154,7 @@ const mapper = {
     deleteCourseInstance,
     updateMembershipStatus,
     createMembership,
+    cancelCourseInstance,
 };
 
 const CourseDetailContainer = ({ location }) => {
@@ -171,6 +179,9 @@ const CourseDetailContainer = ({ location }) => {
                         mutation: updateMembershipStatusMutation,
                     },
                     createMembership: { mutation: createMembershipMutation },
+                    cancelCourseInstance: {
+                        mutation: cancelCourseInstanceMutation,
+                    },
                 }) => {
                     if (loading) return null;
                     if (error) return `Error: ${error}`;
@@ -193,6 +204,9 @@ const CourseDetailContainer = ({ location }) => {
                                     updateMembershipStatusMutation
                                 }
                                 createMembership={createMembershipMutation}
+                                cancelCourseInstance={
+                                    cancelCourseInstanceMutation
+                                }
                             />
                         );
                     }

@@ -82,7 +82,10 @@ export const parseInstancesToTableData = instances =>
         (acc, instance) => {
             const result = [
                 instance.id,
-                getTableDate(instance.date),
+                instance.isCancelled,
+                instance.isCancelled
+                    ? `CANCELLED - ${getTableDate(instance.date)}`
+                    : getTableDate(instance.date),
                 getNumberByRole(instance.participants, DANCE_ROLE.LEADER),
                 getNumberByRole(instance.participants, DANCE_ROLE.FOLLOWER),
             ];
@@ -91,4 +94,3 @@ export const parseInstancesToTableData = instances =>
         },
         []
     );
-

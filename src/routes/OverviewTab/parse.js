@@ -47,7 +47,7 @@ export const parsePaymentsToTableData = payments =>
         payments,
         (acc, payment) => {
             const result = [
-                payment.id,
+                payment.student.id,
                 payment.student.name,
                 payment.amount,
                 getTableDate(payment.date),

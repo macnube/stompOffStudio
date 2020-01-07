@@ -114,6 +114,7 @@ class Overview extends React.Component {
         const paymentOptions = {
             responsive: 'scroll',
             selectableRows: 'none',
+            onRowClick: this.handleNavigateToStudent,
         };
 
         const { instances, unpaidCards, unlinkedPayments } = this.props;

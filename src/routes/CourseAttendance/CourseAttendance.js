@@ -1,5 +1,5 @@
 import 'date-fns';
-import React, { Component, Fragment } from 'react';
+import React, { Fragment, useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
 import map from 'lodash/map';
 import filter from 'lodash/filter';
@@ -16,58 +16,65 @@ import { isValidCardDate, expiresNextWeek } from 'utils/date';
 import { CARD_WARNING_MESSAGE } from './constants';
 import { isCardActive } from 'utils/card';
 
-class CourseAttendance extends Component {
-    state = {
-        openCardDialog: false,
-        openCardWarningDialog: false,
-        warning: '',
-        studentId: '',
-        participantId: '',
-        numberOfCourses: 1,
-        cardId: '',
-    };
+const CourseAttendance = ({
+    card,
+    logCardParticipation,
+    logParticipantStatus,
+    removeCardParticipation,
+    createCard,
+    courseInstance,
+}) => {
+    const [openCardDialog, setOpenCardDialog] = useState(false);
+    const [openCardWarningDialog, setOpenCardWarningDialog] = useState(false);
+    const [warning, setWarning] = useState('');
+    const [studentId, setStudentId] = useState('');
+    const [participantId, setParticipantId] = useState('');
+    const [numberOfCourses, setNumberOfCourses] = useState(1);
+    const [cardId, setCardId] = useState('');
 
-    componentDidUpdate() {
-        const { card, logCardParticipation } = this.props;
+    const handleLogParticipationPresent = id =>
+        logParticipantStatus({
+            variables: {
+                id,
+                status: PARTICIPANT_STATUS.PRESENT,
+            },
+        });
 
-        if (card && card.id !== this.state.cardId) {
-            this.handleLogParticipationPresent(this.state.participantId);
+    const handleAttendanceOfNewCard = () => {
+        if (card && card.id !== cardId) {
+            handleLogParticipationPresent(participantId);
             logCardParticipation({
                 variables: {
                     id: card.id,
-                    participantId: this.state.participantId,
+                    participantId: participantId,
                 },
             });
-            this.setState({
-                cardId: card.id,
-            });
+            setCardId(card.id);
         }
-    }
+    };
 
-    handleAddCardOpen = ({ id, membership: { student } }) => {
+    useEffect(handleAttendanceOfNewCard, [card]);
+
+    const handleAddCardOpen = ({ id, membership: { student } }) => {
         const numberOfCourses = filter(
             student.memberships,
             membership => membership.status === MEMBERSHIP_STATUS.ACTIVE
         ).length;
-        this.setState({
-            openCardDialog: true,
-            studentId: student.id,
-            numberOfCourses,
-            participantId: id,
-        });
+
+        setOpenCardDialog(true);
+        setStudentId(student.id);
+        setNumberOfCourses(numberOfCourses);
+        setParticipantId(id);
     };
 
-    handleClose = () => {
-        this.setState({
-            openCardDialog: false,
-            openCardWarningDialog: false,
-            warning: '',
-            studentId: '',
-            studentName: '',
-        });
+    const handleClose = () => {
+        setOpenCardDialog(false);
+        setOpenCardWarningDialog(false);
+        setWarning('');
+        setStudentId('');
     };
 
-    getColor = participant => {
+    const getColor = participant => {
         if (participant.status === PARTICIPANT_STATUS.PRESENT) {
             return 'primary';
         } else if (participant.status === PARTICIPANT_STATUS.ABSENT) {
@@ -76,16 +83,8 @@ class CourseAttendance extends Component {
         return 'default';
     };
 
-    handleLogParticipationPresent = id => {
-        this.props.logParticipantStatus({
-            variables: {
-                id,
-                status: PARTICIPANT_STATUS.PRESENT,
-            },
-        });
-    };
-    handleResetParticipationStatus = id => {
-        this.props.logParticipantStatus({
+    const handleResetParticipationStatus = id => {
+        logParticipantStatus({
             variables: {
                 id,
                 status: PARTICIPANT_STATUS.NOT_LOGGED,
@@ -93,8 +92,7 @@ class CourseAttendance extends Component {
         });
     };
 
-    handleRemoveParticipation = async (participant, activeCard) => {
-        const { removeCardParticipation } = this.props;
+    const handleRemoveParticipation = async (participant, activeCard) => {
         try {
             if (activeCard) {
                 await removeCardParticipation({
@@ -108,7 +106,6 @@ class CourseAttendance extends Component {
                 participant.membership.student.cards,
                 card => isValidCardDate(card.expirationDate)
             );
-            debugger;
             if (recentCard) {
                 await removeCardParticipation({
                     variables: {
@@ -117,113 +114,95 @@ class CourseAttendance extends Component {
                     },
                 });
 
-                this.handleResetParticipationStatus(participant.id);
+                handleResetParticipationStatus(participant.id);
             }
         } catch (error) {
             console.log('error is: ', error);
         }
 
-        this.handleResetParticipationStatus(participant.id);
+        handleResetParticipationStatus(participant.id);
     };
 
-    handleParticipantClick = id => {
-        const { logCardParticipation, courseInstance } = this.props;
+    const handleParticipantClick = id => {
         const participant = find(courseInstance.participants, { id });
         const cards = participant.membership.student.cards;
         const activeCard = find(cards, card => isCardActive(card));
-
         if (participant.status === PARTICIPANT_STATUS.PRESENT) {
-            return this.handleRemoveParticipation(participant, activeCard);
+            return handleRemoveParticipation(participant, activeCard);
         }
         if (isNil(activeCard)) {
-            return this.handleAddCardOpen(participant);
+            return handleAddCardOpen(participant);
         }
 
         if (activeCard.value === 1) {
-            this.setState({
-                warning: CARD_WARNING_MESSAGE.LAST_CLASS,
-                openCardWarningDialog: true,
-            });
+            setWarning(CARD_WARNING_MESSAGE.LAST_CLASS);
+            setOpenCardWarningDialog(true);
         } else if (expiresNextWeek(activeCard.expirationDate)) {
-            this.setState({
-                warning: CARD_WARNING_MESSAGE.EXPIRES_SOON,
-                openCardWarningDialog: true,
-            });
+            setWarning(CARD_WARNING_MESSAGE.EXPIRES_SOON);
+            setOpenCardWarningDialog(true);
         }
-
         logCardParticipation({
             variables: {
                 id: activeCard.id,
                 participantId: id,
             },
         });
-        this.handleLogParticipationPresent(id);
+        handleLogParticipationPresent(id);
     };
 
-    handleCreateCard = (value, startDate) => {
-        const { createCard } = this.props;
+    const handleCreateCard = (value, startDate) => {
         createCard({
             variables: {
                 value,
                 startDate,
-                studentId: this.state.studentId,
+                studentId,
             },
         });
-        this.handleClose();
+        handleClose();
     };
 
-    handleDropIn = () => {
-        this.handleLogParticipationPresent(this.state.participantId);
-        this.handleClose();
+    const handleDropIn = () => {
+        handleLogParticipationPresent(participantId);
+        handleClose();
     };
 
-    render() {
-        const { courseInstance } = this.props;
-        const {
-            openCardDialog,
-            studentId,
-            numberOfCourses,
-            openCardWarningDialog,
-            warning,
-        } = this.state;
-        return (
-            <Fragment>
-                <Grid container spacing={24}>
-                    {map(courseInstance.participants, participant => (
-                        <Grid item xs={12} sm={6} md={3} key={participant.id}>
-                            <Button
-                                variant="contained"
-                                color={this.getColor(participant)}
-                                onClick={() =>
-                                    this.handleParticipantClick(participant.id)
-                                }
-                            >
-                                {participant.membership.student.name}
-                            </Button>
-                        </Grid>
-                    ))}
-                </Grid>
-                {studentId ? (
-                    <NewCardDialog
-                        open={openCardDialog}
-                        handleCreate={this.handleCreateCard}
-                        handleDropIn={this.handleDropIn}
-                        handleClose={this.handleClose}
-                        numberOfCourses={numberOfCourses}
-                        studentId={studentId}
-                    />
-                ) : null}
-                {warning ? (
-                    <CardWarningDialog
-                        open={openCardWarningDialog}
-                        message={warning}
-                        handleClose={this.handleClose}
-                    />
-                ) : null}
-            </Fragment>
-        );
-    }
-}
+    return (
+        <Fragment>
+            <Grid container spacing={24}>
+                {map(courseInstance.participants, participant => (
+                    <Grid item xs={12} sm={6} md={3} key={participant.id}>
+                        <Button
+                            variant="contained"
+                            color={getColor(participant)}
+                            onClick={() =>
+                                handleParticipantClick(participant.id)
+                            }
+                        >
+                            {participant.membership.student.name}
+                        </Button>
+                    </Grid>
+                ))}
+            </Grid>
+            {studentId ? (
+                <NewCardDialog
+                    open={openCardDialog}
+                    handleCreate={handleCreateCard}
+                    handleDropIn={handleDropIn}
+                    handleClose={handleClose}
+                    numberOfCourses={numberOfCourses}
+                    studentId={studentId}
+                />
+            ) : null}
+            {warning ? (
+                <CardWarningDialog
+                    open={openCardWarningDialog}
+                    message={warning}
+                    handleClose={handleClose}
+                />
+            ) : null}
+        </Fragment>
+    );
+};
 
 CourseAttendance.propTypes = {
     courseInstance: PropTypes.object.isRequired,

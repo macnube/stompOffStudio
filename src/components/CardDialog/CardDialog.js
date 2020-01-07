@@ -50,7 +50,7 @@ class CardDialog extends React.Component {
         try {
             await createCard({
                 variables: {
-                    expirationDate: addWeeks(startDate, 9),
+                    startDate,
                     value,
                     studentId,
                 },

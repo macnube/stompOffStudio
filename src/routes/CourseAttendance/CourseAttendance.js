@@ -160,12 +160,12 @@ class CourseAttendance extends Component {
         this.handleLogParticipationPresent(id);
     };
 
-    handleCreateCard = (value, expirationDate) => {
+    handleCreateCard = (value, startDate) => {
         const { createCard } = this.props;
         createCard({
             variables: {
                 value,
-                expirationDate,
+                startDate,
                 studentId: this.state.studentId,
             },
         });

@@ -17,7 +17,7 @@ const numberToCourseMap = {
 
 class NewCardDialog extends React.Component {
     state = {
-        expirationDate: addWeeks(new Date(), 9),
+        startDate: new Date(),
         numberOfCourses: 1,
     };
 
@@ -47,7 +47,7 @@ class NewCardDialog extends React.Component {
     handleOrder = () =>
         this.props.handleCreate(
             this.state.numberOfCourses * 8,
-            this.state.expirationDate
+            this.state.startDate
         );
 
     getUserReadableDate = date => format(date, 'MMM do, yyyy');

@@ -93,12 +93,12 @@ export const DELETE_COURSE_STUDENT = gql`
 export const CREATE_CARD = gql`
     mutation StudentDetailCreateCard(
         $studentId: ID!
-        $expirationDate: DateTime!
+        $startDate: DateTime!
         $value: Int!
     ) {
         createCard(
             studentId: $studentId
-            expirationDate: $expirationDate
+            startDate: $startDate
             value: $value
         ) {
             ...StudentDetailCardFragment

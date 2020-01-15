@@ -26,6 +26,7 @@ export default function ChartSelector({ total, year, handleOnChangeYear }) {
                 {`€ ${total}`}
             </Typography>
             <Select value={year} onChange={handleOnChangeYear}>
+                <MenuItem value={2020}>2020</MenuItem>
                 <MenuItem value={2019}>2019</MenuItem>
                 <MenuItem value={2018}>2018</MenuItem>
             </Select>

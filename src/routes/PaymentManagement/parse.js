@@ -1,5 +1,5 @@
 import reduce from 'lodash/reduce';
-import reverse from 'lodash/reverse';
+import filter from 'lodash/filter';
 
 import { getTableDate, getChartMonthYear, getYear } from 'utils/date';
 
@@ -23,28 +23,29 @@ export const parsePaymentsToTableData = payments =>
     );
 
 export const parsePaymentsToChartData = (p, year) => {
-    const payments = reverse(p);
+    const payments = filter(p, payment => getYear(payment.date) === year);
+    if (payments.length === 0) {
+        return [];
+    }
     let previousMonthYear = getChartMonthYear(payments[0].date);
     let currentMonthYear;
-    let amount = 0;
-    return reduce(
+    let index = 0;
+    const result = reduce(
         payments,
         (acc, payment) => {
-            if (getYear(payment.date) === year) {
-                currentMonthYear = getChartMonthYear(payment.date);
-                if (currentMonthYear === previousMonthYear) {
-                    amount += payment.amount;
-                    return acc;
-                }
-                acc.push({ time: currentMonthYear, amount });
-                amount = payment.amount;
-                previousMonthYear = currentMonthYear;
+            currentMonthYear = getChartMonthYear(payment.date);
+            if (currentMonthYear === previousMonthYear) {
+                acc[index].amount += payment.amount;
                 return acc;
             }
+            index++;
+            acc.push({ time: currentMonthYear, amount: payment.amount });
+            previousMonthYear = currentMonthYear;
             return acc;
         },
-        []
+        [{ time: previousMonthYear, amount: 0 }]
     );
+    return result;
 };
 
 export const getTotalFromPayments = (payments, year) => {

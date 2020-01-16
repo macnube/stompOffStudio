@@ -18,15 +18,6 @@ const columns = [
     {
         name: 'Studio',
     },
-    {
-        name: 'Room',
-    },
-    {
-        name: 'Teachers',
-    },
-    {
-        name: 'Day',
-    },
 ];
 
 const StudentCourses = ({ courses, history }) => {

@@ -24,7 +24,6 @@ const StudentCoursesContainer = ({ user }) =>
                 if (loading) return null;
                 if (error) return `Error: ${error}`;
                 if (!data.coursesByStudent) return `404: Session not found`;
-                console.log('data is; ', data);
                 return <StudentCourses courses={data.coursesByStudent} />;
             }}
         </Adopt>

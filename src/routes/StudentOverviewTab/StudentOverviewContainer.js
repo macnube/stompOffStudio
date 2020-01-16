@@ -4,14 +4,14 @@ import { Query } from 'react-apollo';
 import { Adopt } from 'react-adopt';
 
 import {
-    GET_INSTANCES_BY_STUDENT,
+    GET_ACTIVE_CARD_BY_STUDENT,
     UPCOMING_ABSENCES_BY_STUDENT,
 } from './graphql';
 import StudentOverview from './StudentOverview';
 import { withUser } from 'core/user';
 
-const getInstancesByStudent = ({ render, id }) => (
-    <Query query={GET_INSTANCES_BY_STUDENT} variables={{ id }}>
+const getActiveCardByStudent = ({ render, id }) => (
+    <Query query={GET_ACTIVE_CARD_BY_STUDENT} variables={{ id }}>
         {render}
     </Query>
 );
@@ -23,7 +23,7 @@ const upcomingAbsences = ({ render, id }) => (
 );
 
 const mapper = {
-    getInstancesByStudent,
+    getActiveCardByStudent,
     upcomingAbsences,
 };
 
@@ -31,22 +31,20 @@ const StudentOverviewContainer = ({ user }) => {
     return user.student.id ? (
         <Adopt mapper={mapper} id={user.student.id}>
             {({
-                getInstancesByStudent: {
-                    data: instancesByStudentData,
-                    error: overviewInstancesError,
-                    loading: overviewLoading,
+                getActiveCardByStudent: {
+                    data: activeCardData,
+                    loading: activeCardLoading,
                 },
-                upcomingAbsences: { data: absencesData },
+                upcomingAbsences: {
+                    data: absencesData,
+                    loading: upcomingAbsencesLoading,
+                },
             }) => {
-                if (overviewLoading) return null;
-                if (overviewInstancesError)
-                    return `Error: ${overviewInstancesError}`;
-                if (instancesByStudentData && absencesData) {
+                if (activeCardLoading || upcomingAbsencesLoading) return null;
+                if (activeCardData && absencesData) {
                     return (
                         <StudentOverview
-                            instances={
-                                instancesByStudentData.instancesByStudent
-                            }
+                            card={activeCardData.activeCardByStudent}
                             absences={absencesData.upcomingAbsencesByStudent}
                         />
                     );

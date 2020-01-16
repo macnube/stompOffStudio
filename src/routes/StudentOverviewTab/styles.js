@@ -1,6 +1,6 @@
 const styles = theme => ({
     root: {
-        display: 'flex',
+        flexGrow: 1,
     },
     chartContainer: {
         marginLeft: -22,

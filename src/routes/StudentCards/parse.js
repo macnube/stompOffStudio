@@ -7,9 +7,8 @@ export const parseCardsToTableData = cards =>
         (acc, card) => {
             const result = [
                 card.id,
-                card.originalValue,
-                getTableDate(card.expirationDate),
                 card.value,
+                getTableDate(card.expirationDate),
             ];
             acc.push(result);
             return acc;

@@ -14,6 +14,7 @@ const styles = theme => ({
     heightLg: {
         height: 250,
     },
+    heightChildren: {},
     buttonPaper: {
         padding: theme.spacing(2),
         display: 'flex',

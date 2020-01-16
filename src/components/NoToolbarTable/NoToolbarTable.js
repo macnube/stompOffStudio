@@ -26,12 +26,12 @@ const NoToolbarTable = ({ title, data, columns, options }) => (
             data={data}
             columns={columns}
             options={{
-                ...options,
                 search: true,
                 print: false,
                 download: false,
                 filter: false,
                 viewColumns: false,
+                ...options,
             }}
         />
     </MuiThemeProvider>

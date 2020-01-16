@@ -37,6 +37,7 @@ import {
     Login,
     ForgotPassword,
     ResetPassword,
+    StudentCardDetail,
     StudentOverview,
     StudentCourses,
     StudentCourseDetail,
@@ -106,6 +107,7 @@ const Dashboard = ({ classes, user, setUser, location }) => {
                 path="/registrationManagement"
                 component={RegistrationManagement}
             />
+            <Route path="/studentCardDetail" component={StudentCardDetail} />
             <Route path="/studentOverview" component={StudentOverview} />
             <Route path="/studentCourses" component={StudentCourses} />
             <Route
@@ -155,7 +157,6 @@ const Dashboard = ({ classes, user, setUser, location }) => {
                             <div className={classes.spacer} />
                         </Fragment>
                     ) : null}
-
                     {user.isAuthenticated && !user.admin ? (
                         <IconButton
                             onClick={handleOpenLogAbsence}

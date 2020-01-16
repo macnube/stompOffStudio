@@ -1,14 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import filter from 'lodash/filter';
-import { isAfter, parseISO, isBefore, isSameDay, startOfToday } from 'date-fns';
 import { withRouter } from 'react-router-dom';
 import Paper from '@material-ui/core/Paper';
 
 import { NoToolbarTable } from 'components';
-import { parseInstancesToTableData, parseAbsencesToTableData } from './parse';
+import { parseCardToTableData, parseAbsencesToTableData } from './parse';
 
-const instanceColumns = [
+const cardColumns = [
     {
         name: 'ID',
         options: {
@@ -16,13 +14,10 @@ const instanceColumns = [
         },
     },
     {
-        name: 'Date',
+        name: 'Classes Left',
     },
     {
-        name: 'Class Name',
-    },
-    {
-        name: 'Topic',
+        name: 'Expiration Date',
     },
 ];
 
@@ -73,25 +68,14 @@ class StudentOverview extends React.Component {
             onRowClick: this.handleNavigateToCourseDetail,
         };
 
-        const { instances, absences } = this.props;
-        const today = startOfToday();
-
-        const recentInstances = filter(instances, instance => {
-            return isBefore(parseISO(instance.date), today);
-        });
-        const upcomingInstances = filter(
-            instances,
-            instance =>
-                isAfter(parseISO(instance.date), today) ||
-                isSameDay(parseISO(instance.date), today)
-        );
+        const { card, absences } = this.props;
 
         return (
             <Paper>
                 <NoToolbarTable
-                    title={'Upcoming Classes'}
-                    data={parseInstancesToTableData(upcomingInstances)}
-                    columns={instanceColumns}
+                    title={'Active Card'}
+                    data={parseCardToTableData(card)}
+                    columns={cardColumns}
                     options={instanceOptions}
                 />
                 <NoToolbarTable
@@ -100,19 +84,13 @@ class StudentOverview extends React.Component {
                     columns={absencesColumns}
                     options={absencesOptions}
                 />
-                <NoToolbarTable
-                    title={'Recent Classes'}
-                    data={parseInstancesToTableData(recentInstances)}
-                    columns={instanceColumns}
-                    options={instanceOptions}
-                />
             </Paper>
         );
     }
 }
 
 StudentOverview.propTypes = {
-    instances: PropTypes.array.isRequired,
+    card: PropTypes.object.isRequired,
     absences: PropTypes.array.isRequired,
     history: PropTypes.object.isRequired,
 };

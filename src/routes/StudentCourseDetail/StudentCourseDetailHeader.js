@@ -7,8 +7,8 @@ import { DetailHeader } from 'components';
 import { getTableTime } from 'utils/date';
 import styles from './styles';
 
-const StudentCourseDetailHeader = ({ course, classes, handleOpen }) => {
-    const { name, description, duration, startTime, room, day } = course;
+const StudentCourseDetailHeader = ({ course, classes }) => {
+    const { name, duration, startTime, room, day } = course;
 
     const renderForm = () => (
         <form>
@@ -16,14 +16,6 @@ const StudentCourseDetailHeader = ({ course, classes, handleOpen }) => {
                 id="standard-name"
                 label="Name"
                 value={name}
-                className={classes.textField}
-                margin="normal"
-                disabled
-            />
-            <TextField
-                id="standard-name"
-                label="Description"
-                value={description}
                 className={classes.textField}
                 margin="normal"
                 disabled
@@ -74,13 +66,12 @@ const StudentCourseDetailHeader = ({ course, classes, handleOpen }) => {
             />
         </form>
     );
-    return <DetailHeader renderForm={renderForm} formOnly />;
+    return <DetailHeader renderForm={renderForm} formOnly height="Children" />;
 };
 
 StudentCourseDetailHeader.propTypes = {
     classes: PropTypes.object.isRequired,
     course: PropTypes.object.isRequired,
-    handleOpen: PropTypes.func.isRequired,
 };
 
 export default withStyles(styles)(StudentCourseDetailHeader);

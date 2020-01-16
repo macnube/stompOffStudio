@@ -16,6 +16,7 @@ export { default as Login } from './Login';
 export { default as ForgotPassword } from './ForgotPassword';
 export { default as ResetPassword } from './ResetPassword';
 // Student Routes
+export { default as StudentCardDetail } from './StudentCardDetail';
 export { default as StudentOverview } from './StudentOverviewTab';
 export { default as StudentCourses } from './StudentCourses';
 export { default as StudentCourseDetail } from './StudentCourseDetail';

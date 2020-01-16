@@ -13,20 +13,17 @@ const columns = [
         },
     },
     {
-        name: 'Value',
+        name: 'Classes Left',
     },
     {
         name: 'Expiration Date',
     },
-    {
-        name: 'Remaining Value',
-    },
 ];
 
 const StudentCards = ({ cards, history }) => {
-    const handleNavigateToCardDetail = rowData => {
+    const handleNavigateToStudentCardDetail = rowData => {
         history.push({
-            pathname: './cardDetail',
+            pathname: './studentCardDetail',
             search: `id=${rowData[0]}`,
         });
     };
@@ -34,7 +31,8 @@ const StudentCards = ({ cards, history }) => {
     const options = {
         responsive: 'scroll',
         selectableRows: 'none',
-        onRowClick: handleNavigateToCardDetail,
+        onRowClick: handleNavigateToStudentCardDetail,
+        search: false,
     };
     return (
         <NoToolbarTable

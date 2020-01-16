@@ -13,7 +13,7 @@ import { MuiPickersUtilsProvider } from 'material-ui-pickers';
 import DateFnsUtils from '@date-io/date-fns';
 
 import StudentCourseDetailHeader from './StudentCourseDetailHeader';
-import { SelectedDeleteToolbar, ClickableTable } from 'components';
+import { SelectedDeleteToolbar, NoToolbarTable } from 'components';
 import StudentAbsenceDialog from './StudentAbsenceDialog';
 import { parseInstancesToTableData, parseAbsencesToTableData } from './parse';
 import { withUser } from 'core/user';
@@ -148,21 +148,21 @@ const StudentCourseDetail = ({
         responsive: 'scroll',
         selectableRows: 'none',
         onRowClick: handleNavigateToInstance,
+        search: false,
     };
     const absencesOptions = {
         responsive: 'scroll',
         customToolbarSelect: renderSelectedToolbar,
+        selectableRows: 'none',
+        search: false,
     };
     return (
         <MuiPickersUtilsProvider utils={DateFnsUtils}>
             <Container maxWidth="lg" className={classes.container}>
                 <Grid container spacing={3}>
-                    <StudentCourseDetailHeader
-                        course={course}
-                        handleOpen={() => setOpen(true)}
-                    />
+                    <StudentCourseDetailHeader course={course} />
                     <Grid item xs={12}>
-                        <ClickableTable
+                        <NoToolbarTable
                             title={'Course Instances'}
                             data={parseInstancesToTableData(course.instances)}
                             columns={columns}
@@ -170,7 +170,7 @@ const StudentCourseDetail = ({
                         />
                     </Grid>
                     <Grid item xs={12}>
-                        <ClickableTable
+                        <NoToolbarTable
                             title={'Upcoming Course Absences'}
                             data={parseAbsencesToTableData(course.absences)}
                             columns={absencesColumns}

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
@@ -6,8 +7,9 @@ import ListItemText from '@material-ui/core/ListItemText';
 import DashboardIcon from '@material-ui/icons/Dashboard';
 import ClassIcon from '@material-ui/icons/CastForEducation';
 import CardIcon from '@material-ui/icons/CardMembership';
+import LogAbsenceIcon from '@material-ui/icons/PersonAddDisabled';
 
-export const ListItems = () => (
+export const StudentListItems = ({ onLogAbsenceClick }) => (
     <div>
         <NavLink exact to="/studentOverview" style={{ textDecoration: 'none' }}>
             <ListItem button>
@@ -33,7 +35,17 @@ export const ListItems = () => (
                 <ListItemText primary="Your Cards" />
             </ListItem>
         </NavLink>
+        <ListItem button onClick={onLogAbsenceClick}>
+            <ListItemIcon>
+                <LogAbsenceIcon />
+            </ListItemIcon>
+            <ListItemText primary="Log Absence" />
+        </ListItem>
     </div>
 );
 
-export default ListItems;
+StudentListItems.propTypes = {
+    onLogAbsenceClick: PropTypes.func.isRequired,
+};
+
+export default StudentListItems;

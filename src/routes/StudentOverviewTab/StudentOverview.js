@@ -60,12 +60,14 @@ class StudentOverview extends React.Component {
             responsive: 'scroll',
             selectableRows: 'none',
             onRowClick: this.handleNavigateToInstance,
+            search: false,
         };
 
         const absencesOptions = {
             responsive: 'scroll',
             selectableRows: 'none',
             onRowClick: this.handleNavigateToCourseDetail,
+            search: false,
         };
 
         const { card, absences } = this.props;
@@ -74,7 +76,7 @@ class StudentOverview extends React.Component {
             <Paper>
                 <NoToolbarTable
                     title={'Active Card'}
-                    data={parseCardToTableData(card)}
+                    data={parseCardToTableData(card) || []}
                     columns={cardColumns}
                     options={instanceOptions}
                 />

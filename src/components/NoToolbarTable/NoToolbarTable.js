@@ -26,7 +26,7 @@ const NoToolbarTable = ({ title, data, columns, options }) => (
             data={data}
             columns={columns}
             options={{
-                search: true,
+                search: false,
                 print: false,
                 download: false,
                 filter: false,

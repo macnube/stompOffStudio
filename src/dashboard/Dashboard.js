@@ -7,6 +7,7 @@ import { withStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Drawer from '@material-ui/core/Drawer';
 import AppBar from '@material-ui/core/AppBar';
+import Hidden from '@material-ui/core/Hidden';
 import Toolbar from '@material-ui/core/Toolbar';
 import List from '@material-ui/core/List';
 import Divider from '@material-ui/core/Divider';
@@ -77,6 +78,7 @@ const Dashboard = ({ classes, user, setUser, location }) => {
     };
 
     const handleOpenLogAbsence = () => {
+        setOpen(false);
         setOpenLogAbsence(true);
     };
 
@@ -173,26 +175,64 @@ const Dashboard = ({ classes, user, setUser, location }) => {
                 </Toolbar>
             </AppBar>
             {user.isAuthenticated ? (
-                <Drawer
-                    variant="permanent"
-                    classes={{
-                        paper: classNames(
-                            classes.drawerPaper,
-                            !open && classes.drawerPaperClose
-                        ),
-                    }}
-                    open={open}
-                >
-                    <div className={classes.toolbarIcon}>
-                        <IconButton onClick={handleDrawerClose}>
-                            <ChevronLeftIcon />
-                        </IconButton>
-                    </div>
-                    <Divider />
-                    <List>
-                        {user.admin ? <ListItems /> : <StudentListItems />}
-                    </List>
-                </Drawer>
+                <nav className={classes.drawer} aria-label="mailbox folders">
+                    <Hidden smUp implementation="css">
+                        <Drawer
+                            variant="temporary"
+                            classes={{
+                                paper: classNames(
+                                    classes.drawerPaper,
+                                    !open && classes.drawerPaperClose
+                                ),
+                            }}
+                            open={open}
+                        >
+                            <div className={classes.toolbarIcon}>
+                                <IconButton onClick={handleDrawerClose}>
+                                    <ChevronLeftIcon />
+                                </IconButton>
+                            </div>
+                            <Divider />
+                            <List>
+                                {user.isAdmin ? (
+                                    <ListItems />
+                                ) : (
+                                    <StudentListItems
+                                        onLogAbsenceClick={handleOpenLogAbsence}
+                                    />
+                                )}
+                            </List>
+                        </Drawer>
+                    </Hidden>
+                    <Hidden xsDown implementation="css">
+                        <Drawer
+                            variant="permanent"
+                            classes={{
+                                paper: classNames(
+                                    classes.drawerPaper,
+                                    !open && classes.drawerPaperClose
+                                ),
+                            }}
+                            open={open}
+                        >
+                            <div className={classes.toolbarIcon}>
+                                <IconButton onClick={handleDrawerClose}>
+                                    <ChevronLeftIcon />
+                                </IconButton>
+                            </div>
+                            <Divider />
+                            <List>
+                                {user.isAdmin ? (
+                                    <ListItems />
+                                ) : (
+                                    <StudentListItems
+                                        onLogAbsenceClick={handleOpenLogAbsence}
+                                    />
+                                )}
+                            </List>
+                        </Drawer>
+                    </Hidden>
+                </nav>
             ) : null}
             <main className={classes.content}>
                 <div className={classes.appBarSpacer} />

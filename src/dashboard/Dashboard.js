@@ -195,7 +195,7 @@ const Dashboard = ({ classes, user, setUser, location }) => {
                             </div>
                             <Divider />
                             <List>
-                                {user.isAdmin ? (
+                                {user.admin ? (
                                     <ListItems />
                                 ) : (
                                     <StudentListItems
@@ -223,7 +223,7 @@ const Dashboard = ({ classes, user, setUser, location }) => {
                             </div>
                             <Divider />
                             <List>
-                                {user.isAdmin ? (
+                                {user.admin ? (
                                     <ListItems />
                                 ) : (
                                     <StudentListItems

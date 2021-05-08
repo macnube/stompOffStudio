@@ -15,7 +15,7 @@
     "dotenv": "^8.0.0",
     "graphql": "^14.2.1",
     "install": "^0.12.2",
-    "lodash": "^4.17.13",
+    "lodash": "^4.17.21",
     "material-ui-pickers": "^2.2.4",
     "mui-datatables": "^2.4.0",
     "npm": "^6.9.0",
